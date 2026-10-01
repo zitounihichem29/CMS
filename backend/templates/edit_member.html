@@ -1,0 +1,347 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Member
+{% endblock %}
+
+{% block content %}
+
+<div class="member-detail-page">
+
+    <div class="member-detail-back">
+        <a href="{{ url_for(
+            'members.member_detail',
+            membership_id=member['membership_id']
+        ) }}">
+            ← Back to member
+        </a>
+    </div>
+
+
+    <div class="member-detail-section">
+
+        <h2>
+            Edit member
+        </h2>
+
+
+        <form
+            method="POST"
+            action="{{ url_for(
+                'members.edit_member',
+                membership_id=member['membership_id']
+            ) }}"
+        >
+
+
+            <div class="member-detail-grid">
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        First name
+                    </span>
+
+                    <input
+                        type="text"
+                        name="first_name"
+                        value="{{ member['first_name'] }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        Last name
+                    </span>
+
+                    <input
+                        type="text"
+                        name="last_name"
+                        value="{{ member['last_name'] }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        Date of birth
+                    </span>
+
+                    <input
+                        type="date"
+                        name="date_of_birth"
+                        value="{{ member['date_of_birth'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        Phone
+                    </span>
+
+                    <input
+                        type="text"
+                        name="phone"
+                        value="{{ member['phone'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        Email
+                    </span>
+
+                    <input
+                        type="email"
+                        name="email"
+                        value="{{ member['email'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        Profession
+                    </span>
+
+                    <input
+                        type="text"
+                        name="profession"
+                        value="{{ member['profession'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        University
+                    </span>
+
+                    <input
+                        type="text"
+                        name="university"
+                        value="{{ member['university'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        Faculty
+                    </span>
+
+                    <input
+                        type="text"
+                        name="faculty"
+                        value="{{ member['faculty'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        Username
+                    </span>
+
+                    <input
+                        type="text"
+                        name="username"
+                        value="{{ member['username'] }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        Department
+                    </span>
+
+                    <select name="department_id" required>
+
+                        {% for department in departments %}
+
+                            <option
+                                value="{{ department['department_id'] }}"
+                                {% if department['department_id'] == member['department_id'] %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ department["name"] }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        Role
+                    </span>
+
+                    <select name="role_id" required>
+
+                        {% for role in roles %}
+
+                            <option
+                                value="{{ role['role_id'] }}"
+                                {% if role['role_id'] == member['role_id'] %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ role["name"] }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="member-detail-section" style="margin-top: 20px;">
+
+                <h2>
+                    Bio
+                </h2>
+
+                <textarea
+                    name="bio"
+                    rows="5"
+                >{{ member["bio"] or "" }}</textarea>
+
+            </div>
+
+
+            <div class="member-detail-section" style="margin-top: 20px;">
+
+                <h2>
+                    Social links
+                </h2>
+
+                <div class="member-detail-grid">
+
+                    <div class="member-detail-item">
+
+                        <span>
+                            LinkedIn
+                        </span>
+
+                        <input
+                            type="text"
+                            name="linkedin"
+                            value="{{ member['linkedin'] or '' }}"
+                        >
+
+                    </div>
+
+
+                    <div class="member-detail-item">
+
+                        <span>
+                            Facebook
+                        </span>
+
+                        <input
+                            type="text"
+                            name="facebook"
+                            value="{{ member['facebook'] or '' }}"
+                        >
+
+                    </div>
+
+
+                    <div class="member-detail-item">
+
+                        <span>
+                            Discord
+                        </span>
+
+                        <input
+                            type="text"
+                            name="discord"
+                            value="{{ member['discord'] or '' }}"
+                        >
+
+                    </div>
+
+
+                    <div class="member-detail-item">
+
+                        <span>
+                            GitHub
+                        </span>
+
+                        <input
+                            type="text"
+                            name="github"
+                            value="{{ member['github'] or '' }}"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="member-management-actions" style="margin-top: 24px;">
+
+                <button
+                    type="submit"
+                    class="member-management-btn member-management-success"
+                >
+                    Save changes
+                </button>
+
+
+                <a
+                    href="{{ url_for(
+                        'members.member_detail',
+                        membership_id=member['membership_id']
+                    ) }}"
+                    class="member-management-btn"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

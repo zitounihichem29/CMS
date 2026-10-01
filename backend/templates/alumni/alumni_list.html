@@ -1,0 +1,722 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+.alumni-page {
+    padding: 8px 0 40px;
+}
+
+.alumni-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 22px;
+}
+
+.alumni-eyebrow {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    opacity: .65;
+}
+
+.alumni-header h1 {
+    margin: 6px 0 8px;
+}
+
+.alumni-header p {
+    margin: 0;
+    max-width: 720px;
+    opacity: .72;
+}
+
+.alumni-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 11px 16px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    font-weight: 800;
+
+    background: #0d7774;
+
+    color: white;
+}
+
+.alumni-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+
+    margin: 18px 0;
+}
+
+.alumni-stat {
+    border:
+        1px solid
+        rgba(120, 140, 150, .22);
+
+    border-radius: 14px;
+
+    padding: 15px;
+
+    background:
+        rgba(255, 255, 255, .04);
+}
+
+.alumni-stat strong {
+    display: block;
+    font-size: 24px;
+}
+
+.alumni-stat span {
+    font-size: 12px;
+    opacity: .7;
+}
+
+.alumni-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: end;
+
+    padding: 14px;
+
+    border:
+        1px solid
+        rgba(120, 140, 150, .22);
+
+    border-radius: 14px;
+
+    margin-bottom: 18px;
+}
+
+.alumni-field {
+    display: grid;
+    gap: 6px;
+
+    min-width: 180px;
+}
+
+.alumni-field label {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.alumni-field select {
+    padding: 10px 12px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid
+        rgba(120, 140, 150, .28);
+
+    background: transparent;
+
+    color: inherit;
+}
+
+.alumni-filter-button {
+    padding: 10px 14px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid
+        rgba(120, 140, 150, .28);
+
+    background: transparent;
+
+    color: inherit;
+
+    cursor: pointer;
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.alumni-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+}
+
+.alumni-card {
+    border:
+        1px solid
+        rgba(120, 140, 150, .22);
+
+    border-radius: 18px;
+
+    padding: 16px;
+
+    text-decoration: none;
+
+    color: inherit;
+
+    background:
+        rgba(255, 255, 255, .035);
+
+    display: grid;
+
+    gap: 12px;
+}
+
+.alumni-card-top {
+    display: flex;
+
+    gap: 12px;
+
+    align-items: center;
+}
+
+.alumni-avatar {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 900;
+
+    background:
+        rgba(13, 119, 116, .14);
+
+    flex: none;
+}
+
+.alumni-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.alumni-card h3 {
+    margin: 0 0 4px;
+}
+
+.alumni-card p {
+    margin: 0;
+
+    opacity: .72;
+
+    font-size: 13px;
+}
+
+.alumni-badges {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+}
+
+.alumni-badge {
+    display: inline-flex;
+
+    padding: 5px 8px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    background:
+        rgba(13, 119, 116, .12);
+}
+
+.alumni-badge.hidden {
+    background:
+        rgba(160, 100, 30, .12);
+}
+
+.alumni-badge.spotlight {
+    background:
+        rgba(130, 90, 190, .14);
+}
+
+.alumni-empty {
+    padding: 34px;
+
+    border:
+        1px dashed
+        rgba(120, 140, 150, .3);
+
+    border-radius: 16px;
+
+    text-align: center;
+
+    opacity: .75;
+}
+
+
+@media (
+    max-width: 1000px
+) {
+
+    .alumni-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .alumni-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+@media (
+    max-width: 650px
+) {
+
+    .alumni-header {
+        display: grid;
+    }
+
+    .alumni-grid,
+    .alumni-stats {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+</style>
+
+
+<div class="alumni-page">
+
+    <div class="alumni-header">
+
+        <div>
+
+            <span class="alumni-eyebrow">
+                ORSC COMMUNITY
+            </span>
+
+            <h1>
+                Alumni
+            </h1>
+
+            <p>
+                Manage former ORSC members,
+                their current paths,
+                public visibility,
+                featured profiles and
+                the homepage Spotlight.
+            </p>
+
+        </div>
+
+
+        {% if can_manage %}
+
+            <a
+                href="{{ url_for(
+                    'alumni.new_alumni'
+                ) }}"
+                class="alumni-primary"
+            >
+                + Add Alumni
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="alumni-stats">
+
+        <div class="alumni-stat">
+
+            <strong>
+                {{ stats["total"] or 0 }}
+            </strong>
+
+            <span>
+                Total profiles
+            </span>
+
+        </div>
+
+
+        <div class="alumni-stat">
+
+            <strong>
+                {{ stats["public_total"] or 0 }}
+            </strong>
+
+            <span>
+                Public
+            </span>
+
+        </div>
+
+
+        <div class="alumni-stat">
+
+            <strong>
+                {{ stats["featured_total"] or 0 }}
+            </strong>
+
+            <span>
+                Featured
+            </span>
+
+        </div>
+
+
+        <div class="alumni-stat">
+
+            <strong>
+                {{ stats["spotlight_total"] or 0 }}
+            </strong>
+
+            <span>
+                Homepage Spotlight
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <form
+        method="GET"
+        class="alumni-filters"
+    >
+
+        <div class="alumni-field">
+
+            <label for="category">
+                Category
+            </label>
+
+            <select
+                id="category"
+                name="category"
+            >
+
+                <option
+                    value="ALL"
+                    {% if selected_category == "ALL" %}
+                        selected
+                    {% endif %}
+                >
+                    All categories
+                </option>
+
+                <option
+                    value="ACADEMIA"
+                    {% if selected_category == "ACADEMIA" %}
+                        selected
+                    {% endif %}
+                >
+                    Academia
+                </option>
+
+                <option
+                    value="STARTUP"
+                    {% if selected_category == "STARTUP" %}
+                        selected
+                    {% endif %}
+                >
+                    Startup
+                </option>
+
+                <option
+                    value="INDUSTRY"
+                    {% if selected_category == "INDUSTRY" %}
+                        selected
+                    {% endif %}
+                >
+                    Industry
+                </option>
+
+                <option
+                    value="OTHER"
+                    {% if selected_category == "OTHER" %}
+                        selected
+                    {% endif %}
+                >
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="alumni-field">
+
+            <label for="visibility">
+                Visibility
+            </label>
+
+            <select
+                id="visibility"
+                name="visibility"
+            >
+
+                <option
+                    value="ALL"
+                    {% if selected_visibility == "ALL" %}
+                        selected
+                    {% endif %}
+                >
+                    All profiles
+                </option>
+
+                <option
+                    value="PUBLIC"
+                    {% if selected_visibility == "PUBLIC" %}
+                        selected
+                    {% endif %}
+                >
+                    Public
+                </option>
+
+                <option
+                    value="HIDDEN"
+                    {% if selected_visibility == "HIDDEN" %}
+                        selected
+                    {% endif %}
+                >
+                    Hidden
+                </option>
+
+                <option
+                    value="FEATURED"
+                    {% if selected_visibility == "FEATURED" %}
+                        selected
+                    {% endif %}
+                >
+                    Featured
+                </option>
+
+                <option
+                    value="SPOTLIGHT"
+                    {% if selected_visibility == "SPOTLIGHT" %}
+                        selected
+                    {% endif %}
+                >
+                    Spotlight
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="alumni-filter-button"
+        >
+            Apply Filters
+        </button>
+
+
+        <a
+            href="{{ url_for(
+                'alumni.alumni_list'
+            ) }}"
+            class="alumni-filter-button"
+        >
+            Reset
+        </a>
+
+    </form>
+
+
+    {% if alumni %}
+
+        <div class="alumni-grid">
+
+            {% for person in alumni %}
+
+                <a
+                    href="{{ url_for(
+                        'alumni.alumni_detail',
+                        alumni_id=person['alumni_id']
+                    ) }}"
+                    class="alumni-card"
+                >
+
+                    <div class="alumni-card-top">
+
+                        <div class="alumni-avatar">
+
+                            {% if person["photo_path"] %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'alumni.alumni_photo',
+                                        filename=person['photo_path']
+                                    ) }}"
+                                    alt="{{ person['first_name'] }} {{ person['last_name'] }}"
+                                >
+
+                            {% elif person["profile_photo"] %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'profile.profile_photo',
+                                        filename=person['profile_photo']
+                                    ) }}"
+                                    alt="{{ person['first_name'] }} {{ person['last_name'] }}"
+                                >
+
+                            {% else %}
+
+                                {{ person["first_name"][0] }}
+                                {{ person["last_name"][0] }}
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div>
+
+                            <h3>
+                                {{ person["first_name"] }}
+                                {{ person["last_name"] }}
+                            </h3>
+
+                            <p>
+                                {{
+                                    person["headline"]
+                                    or person["current_title"]
+                                    or "ORSC Alumni"
+                                }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="alumni-badges">
+
+                        <span class="alumni-badge">
+                            {{ person["category"] }}
+                        </span>
+
+
+                        {% if person["is_public"] %}
+
+                            <span class="alumni-badge">
+                                PUBLIC
+                            </span>
+
+                        {% else %}
+
+                            <span class="alumni-badge hidden">
+                                HIDDEN
+                            </span>
+
+                        {% endif %}
+
+
+                        {% if person["is_featured"] %}
+
+                            <span class="alumni-badge">
+                                FEATURED
+                            </span>
+
+                        {% endif %}
+
+
+                        {% if person["is_spotlight"] %}
+
+                            <span class="alumni-badge spotlight">
+                                SPOTLIGHT
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <p>
+
+                        {{ person["current_title"] or "" }}
+
+                        {% if
+                            person["current_title"]
+                            and person["current_organization"]
+                        %}
+                            ·
+                        {% endif %}
+
+                        {{ person["current_organization"] or "" }}
+
+                    </p>
+
+
+                    <p>
+
+                        {{ person["membership_count"] }}
+
+                        ORSC membership record{% if person["membership_count"] != 1 %}s{% endif %}
+
+                    </p>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <div class="alumni-empty">
+
+            No Alumni profiles match
+            the current filters.
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

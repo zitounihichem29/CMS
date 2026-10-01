@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Add New Template
+{% endblock %}
+
+
+{% block content %}
+
+<div class="new-template-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="template-form-header">
+
+        <div>
+
+            <span class="templates-label">
+                ORSC RESOURCES
+            </span>
+
+            <h1>
+                Add New Template
+            </h1>
+
+            <p>
+                Add a reusable file or an external Canva / Figma template.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('templates.templates') }}"
+            class="btn-secondary"
+        >
+            Back to Templates
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         FORM
+         ======================================== -->
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        class="template-form"
+    >
+
+
+        <!-- TEMPLATE NAME -->
+
+        <div class="template-form-group">
+
+            <label for="name">
+                Template Name *
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Example: SDACS Authorization"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- TEMPLATE TYPE -->
+
+        <div class="template-form-group">
+
+            <label for="document_type">
+                Template Type *
+            </label>
+
+            <select
+                id="document_type"
+                name="document_type"
+                required
+            >
+
+                <option value="">
+                    Select a type
+                </option>
+
+                <option value="pdf">
+                    PDF
+                </option>
+
+                <option value="word">
+                    Word
+                </option>
+
+                <option value="excel">
+                    Excel
+                </option>
+
+                <option value="powerpoint">
+                    PowerPoint
+                </option>
+
+                <option value="canva">
+                    Canva
+                </option>
+
+                <option value="figma">
+                    Figma
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <!-- ========================================
+             FILE UPLOAD
+             ======================================== -->
+
+        <div
+            class="template-form-group"
+            id="fileSection"
+            style="display: none;"
+        >
+
+            <label for="template_file">
+                Upload File *
+            </label>
+
+            <input
+                type="file"
+                id="template_file"
+                name="template_file"
+            >
+
+            <span class="template-form-help" id="fileHelp">
+                Select the file corresponding to the chosen type.
+            </span>
+
+        </div>
+
+
+
+        <!-- ========================================
+             CANVA / FIGMA LINK
+             ======================================== -->
+
+        <div
+            class="template-form-group"
+            id="linkSection"
+            style="display: none;"
+        >
+
+            <label for="external_url">
+                Template Link *
+            </label>
+
+            <input
+                type="url"
+                id="external_url"
+                name="external_url"
+                placeholder="https://..."
+            >
+
+            <span class="template-form-help">
+                Paste the Canva or Figma template link.
+            </span>
+
+        </div>
+
+
+
+        <!-- ========================================
+             INFO
+             ======================================== -->
+
+        <div class="template-form-info">
+
+            <p>
+                PDF, Word, Excel and PowerPoint templates are uploaded directly
+                to the CMS. Canva and Figma templates are stored as external links.
+            </p>
+
+        </div>
+
+
+
+        <!-- ========================================
+             ACTIONS
+             ======================================== -->
+
+        <div class="template-form-actions">
+
+            <a
+                href="{{ url_for('templates.templates') }}"
+                class="btn-secondary"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Add Template
+            </button>
+
+        </div>
+
+
+    </form>
+
+
+</div>
+
+
+
+<!-- ========================================
+     TYPE SWITCH
+     ======================================== -->
+
+<script>
+
+    const typeSelect =
+        document.getElementById("document_type");
+
+    const fileSection =
+        document.getElementById("fileSection");
+
+    const linkSection =
+        document.getElementById("linkSection");
+
+    const fileInput =
+        document.getElementById("template_file");
+
+    const externalUrl =
+        document.getElementById("external_url");
+
+    const fileHelp =
+        document.getElementById("fileHelp");
+
+
+    const fileTypes = [
+        "pdf",
+        "word",
+        "excel",
+        "powerpoint"
+    ];
+
+
+    function updateTemplateFields() {
+
+        const selectedType =
+            typeSelect.value;
+
+
+        if (
+            fileTypes.includes(
+                selectedType
+            )
+        ) {
+
+            fileSection.style.display =
+                "block";
+
+            linkSection.style.display =
+                "none";
+
+
+            fileInput.required =
+                true;
+
+            externalUrl.required =
+                false;
+
+            externalUrl.value =
+                "";
+
+
+            if (selectedType === "pdf") {
+
+                fileInput.accept =
+                    ".pdf,application/pdf";
+
+                fileHelp.textContent =
+                    "Accepted format: PDF";
+
+            }
+
+            else if (
+                selectedType === "word"
+            ) {
+
+                fileInput.accept =
+                    ".doc,.docx";
+
+                fileHelp.textContent =
+                    "Accepted formats: DOC, DOCX";
+
+            }
+
+            else if (
+                selectedType === "excel"
+            ) {
+
+                fileInput.accept =
+                    ".xls,.xlsx";
+
+                fileHelp.textContent =
+                    "Accepted formats: XLS, XLSX";
+
+            }
+
+            else if (
+                selectedType === "powerpoint"
+            ) {
+
+                fileInput.accept =
+                    ".ppt,.pptx";
+
+                fileHelp.textContent =
+                    "Accepted formats: PPT, PPTX";
+
+            }
+
+        }
+
+        else if (
+            selectedType === "canva"
+            || selectedType === "figma"
+        ) {
+
+            fileSection.style.display =
+                "none";
+
+            linkSection.style.display =
+                "block";
+
+
+            fileInput.required =
+                false;
+
+            externalUrl.required =
+                true;
+
+            fileInput.value =
+                "";
+
+        }
+
+        else {
+
+            fileSection.style.display =
+                "none";
+
+            linkSection.style.display =
+                "none";
+
+
+            fileInput.required =
+                false;
+
+            externalUrl.required =
+                false;
+
+        }
+
+    }
+
+
+    typeSelect.addEventListener(
+        "change",
+        updateTemplateFields
+    );
+
+
+    updateTemplateFields();
+
+</script>
+
+
+{% endblock %}

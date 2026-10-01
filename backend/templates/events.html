@@ -1,0 +1,560 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Events
+{% endblock %}
+
+
+{% block content %}
+
+<div class="events-page">
+
+
+    <!-- ========================================
+         PAGE HEADER
+         ======================================== -->
+
+    <div class="events-header">
+
+        <div class="events-header-content">
+
+            <span class="events-label">
+                ORSC EVENTS
+            </span>
+
+            <h1>
+                Events
+            </h1>
+
+            <p class="events-header-description">
+                Discover upcoming activities and explore past ORSC events.
+            </p>
+
+        </div>
+
+
+        {% if can_create_event %}
+
+            <div class="events-header-actions">
+
+                <a
+                    href="{{ url_for('events.new_event') }}"
+                    class="btn-primary"
+                >
+                    <span class="btn-icon">
+                        +
+                    </span>
+
+                    <span>
+                        New Event
+                    </span>
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- ========================================
+         EVENTS OVERVIEW
+         ======================================== -->
+
+    <div class="events-overview">
+
+
+        <div class="events-overview-card">
+
+            <span class="events-overview-label">
+                Upcoming
+            </span>
+
+            <strong class="events-overview-number">
+                {{ upcoming_events|length }}
+            </strong>
+
+            <span class="events-overview-text">
+                Scheduled events
+            </span>
+
+        </div>
+
+
+
+        <div class="events-overview-card">
+
+            <span class="events-overview-label">
+                Past
+            </span>
+
+            <strong class="events-overview-number">
+                {{ past_events|length }}
+            </strong>
+
+            <span class="events-overview-text">
+                Completed events
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ========================================
+         UPCOMING EVENTS
+         ======================================== -->
+
+    <section class="events-section">
+
+
+        <div class="events-section-header">
+
+            <div>
+
+                <span class="events-section-label">
+                    NEXT
+                </span>
+
+                <h2>
+                    Upcoming Events
+                </h2>
+
+                <p>
+                    Events that are scheduled or currently taking place.
+                </p>
+
+            </div>
+
+
+            <span class="events-section-count">
+                {{ upcoming_events|length }}
+            </span>
+
+        </div>
+
+
+
+        <div class="events-grid">
+
+
+            {% for event in upcoming_events %}
+
+
+                {% if not is_alumni %}
+
+                    <a
+                        href="{{ url_for(
+                            'events.event_detail',
+                            event_id=event['event_id']
+                        ) }}"
+                        class="event-card-link"
+                    >
+
+                        <article class="event-card event-card-upcoming">
+
+
+                            <div class="event-card-top">
+
+                                <span class="event-status event-status-upcoming">
+                                    Upcoming
+                                </span>
+
+                            </div>
+
+
+
+                            <div class="event-card-content">
+
+                                <h3>
+                                    {{ event["title"] }}
+                                </h3>
+
+
+                                <div class="event-card-date">
+
+                                    <span class="event-card-date-label">
+                                        Date
+                                    </span>
+
+                                    <span class="event-card-date-value">
+
+                                        {% if event["event_date"] == event["end_date"] %}
+
+                                            {{ event["event_date"] }}
+
+                                        {% else %}
+
+                                            {{ event["event_date"] }}
+                                            <span class="event-date-separator">
+                                                →
+                                            </span>
+                                            {{ event["end_date"] }}
+
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="event-card-footer">
+
+                                <span>
+                                    View event
+                                </span>
+
+                                <span class="event-card-arrow">
+                                    →
+                                </span>
+
+                            </div>
+
+
+                        </article>
+
+                    </a>
+
+
+
+                {% else %}
+
+
+                    <!-- ========================================
+                         ALUMNI
+                         List visible, detail unavailable
+                         ======================================== -->
+
+                    <article class="event-card event-card-upcoming event-card-readonly">
+
+
+                        <div class="event-card-top">
+
+                            <span class="event-status event-status-upcoming">
+                                Upcoming
+                            </span>
+
+                            <span class="event-readonly-badge">
+                                View only
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="event-card-content">
+
+                            <h3>
+                                {{ event["title"] }}
+                            </h3>
+
+
+                            <div class="event-card-date">
+
+                                <span class="event-card-date-label">
+                                    Date
+                                </span>
+
+                                <span class="event-card-date-value">
+
+                                    {% if event["event_date"] == event["end_date"] %}
+
+                                        {{ event["event_date"] }}
+
+                                    {% else %}
+
+                                        {{ event["event_date"] }}
+                                        <span class="event-date-separator">
+                                            →
+                                        </span>
+                                        {{ event["end_date"] }}
+
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="event-card-footer event-card-footer-muted">
+
+                            Event details are available to current members.
+
+                        </div>
+
+
+                    </article>
+
+
+                {% endif %}
+
+
+            {% else %}
+
+
+                <!-- ========================================
+                     EMPTY STATE
+                     ======================================== -->
+
+                <div class="events-empty">
+
+                    <div class="events-empty-icon">
+                        ◫
+                    </div>
+
+                    <h3>
+                        No upcoming events
+                    </h3>
+
+                    <p>
+                        New ORSC events will appear here once they are scheduled.
+                    </p>
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================
+         PAST EVENTS
+         ======================================== -->
+
+    <section class="events-section events-section-past">
+
+
+        <div class="events-section-header">
+
+            <div>
+
+                <span class="events-section-label">
+                    ARCHIVE
+                </span>
+
+                <h2>
+                    Past Events
+                </h2>
+
+                <p>
+                    Previously completed ORSC events.
+                </p>
+
+            </div>
+
+
+            <span class="events-section-count">
+                {{ past_events|length }}
+            </span>
+
+        </div>
+
+
+
+        <div class="events-grid">
+
+
+            {% for event in past_events %}
+
+
+                {% if not is_alumni %}
+
+                    <a
+                        href="{{ url_for(
+                            'events.event_detail',
+                            event_id=event['event_id']
+                        ) }}"
+                        class="event-card-link"
+                    >
+
+                        <article class="event-card event-card-past">
+
+
+                            <div class="event-card-top">
+
+                                <span class="event-status event-status-past">
+                                    Completed
+                                </span>
+
+                            </div>
+
+
+
+                            <div class="event-card-content">
+
+                                <h3>
+                                    {{ event["title"] }}
+                                </h3>
+
+
+                                <div class="event-card-date">
+
+                                    <span class="event-card-date-label">
+                                        Date
+                                    </span>
+
+                                    <span class="event-card-date-value">
+
+                                        {% if event["event_date"] == event["end_date"] %}
+
+                                            {{ event["event_date"] }}
+
+                                        {% else %}
+
+                                            {{ event["event_date"] }}
+                                            <span class="event-date-separator">
+                                                →
+                                            </span>
+                                            {{ event["end_date"] }}
+
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="event-card-footer">
+
+                                <span>
+                                    View event
+                                </span>
+
+                                <span class="event-card-arrow">
+                                    →
+                                </span>
+
+                            </div>
+
+
+                        </article>
+
+                    </a>
+
+
+
+                {% else %}
+
+
+                    <!-- ========================================
+                         ALUMNI
+                         ======================================== -->
+
+                    <article class="event-card event-card-past event-card-readonly">
+
+
+                        <div class="event-card-top">
+
+                            <span class="event-status event-status-past">
+                                Completed
+                            </span>
+
+                            <span class="event-readonly-badge">
+                                View only
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="event-card-content">
+
+                            <h3>
+                                {{ event["title"] }}
+                            </h3>
+
+
+                            <div class="event-card-date">
+
+                                <span class="event-card-date-label">
+                                    Date
+                                </span>
+
+                                <span class="event-card-date-value">
+
+                                    {% if event["event_date"] == event["end_date"] %}
+
+                                        {{ event["event_date"] }}
+
+                                    {% else %}
+
+                                        {{ event["event_date"] }}
+                                        <span class="event-date-separator">
+                                            →
+                                        </span>
+                                        {{ event["end_date"] }}
+
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="event-card-footer event-card-footer-muted">
+
+                            Event details are available to current members.
+
+                        </div>
+
+
+                    </article>
+
+
+                {% endif %}
+
+
+            {% else %}
+
+
+                <!-- ========================================
+                     EMPTY STATE
+                     ======================================== -->
+
+                <div class="events-empty">
+
+                    <div class="events-empty-icon">
+                        ◫
+                    </div>
+
+                    <h3>
+                        No past events
+                    </h3>
+
+                    <p>
+                        Completed ORSC events will appear here.
+                    </p>
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+    </section>
+
+
+</div>
+
+{% endblock %}

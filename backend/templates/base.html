@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+            ORSC CMS
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/cms-ui-v3.css') }}"
+    >
+
+    <meta
+        name="csrf-token"
+        content="{{ csrf_token() }}"
+    >
+
+</head>
+
+
+<body class="cms-body">
+
+    <div class="cms-layout">
+
+
+        <!-- =================================================
+             SIDEBAR
+        ================================================== -->
+
+        <aside class="sidebar">
+
+
+            <!-- =============================================
+                 LOGO
+            ============================================== -->
+
+            <div class="sidebar-logo">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='images/orsc-logo.png'
+                    ) }}"
+                    alt="ORSC Logo"
+                    class="orsc-logo"
+                >
+
+                <div class="logo-text">
+
+                    <strong>
+                        ORSC
+                    </strong>
+
+                    <span>
+                        Operations Research<br>
+                        Society Club
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- =============================================
+                 NAVIGATION
+            ============================================== -->
+
+            <nav class="sidebar-nav">
+
+
+
+                {% if current_user %}
+
+                    <a
+                        href="{{ url_for(
+                            'alumni.alumni_list'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'alumni' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">
+                            ◉
+                        </span>
+
+                        <span>
+                            Alumni
+                        </span>
+                    </a>
+
+                {% endif %}
+
+
+                <!-- {% if current_user %}
+
+                    <a href="{{ url_for('records.records_home') }}" class="nav-item{% if request.blueprint == 'records' %}active{% endif %}">
+
+                        <span class="nav-icon">
+                            ▣
+                        </span>
+
+                        <span>
+                            Club Records
+                        </span>
+
+                    </a>
+
+                {% endif %} -->
+
+
+                {% if current_user and current_user["is_alumni"] %}
+
+
+                    <!-- =====================================
+                         ALUMNI SIDEBAR
+                    ====================================== -->
+
+                    <a
+                        href="{{ url_for('home_page') }}"
+                        class="
+                            nav-item
+                            {% if request.endpoint == 'home_page' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">⌂</span>
+                        <span>Home</span>
+                    </a>
+
+
+                    <a
+                        href="{{ url_for(
+                            'announcements.announcements'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'announcements' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">◇</span>
+                        <span>Announcements</span>
+                    </a>
+
+
+                    <a
+                        href="{{ url_for(
+                            'trainings.trainings'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'trainings' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">☆</span>
+                        <span>Trainings</span>
+                    </a>
+
+
+                    <a
+                        href="{{ url_for(
+                            'events.events'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'events' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">◫</span>
+                        <span>Events</span>
+                    </a>
+
+
+                    <a
+                        href="{{ url_for(
+                            'projects.projects'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'projects' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">◇</span>
+                        <span>Projects</span>
+                    </a>
+
+
+                    <a
+                        href="{{ url_for(
+                            'articles.articles'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'articles' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">▥</span>
+                        <span>Articles</span>
+                    </a>
+                    
+
+                    <a
+                        href="{{ url_for(
+                            'settings.settings'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'settings' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">⚙</span>
+                        <span>Settings</span>
+                    </a>
+
+
+                {% else %}
+
+
+                    <!-- =====================================
+                         CURRENT MEMBERS SIDEBAR
+                    ====================================== -->
+
+                    <a
+                        href="{{ url_for('home_page') }}"
+                        class="
+                            nav-item
+                            {% if request.endpoint == 'home_page' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">⌂</span>
+                        <span>Home</span>
+                    </a>
+
+
+                    {% if current_user and current_user["role_name"] in [
+                        "HEAD",
+                        "PRESIDENT",
+                        "VICE_PRESIDENT"
+                     ]
+                    %}
+
+                        <a
+                            href="{{ url_for(
+                                'dashboard.dashboard'
+                            ) }}"
+                            class="
+                                nav-item
+                                {% if request.endpoint == 'dashboard.dashboard' %}
+                                    active
+                                {% endif %}
+                            "
+                        >
+                            <span class="nav-icon">▦</span>
+                            <span>Dashboard</span>
+                        </a>
+
+                    {% endif %}
+
+
+                    <!-- =====================================
+                         MEMBERS
+                    ====================================== -->
+
+                    {% if
+                        current_user
+                        and (
+                            current_user["department_id"] == 1
+                            or current_user["role_name"] in [
+                                "HEAD",
+                                "SUB_HEAD",
+                                "PRESIDENT",
+                                "VICE_PRESIDENT"
+                            ]
+                        )
+                    %}
+
+                        <a
+                            href="{{ url_for(
+                                'members.members'
+                            ) }}"
+                            class="
+                                nav-item
+                                {% if request.blueprint == 'members' %}
+                                    active
+                                {% endif %}
+                            "
+                        >
+                            <span class="nav-icon">♙</span>
+                            <span>Members</span>
+                        </a>
+
+                    {% endif %}
+
+
+                    <!-- =====================================
+                         APPLICATIONS
+                    ====================================== -->
+
+                    {% if
+                        current_user
+                            and (
+                                current_user["role_name"] in [
+                                    "PRESIDENT",
+                                    "VICE_PRESIDENT"
+                                ]
+                            or (
+                                current_user["department_id"] == 1
+                                and current_user["role_name"] in [
+                                    "HEAD",
+                                    "SUB_HEAD",
+                                    "MEMBER"
+                                ]
+                            )
+                        )
+                    %}
+
+                        <a
+                            href="{{ url_for(
+                                'applications.applications'
+                            ) }}"
+                            class="
+                                nav-item
+                                {% if request.blueprint == 'applications' %}
+                                    active
+                                {% endif %}
+                            "
+                        >
+                            <span class="nav-icon">▣</span>
+                            <span>Applications</span>
+                        </a>
+
+                    {% endif %}
+
+
+                    <!-- =====================================
+                         DEPARTMENTS
+                    ====================================== -->
+
+                    <a
+                        href="{{ url_for(
+                            'departments.departments'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'departments' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">▤</span>
+                        <span>Departments</span>
+                    </a>
+
+
+                    <!-- =====================================
+                         TASKS
+                    ====================================== -->
+
+                    <a
+                        href="{{ url_for(
+                            'tasks.tasks'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'tasks' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">✓</span>
+                        <span>Tasks</span>
+                    </a>
+
+
+                    <!-- =====================================
+                         ANNOUNCEMENTS
+                    ====================================== -->
+
+                    <a
+                        href="{{ url_for(
+                            'announcements.announcements'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'announcements' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">◇</span>
+                        <span>Announcements</span>
+                    </a>
+
+
+                    <!-- =====================================
+                         TRAININGS
+                    ====================================== -->
+
+                    <a
+                        href="{{ url_for(
+                            'trainings.trainings'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'trainings' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">☆</span>
+                        <span>Trainings</span>
+                    </a>
+
+
+                    <!-- =====================================
+                         EVENTS
+                    ====================================== -->
+
+                    <a
+                        href="{{ url_for(
+                            'events.events'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'events' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">◫</span>
+                        <span>Events</span>
+                    </a>
+
+
+                    <!-- =====================================
+                         PROJECTS
+                    ====================================== -->
+
+                    <a
+                        href="{{ url_for(
+                            'projects.projects'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'projects' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">◇</span>
+                        <span>Projects</span>
+                    </a>
+
+
+                    <!-- =====================================
+                         ARTICLES
+                    ====================================== -->
+
+                    <a
+                        href="{{ url_for(
+                            'articles.articles'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'articles' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">▥</span>
+                        <span>Articles</span>
+                    </a>
+
+
+                    <!-- =====================================
+                         TEMPLATES
+                    ====================================== -->
+
+                    <a
+                        href="{{ url_for(
+                            'templates.templates'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'templates' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">□</span>
+                        <span>Templates</span>
+                    </a>
+
+
+                    <!-- =====================================
+                         ORGANIZATIONS
+                    ====================================== -->
+
+                    <a
+                        href="{{ url_for(
+                            'organizations.organizations'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'organizations' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">◎</span>
+                        <span>Organizations</span>
+                    </a>
+
+
+                    <!-- =====================================
+                         SETTINGS
+                    ====================================== -->
+
+                    <a
+                        href="{{ url_for(
+                            'settings.settings'
+                        ) }}"
+                        class="
+                            nav-item
+                            {% if request.blueprint == 'settings' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        <span class="nav-icon">⚙</span>
+                        <span>Settings</span>
+                    </a>
+
+
+                {% endif %}
+
+            </nav>
+
+
+            <!-- =============================================
+                 SIDEBAR USER PROFILE
+            ============================================== -->
+
+            {% if current_user %}
+
+                <div class="sidebar-profile">
+
+
+                    <!-- PROFILE LINK -->
+
+                    <a
+                        href="{{ url_for('profile.profile') }}"
+                        class="sidebar-profile-link"
+                    >
+
+                        <div class="sidebar-profile-avatar">
+
+                            {% if current_user["profile_photo"] %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'profile.profile_photo',
+                                        filename=current_user['profile_photo']
+                                    ) }}"
+                                    alt="Profile photo"
+                                    class="sidebar-profile-avatar-image"
+                                >
+
+                            {% else %}
+
+                                {{ current_user["first_name"][0] }}
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="profile-info">
+
+                            <strong>
+                                {{ current_user["first_name"] }}
+                                {{ current_user["last_name"] }}
+                            </strong>
+
+                            <span>
+
+                                {% if current_user["is_alumni"] %}
+
+                                    ALUMNI
+
+                                {% else %}
+
+                                    {{ current_user["role_name"] }}
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- PROFILE MENU -->
+
+                    <div class="profile-menu-wrapper">
+
+                        <button
+                            type="button"
+                            class="profile-menu"
+                            title="Profile menu"
+                            aria-label="Open profile menu"
+                            data-profile-menu-button
+                        >
+                            ⋮
+                        </button>
+
+
+                        <div
+                            class="profile-dropdown"
+                            data-profile-menu-panel
+                            hidden
+                        >
+
+                            <a
+                                href="{{ url_for(
+                                    'profile.profile'
+                                ) }}"
+                            >
+                                My Profile
+                            </a>
+
+                            <a
+                                href="{{ url_for(
+                                    'settings.settings'
+                                ) }}"
+                            >
+                                Settings
+                            </a>
+
+                            <div class="profile-dropdown-divider">
+                            </div>
+
+                            <a
+                                href="{{ url_for('logout') }}"
+                                class="profile-dropdown-logout"
+                            >
+                                Log out
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </aside>
+
+        <div
+            class="sidebar-mobile-overlay"
+            data-mobile-sidebar-overlay
+        ></div> 
+
+
+        <!-- =================================================
+             MAIN AREA
+        ================================================== -->
+
+        <div class="main-area">
+
+
+            <!-- =============================================
+                 TOPBAR
+            ============================================== -->
+
+            <header class="topbar">
+
+
+
+                <!-- MOBILE SIDEBAR BUTTON -->
+
+                <button
+                    type="button"
+                    class="mobile-menu-toggle"
+                    data-mobile-menu-toggle
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+
+                <!-- SEARCH -->
+
+                <div class="search-box cms-global-search">
+
+                    <span
+                        class="search-icon"
+                        aria-hidden="true"
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            class="topbar-svg-icon"
+                        >
+                            <circle
+                                cx="11"
+                                cy="11"
+                                r="6.5"
+                            ></circle>
+
+                            <path
+                                d="M16 16L21 21"
+                            ></path>
+                        </svg>
+
+                    </span>
+
+
+                    <input
+                        type="text"
+                        id="cmsGlobalSearch"
+                        placeholder="Search CMS..."
+                        autocomplete="off"
+                        aria-label="Search CMS"
+                        aria-expanded="false"
+                        aria-controls="cmsGlobalSearchResults"
+                    >
+
+
+                    <div
+                        id="cmsGlobalSearchResults"
+                        class="cms-global-search-results"
+                        hidden
+                    >
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     TOPBAR ACTIONS
+                ========================================== -->
+
+                <div class="topbar-actions">
+
+
+                    <!-- NOTIFICATIONS -->
+
+                    <button
+                        type="button"
+                        class="
+                            topbar-button
+                            notification-button
+                        "
+                        title="Notifications"
+                        aria-label="Notifications"
+                        onclick="
+                            window.location.href=
+                            '{{ url_for(
+                                'notifications.notifications'
+                            ) }}'
+                        "
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            class="topbar-svg-icon"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="
+                                    M18 8
+                                    A6 6 0 0 0 6 8
+                                    C6 15 3.5 16.5 3.5 16.5
+                                    H20.5
+                                    C20.5 16.5 18 15 18 8
+                                "
+                            ></path>
+
+                            <path
+                                d="
+                                    M9.5 19
+                                    C10 20.5 14 20.5 14.5 19
+                                "
+                            ></path>
+
+                        </svg>
+
+
+                        {% if unread_notification_count > 0 %}
+
+                            <span class="notification-badge">
+
+                                {{ unread_notification_count }}
+
+                            </span>
+
+                        {% endif %}
+
+                    </button>
+
+
+                    <!-- HELP -->
+
+                    <button
+                        type="button"
+                        class="topbar-button"
+                        title="Help"
+                        aria-label="Help"
+                        onclick="
+                            window.location.href=
+                            '{{ url_for('help_page') }}'
+                        "
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            class="topbar-svg-icon"
+                            aria-hidden="true"
+                        >
+
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="9"
+                            ></circle>
+
+                            <path
+                                d="
+                                    M9.7 9
+                                    A2.5 2.5 0 1 1 13.5 11.1
+                                    C12.4 11.7 12 12.2 12 13.4
+                                "
+                            ></path>
+
+                            <path
+                                d="M12 17H12.01"
+                            ></path>
+
+                        </svg>
+
+                    </button>
+
+
+                    <!-- THEME -->
+
+                    <button
+                        type="button"
+                        id="themeToggle"
+                        class="theme-toggle"
+                        title="Toggle theme"
+                        aria-label="Toggle light and dark mode"
+                    >
+                        ☾
+                    </button>
+
+
+                    <!-- =====================================
+                         TOPBAR PROFILE
+                    ====================================== -->
+
+                    {% if current_user %}
+
+                        <div class="topbar-profile">
+
+
+                            <!-- PROFILE LINK -->
+
+                            <a
+                                href="{{ url_for(
+                                    'profile.profile'
+                                ) }}"
+                                class="topbar-profile-link"
+                            >
+
+                                <div class="profile-avatar small">
+
+                                    {% if current_user["profile_photo"] %}
+
+                                        <img
+                                            src="{{ url_for(
+                                                'profile.profile_photo',
+                                                filename=current_user['profile_photo']
+                                            ) }}"
+                                            alt="Profile photo"
+                                            class="profile-avatar-image"
+                                        >
+
+                                    {% else %}
+
+                                        {{ current_user["first_name"][0] }}
+
+                                    {% endif %}
+
+                                </div>
+
+                                <span>
+                                    {{ current_user["first_name"] }}
+                                </span>
+
+                            </a>
+
+
+                            <!-- THREE DOT MENU -->
+
+                            <div class="profile-menu-wrapper">
+
+                                <button
+                                    type="button"
+                                    class="profile-menu"
+                                    title="Profile menu"
+                                    aria-label="Open profile menu"
+                                    data-profile-menu-button
+                                >
+                                    ⋮
+                                </button>
+
+
+                                <div
+                                    class="profile-dropdown"
+                                    data-profile-menu-panel
+                                    hidden
+                                >
+
+                                    <a
+                                        href="{{ url_for(
+                                            'profile.profile'
+                                        ) }}"
+                                    >
+                                        My Profile
+                                    </a>
+
+
+                                    <a
+                                        href="{{ url_for(
+                                            'settings.settings'
+                                        ) }}"
+                                    >
+                                        Settings
+                                    </a>
+
+
+                                    <div
+                                        class="profile-dropdown-divider"
+                                    >
+                                    </div>
+
+
+                                    <a
+                                        href="{{ url_for('logout') }}"
+                                        class="profile-dropdown-logout"
+                                    >
+                                        Log out
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </header>
+
+
+            <!-- =============================================
+                 PAGE CONTENT
+            ============================================== -->
+
+            <main class="page-content">
+
+                {% block content %}
+                {% endblock %}
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         MAIN JAVASCRIPT
+    ================================================== -->
+
+    <script
+        src="{{ url_for(
+            'static',
+            filename='js/script.js'
+        ) }}"
+    ></script>
+
+
+    <!-- =================================================
+         PROFILE MENU + THEME
+    ================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+
+                // =========================================
+                // THEME
+                // =========================================
+
+                const themeToggle =
+                    document.getElementById(
+                        "themeToggle"
+                    );
+
+
+                const themeButtons =
+                    document.querySelectorAll(
+                        "[data-theme-option]"
+                    );
+
+
+                function applyTheme(theme) {
+
+                    const isDark =
+                        theme === "dark";
+
+
+                    document.body.classList.toggle(
+                        "dark",
+                        isDark
+                    );
+
+
+                    document.documentElement.setAttribute(
+                        "data-theme",
+                        theme
+                    );
+
+
+                    localStorage.setItem(
+                        "orsc-theme",
+                        theme
+                    );
+
+
+                    if (themeToggle) {
+
+                        themeToggle.textContent =
+                            isDark
+                                ? "☀"
+                                : "☾";
+
+                    }
+
+
+                    themeButtons.forEach(
+                        function (button) {
+
+                            const isActive =
+                                button.dataset.themeOption
+                                === theme;
+
+                            button.classList.toggle(
+                                "active",
+                                isActive
+                            );
+
+                            button.setAttribute(
+                                "aria-pressed",
+                                isActive
+                                    ? "true"
+                                    : "false"
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                const savedTheme =
+                    localStorage.getItem(
+                        "orsc-theme"
+                    );
+
+
+                if (
+                    savedTheme === "dark"
+                    || savedTheme === "light"
+                ) {
+
+                    applyTheme(
+                        savedTheme
+                    );
+
+                } else {
+
+                    applyTheme(
+                        "light"
+                    );
+
+                }
+
+
+                if (themeToggle) {
+
+                    themeToggle.addEventListener(
+                        "click",
+                        function () {
+
+                            const isDark =
+                                document.body
+                                    .classList
+                                    .contains(
+                                        "dark"
+                                    );
+
+
+                            applyTheme(
+                                isDark
+                                    ? "light"
+                                    : "dark"
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                themeButtons.forEach(
+                    function (button) {
+
+                        button.addEventListener(
+                            "click",
+                            function () {
+
+                                applyTheme(
+                                    button.dataset
+                                        .themeOption
+                                );
+
+                            }
+                        );
+
+                    }
+                );
+
+
+                // =========================================
+                // PROFILE DROPDOWNS
+                // =========================================
+
+                const profileMenuButtons =
+                    document.querySelectorAll(
+                        "[data-profile-menu-button]"
+                    );
+
+
+                function closeProfileMenus() {
+
+                    document
+                        .querySelectorAll(
+                            "[data-profile-menu-panel]"
+                        )
+                        .forEach(
+                            function (panel) {
+
+                                panel.hidden = true;
+
+                            }
+                        );
+
+                }
+
+
+                profileMenuButtons.forEach(
+                    function (button) {
+
+                        button.addEventListener(
+                            "click",
+                            function (event) {
+
+                                event.stopPropagation();
+
+
+                                const wrapper =
+                                    button.closest(
+                                        ".profile-menu-wrapper"
+                                    );
+
+
+                                const panel =
+                                    wrapper.querySelector(
+                                        "[data-profile-menu-panel]"
+                                    );
+
+
+                                const wasOpen =
+                                    !panel.hidden;
+
+
+                                closeProfileMenus();
+
+
+                                panel.hidden =
+                                    wasOpen;
+
+                            }
+                        );
+
+                    }
+                );
+
+
+                document.addEventListener(
+                    "click",
+                    function (event) {
+
+                        if (
+                            !event.target.closest(
+                                ".profile-menu-wrapper"
+                            )
+                        ) {
+
+                            closeProfileMenus();
+
+                        }
+
+                    }
+                );
+
+
+                document.addEventListener(
+                    "keydown",
+                    function (event) {
+
+                        if (
+                            event.key === "Escape"
+                        ) {
+
+                            closeProfileMenus();
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    </script>
+
+
+
+ <script
+    src="{{ url_for(
+        'static',
+        filename='js/cms-ui-v3.js'
+    ) }}"
+ ></script>
+
+
+ <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const meta = document.querySelector(
+        'meta[name="csrf-token"]'
+    );
+
+    if (!meta) {
+        return;
+    }
+
+    const csrfToken = meta.content;
+
+    document.querySelectorAll("form").forEach(function (form) {
+
+        if (
+            form.method.toLowerCase() !== "post"
+        ) {
+            return;
+        }
+
+        if (
+            form.querySelector(
+                'input[name="csrf_token"]'
+            )
+        ) {
+            return;
+        }
+
+        const input = document.createElement("input");
+
+        input.type = "hidden";
+        input.name = "csrf_token";
+        input.value = csrfToken;
+
+        form.prepend(input);
+    });
+
+  });
+ </script>
+
+</body>
+
+</html>

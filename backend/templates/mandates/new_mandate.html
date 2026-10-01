@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="new-mandate-page">
+
+    <div class="new-mandate-shell">
+
+        <div class="new-mandate-header">
+
+            <div>
+
+                <span class="new-mandate-label">
+                    GOVERNANCE
+                </span>
+
+                <h1>
+                    Create Next Mandate
+                </h1>
+
+                <p>
+                    Prepare the next ORSC academic mandate before
+                    configuring its future board.
+                </p>
+
+            </div>
+
+            <a
+                href="{{ url_for('mandates.mandates') }}"
+                class="new-mandate-back"
+            >
+                Back to Mandates
+            </a>
+
+        </div>
+
+
+        {% if existing_draft %}
+
+            <div class="new-mandate-warning">
+
+                <strong>
+                    A draft mandate already exists.
+                </strong>
+
+                <span>
+                    {{ existing_draft["name"] }}
+                    is currently being prepared.
+                </span>
+
+                <a
+                    href="{{ url_for(
+                        'mandates.mandate_detail',
+                        term_id=existing_draft['term_id']
+                    ) }}"
+                >
+                    Open Draft Mandate
+                </a>
+
+            </div>
+
+
+        {% else %}
+
+            <div class="new-mandate-card">
+
+                <div class="new-mandate-card-header">
+
+                    <span class="new-mandate-step">
+                        STEP 01
+                    </span>
+
+                    <h2>
+                        Mandate Information
+                    </h2>
+
+                    <p>
+                        Define the academic year and its official
+                        start and end dates.
+                    </p>
+
+                </div>
+
+
+                {% if error %}
+
+                    <div class="new-mandate-error">
+                        {{ error }}
+                    </div>
+
+                {% endif %}
+
+
+                <form
+                    method="POST"
+                    class="new-mandate-form"
+                >
+
+                    <div class="new-mandate-field">
+
+                        <label for="name">
+                            Mandate Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Example: 2027/2028"
+                            required
+                        >
+
+                        <small>
+                            Use the official academic-year format.
+                        </small>
+
+                    </div>
+
+
+                    <div class="new-mandate-date-grid">
+
+                        <div class="new-mandate-field">
+
+                            <label for="start_date">
+                                Start Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="start_date"
+                                name="start_date"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="new-mandate-field">
+
+                            <label for="end_date">
+                                End Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="end_date"
+                                name="end_date"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    {% if requires_emergency_reason %}
+
+                        <div class="new-mandate-info-box">
+
+                            <div class="new-mandate-info-icon">
+                                !
+                            </div>
+
+                            <div style="width:100%;">
+
+                                <strong>
+                                    Platform Administrator emergency action
+                                </strong>
+
+                                <p>
+                                    Because this account is not currently the
+                                    President or Vice President, an emergency
+                                    reason is required and will be written to
+                                    the mandate audit log.
+                                </p>
+
+                                <textarea
+                                    name="emergency_reason"
+                                    rows="3"
+                                    required
+                                    placeholder="Explain why emergency mandate creation is necessary."
+                                    style="width:100%; margin-top:10px;"
+                                ></textarea>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="new-mandate-info-box">
+
+                        <div class="new-mandate-info-icon">
+                            i
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                This mandate will be created as DRAFT.
+                            </strong>
+
+                            <p>
+                                Creating it does not replace the current
+                                active mandate. The future board must first
+                                complete the election, HR configuration,
+                                approvals and final activation.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="new-mandate-actions">
+
+                        <a
+                            href="{{ url_for('mandates.mandates') }}"
+                            class="new-mandate-cancel"
+                        >
+                            Cancel
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="new-mandate-submit"
+                        >
+                            Create Draft Mandate
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

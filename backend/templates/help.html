@@ -1,0 +1,1046 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    Help - ORSC CMS
+{% endblock %}
+
+
+{% block content %}
+
+<div class="help-page">
+
+
+    <!-- =========================================
+         HERO
+    ========================================== -->
+
+    <section class="help-hero">
+
+        <div class="help-hero-content">
+
+            <span class="help-label">
+                ORSC CMS SUPPORT
+            </span>
+
+            <h1>
+                How can we help?
+            </h1>
+
+            <p>
+                Find quick guidance for using the ORSC Club
+                Management System and understanding the tools
+                available to your account.
+            </p>
+
+        </div>
+
+
+        <div class="help-hero-decoration">
+
+            <div class="help-orbit help-orbit-one">
+            </div>
+
+            <div class="help-orbit help-orbit-two">
+            </div>
+
+            <div class="help-hero-icon">
+                ?
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         CURRENT ACCESS
+    ========================================== -->
+
+    {% if current_user %}
+
+        <section class="help-access-card">
+
+            <div class="help-access-icon">
+                ♙
+            </div>
+
+
+            <div class="help-access-content">
+
+                <span class="help-access-label">
+                    YOUR ACCESS
+                </span>
+
+                <h2>
+                    {{ current_user["first_name"] }}
+                    {{ current_user["last_name"] }}
+                </h2>
+
+
+                {% if current_user["is_alumni"] %}
+
+                    <p>
+                        You are currently using the CMS as an
+                        <strong>Alumni member</strong>.
+                        Your access is mainly read-only and allows
+                        you to consult selected club information.
+                    </p>
+
+                {% else %}
+
+                    <p>
+                        Your current role is
+                        <strong>
+                            {{ current_user["role_name"] }}
+                        </strong>
+
+                        {% if current_user["department_name"] %}
+                            in the
+                            <strong>
+                                {{ current_user["department_name"] }}
+                            </strong>
+                            department.
+                        {% endif %}
+
+                        The CMS automatically shows only the tools
+                        available to your account.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+    {% endif %}
+
+
+
+    <!-- =========================================
+         QUICK NAVIGATION
+    ========================================== -->
+
+    <section class="help-section">
+
+        <div class="help-section-heading">
+
+            <span class="help-section-label">
+                QUICK GUIDE
+            </span>
+
+            <h2>
+                Explore the CMS
+            </h2>
+
+            <p>
+                Select a section to understand its purpose.
+            </p>
+
+        </div>
+
+
+        <div class="help-guide-grid">
+
+
+            <!-- HOME -->
+
+            <a
+                href="#help-home"
+                class="help-guide-card"
+            >
+
+                <div class="help-guide-icon">
+                    ⌂
+                </div>
+
+                <div>
+
+                    <h3>
+                        Home
+                    </h3>
+
+                    <p>
+                        Your personal overview and upcoming activity.
+                    </p>
+
+                </div>
+
+                <span class="help-guide-arrow">
+                    ↓
+                </span>
+
+            </a>
+
+
+
+            <!-- TASKS -->
+
+            {% if not current_user["is_alumni"] %}
+
+                <a
+                    href="#help-tasks"
+                    class="help-guide-card"
+                >
+
+                    <div class="help-guide-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Tasks
+                        </h3>
+
+                        <p>
+                            Follow assignments, deadlines and progress.
+                        </p>
+
+                    </div>
+
+                    <span class="help-guide-arrow">
+                        ↓
+                    </span>
+
+                </a>
+
+            {% endif %}
+
+
+
+            <!-- ANNOUNCEMENTS -->
+
+            <a
+                href="#help-announcements"
+                class="help-guide-card"
+            >
+
+                <div class="help-guide-icon">
+                    ◇
+                </div>
+
+                <div>
+
+                    <h3>
+                        Announcements
+                    </h3>
+
+                    <p>
+                        Read internal club communications.
+                    </p>
+
+                </div>
+
+                <span class="help-guide-arrow">
+                    ↓
+                </span>
+
+            </a>
+
+
+
+            <!-- ACTIVITIES -->
+
+            <a
+                href="#help-activities"
+                class="help-guide-card"
+            >
+
+                <div class="help-guide-icon">
+                    ◫
+                </div>
+
+                <div>
+
+                    <h3>
+                        Activities
+                    </h3>
+
+                    <p>
+                        Events, trainings, projects and articles.
+                    </p>
+
+                </div>
+
+                <span class="help-guide-arrow">
+                    ↓
+                </span>
+
+            </a>
+
+
+
+            <!-- PROFILE -->
+
+            <a
+                href="#help-profile"
+                class="help-guide-card"
+            >
+
+                <div class="help-guide-icon">
+                    ♙
+                </div>
+
+                <div>
+
+                    <h3>
+                        Profile
+                    </h3>
+
+                    <p>
+                        Manage your personal account information.
+                    </p>
+
+                </div>
+
+                <span class="help-guide-arrow">
+                    ↓
+                </span>
+
+            </a>
+
+
+
+            <!-- SETTINGS -->
+
+            <a
+                href="#help-settings"
+                class="help-guide-card"
+            >
+
+                <div class="help-guide-icon">
+                    ⚙
+                </div>
+
+                <div>
+
+                    <h3>
+                        Settings
+                    </h3>
+
+                    <p>
+                        Personalize your CMS experience.
+                    </p>
+
+                </div>
+
+                <span class="help-guide-arrow">
+                    ↓
+                </span>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         HOME
+    ========================================== -->
+
+    <section
+        class="help-content-card"
+        id="help-home"
+    >
+
+        <div class="help-content-number">
+            01
+        </div>
+
+
+        <div class="help-content-body">
+
+            <span class="help-content-label">
+                HOME
+            </span>
+
+            <h2>
+                Your CMS starting point
+            </h2>
+
+            <p>
+                The Home page gives you a quick overview of the
+                information that matters most to your account.
+            </p>
+
+
+            <div class="help-feature-list">
+
+                <div class="help-feature-item">
+                    <span>✓</span>
+                    <p>
+                        View the next ORSC event.
+                    </p>
+                </div>
+
+
+                {% if not current_user["is_alumni"] %}
+
+                    <div class="help-feature-item">
+                        <span>✓</span>
+                        <p>
+                            View your next assigned task.
+                        </p>
+                    </div>
+
+                    <div class="help-feature-item">
+                        <span>✓</span>
+                        <p>
+                            Check upcoming trainings and meetings.
+                        </p>
+                    </div>
+
+                {% endif %}
+
+
+                <div class="help-feature-item">
+                    <span>✓</span>
+                    <p>
+                        See unread notifications.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         TASKS
+    ========================================== -->
+
+    {% if not current_user["is_alumni"] %}
+
+        <section
+            class="help-content-card"
+            id="help-tasks"
+        >
+
+            <div class="help-content-number">
+                02
+            </div>
+
+
+            <div class="help-content-body">
+
+                <span class="help-content-label">
+                    TASKS
+                </span>
+
+                <h2>
+                    Manage your assignments
+                </h2>
+
+                <p>
+                    The Tasks module is used to organize internal
+                    work and follow the progress of assignments.
+                </p>
+
+
+                <div class="help-feature-list">
+
+                    <div class="help-feature-item">
+                        <span>✓</span>
+                        <p>
+                            View tasks assigned to you.
+                        </p>
+                    </div>
+
+
+                    <div class="help-feature-item">
+                        <span>✓</span>
+                        <p>
+                            Check deadlines and task status.
+                        </p>
+                    </div>
+
+
+                    <div class="help-feature-item">
+                        <span>✓</span>
+                        <p>
+                            Open a task to view its complete details.
+                        </p>
+                    </div>
+
+
+                    <div class="help-feature-item">
+                        <span>✓</span>
+                        <p>
+                            Submit work or attachments when required.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                {% if current_user["role_name"] in [
+                    "SUB_HEAD",
+                    "HEAD",
+                    "PRESIDENT",
+                    "VICE_PRESIDENT"
+                ] %}
+
+                    <div class="help-role-note">
+
+                        <strong>
+                            Management access
+                        </strong>
+
+                        <p>
+                            Your role may also allow you to create
+                            and assign tasks to other members.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+    {% endif %}
+
+
+
+    <!-- =========================================
+         ANNOUNCEMENTS
+    ========================================== -->
+
+    <section
+        class="help-content-card"
+        id="help-announcements"
+    >
+
+        <div class="help-content-number">
+
+            {% if current_user["is_alumni"] %}
+                02
+            {% else %}
+                03
+            {% endif %}
+
+        </div>
+
+
+        <div class="help-content-body">
+
+            <span class="help-content-label">
+                ANNOUNCEMENTS
+            </span>
+
+            <h2>
+                Stay informed
+            </h2>
+
+            <p>
+                Announcements are used for internal communication
+                between ORSC members.
+            </p>
+
+
+            <div class="help-feature-list">
+
+                <div class="help-feature-item">
+                    <span>✓</span>
+                    <p>
+                        Read club announcements.
+                    </p>
+                </div>
+
+
+                <div class="help-feature-item">
+                    <span>✓</span>
+                    <p>
+                        Identify unread announcements.
+                    </p>
+                </div>
+
+
+                {% if not current_user["is_alumni"] %}
+
+                    <div class="help-feature-item">
+                        <span>✓</span>
+                        <p>
+                            Create announcements when permitted.
+                        </p>
+                    </div>
+
+                {% endif %}
+
+
+                {% if
+                    not current_user["is_alumni"]
+                    and (
+                        current_user["department_id"] == 1
+                        or current_user["role_name"] in [
+                            "PRESIDENT",
+                            "VICE_PRESIDENT"
+                        ]
+                    )
+                %}
+
+                    <div class="help-feature-item">
+                        <span>✓</span>
+                        <p>
+                            Authorized HR and Presidency accounts can
+                            also manage messages received from guests.
+                        </p>
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         ACTIVITIES
+    ========================================== -->
+
+    <section
+        class="help-content-card"
+        id="help-activities"
+    >
+
+        <div class="help-content-number">
+
+            {% if current_user["is_alumni"] %}
+                03
+            {% else %}
+                04
+            {% endif %}
+
+        </div>
+
+
+        <div class="help-content-body">
+
+            <span class="help-content-label">
+                CLUB ACTIVITIES
+            </span>
+
+            <h2>
+                Follow ORSC activities
+            </h2>
+
+            <p>
+                Several CMS modules are dedicated to the academic,
+                scientific and organizational activities of the club.
+            </p>
+
+
+            <div class="help-module-grid">
+
+
+                <div class="help-module">
+
+                    <span>
+                        ☆
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Trainings
+                        </h3>
+
+                        <p>
+                            View upcoming and past training sessions,
+                            coaches and related information.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="help-module">
+
+                    <span>
+                        ◫
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Events
+                        </h3>
+
+                        <p>
+                            Consult ORSC events, dates, locations
+                            and event details.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="help-module">
+
+                    <span>
+                        ◇
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Projects
+                        </h3>
+
+                        <p>
+                            Follow internal IT and optimization
+                            projects developed by club members.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="help-module">
+
+                    <span>
+                        ▥
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Articles
+                        </h3>
+
+                        <p>
+                            Explore scientific articles and research
+                            work produced inside ORSC.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         PROFILE
+    ========================================== -->
+
+    <section
+        class="help-content-card"
+        id="help-profile"
+    >
+
+        <div class="help-content-number">
+
+            {% if current_user["is_alumni"] %}
+                04
+            {% else %}
+                05
+            {% endif %}
+
+        </div>
+
+
+        <div class="help-content-body">
+
+            <span class="help-content-label">
+                PROFILE
+            </span>
+
+            <h2>
+                Manage your information
+            </h2>
+
+            <p>
+                Your profile contains the personal and professional
+                information associated with your ORSC account.
+            </p>
+
+
+            <div class="help-feature-list">
+
+                <div class="help-feature-item">
+                    <span>✓</span>
+
+                    <p>
+                        View your personal information.
+                    </p>
+                </div>
+
+
+                <div class="help-feature-item">
+                    <span>✓</span>
+
+                    <p>
+                        Add or update your profile photo.
+                    </p>
+                </div>
+
+
+                <div class="help-feature-item">
+                    <span>✓</span>
+
+                    <p>
+                        Update available contact and social links.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         SETTINGS
+    ========================================== -->
+
+    <section
+        class="help-content-card"
+        id="help-settings"
+    >
+
+        <div class="help-content-number">
+
+            {% if current_user["is_alumni"] %}
+                05
+            {% else %}
+                06
+            {% endif %}
+
+        </div>
+
+
+        <div class="help-content-body">
+
+            <span class="help-content-label">
+                SETTINGS
+            </span>
+
+            <h2>
+                Personalize your account
+            </h2>
+
+            <p>
+                Settings allow you to manage account preferences
+                and security options.
+            </p>
+
+
+            <div class="help-feature-list">
+
+                <div class="help-feature-item">
+                    <span>✓</span>
+
+                    <p>
+                        Switch between Light and Dark mode.
+                    </p>
+                </div>
+
+
+                <div class="help-feature-item">
+                    <span>✓</span>
+
+                    <p>
+                        Change your password.
+                    </p>
+                </div>
+
+
+                <div class="help-feature-item">
+                    <span>✓</span>
+
+                    <p>
+                        Review available account preferences.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         SEARCH + NOTIFICATIONS
+    ========================================== -->
+
+    <section class="help-tools-section">
+
+        <div class="help-section-heading">
+
+            <span class="help-section-label">
+                TOPBAR TOOLS
+            </span>
+
+            <h2>
+                Useful shortcuts
+            </h2>
+
+        </div>
+
+
+        <div class="help-tools-grid">
+
+
+            <div class="help-tool-card">
+
+                <div class="help-tool-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        class="topbar-svg-icon"
+                    >
+                        <circle
+                            cx="11"
+                            cy="11"
+                            r="6.5"
+                        ></circle>
+
+                        <path
+                            d="M16 16L21 21"
+                        ></path>
+                    </svg>
+
+                </div>
+
+                <h3>
+                    CMS Search
+                </h3>
+
+                <p>
+                    Use the search field in the topbar to quickly
+                    find a page available to your account.
+                </p>
+
+            </div>
+
+
+
+            <div class="help-tool-card">
+
+                <div class="help-tool-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        class="topbar-svg-icon"
+                    >
+                        <path
+                            d="
+                                M18 8
+                                A6 6 0 0 0 6 8
+                                C6 15 3.5 16.5 3.5 16.5
+                                H20.5
+                                C20.5 16.5 18 15 18 8
+                            "
+                        ></path>
+
+                        <path
+                            d="
+                                M9.5 19
+                                C10 20.5 14 20.5 14.5 19
+                            "
+                        ></path>
+                    </svg>
+
+                </div>
+
+                <h3>
+                    Notifications
+                </h3>
+
+                <p>
+                    The notification icon alerts you when something
+                    in the CMS requires your attention.
+                </p>
+
+            </div>
+
+
+
+            <div class="help-tool-card">
+
+                <div class="help-tool-icon">
+                    ☾
+                </div>
+
+                <h3>
+                    Theme
+                </h3>
+
+                <p>
+                    Switch instantly between Light and Dark mode
+                    from the topbar.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         SUPPORT
+    ========================================== -->
+
+    <section class="help-support-card">
+
+        <div>
+
+            <span class="help-section-label">
+                STILL NEED HELP?
+            </span>
+
+            <h2>
+                Contact your ORSC administration
+            </h2>
+
+            <p>
+                If you experience an account, permission or CMS
+                problem that is not explained here, contact the
+                responsible ORSC administration team.
+            </p>
+
+        </div>
+
+
+        <a
+            href="mailto:crorsclub@gmail.com"
+            class="help-support-button"
+        >
+            crorsclub@gmail.com
+
+            <span>
+                →
+            </span>
+        </a>
+
+    </section>
+
+</div>
+
+{% endblock %}

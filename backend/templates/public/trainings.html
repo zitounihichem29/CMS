@@ -1,0 +1,590 @@
+{% extends "public/base_public.html" %}
+
+{% block title %}
+Trainings | ORSC
+{% endblock %}
+
+{% block content %}
+
+<div class="public-trainings-page">
+
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <section class="public-trainings-hero">
+
+        <div class="public-trainings-hero-inner">
+
+            <span class="public-section-label">
+                LEARN • PRACTICE • GROW
+            </span>
+
+            <h1>
+                Trainings
+            </h1>
+
+            <p>
+                Learn practical skills, explore new technologies
+                and grow through workshops led by members,
+                professionals and invited coaches.
+            </p>
+
+        </div>
+
+        <div class="public-trainings-hero-visual">
+
+            <div class="training-orbit training-orbit-one"></div>
+            <div class="training-orbit training-orbit-two"></div>
+
+            <div class="training-hero-symbol">
+                <span>OR</span>
+                <strong>LEARN</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         UPCOMING TRAININGS
+         ===================================================== -->
+
+    <section class="public-trainings-section">
+
+        <div class="public-trainings-section-header">
+
+            <div>
+
+                <span class="public-section-label">
+                    WHAT'S NEXT
+                </span>
+
+                <h2>
+                    Upcoming Trainings
+                </h2>
+
+            </div>
+
+            <span class="public-training-count">
+                {{ upcoming_trainings|length }}
+            </span>
+
+        </div>
+
+
+        {% if upcoming_trainings %}
+
+            <div class="public-upcoming-trainings">
+
+                {% for training in upcoming_trainings %}
+
+                    <button
+                        type="button"
+                        class="
+                            public-training-card
+                            public-training-open
+                            {% if loop.first %}
+                                public-training-featured
+                            {% endif %}
+                        "
+                    >
+
+                        <!-- IMAGE -->
+
+                        <div class="public-training-image">
+
+                            {% if training["cover_media_id"] %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'public.public_training_media',
+                                        training_media_id=training['cover_media_id']
+                                    ) }}"
+                                    alt="{{ training['title'] }}"
+                                >
+
+                            {% else %}
+
+                                <div class="public-training-placeholder">
+
+                                    <span>
+                                        ORSC
+                                    </span>
+
+                                    <strong>
+                                        TRAINING
+                                    </strong>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <span class="public-training-status upcoming">
+                                Upcoming
+                            </span>
+
+                        </div>
+
+
+                        <!-- CONTENT -->
+
+                        <div class="public-training-card-content">
+
+                            <div class="public-training-card-top">
+
+                                <span class="public-training-date">
+
+                                    {% if training["training_date"] %}
+
+                                        {{ training["training_date"] }}
+
+                                    {% else %}
+
+                                        Date TBD
+
+                                    {% endif %}
+
+                                </span>
+
+                                <span class="public-training-arrow">
+                                    ↗
+                                </span>
+
+                            </div>
+
+
+                            <h3>
+                                {{ training["title"] }}
+                            </h3>
+
+
+                            <div class="public-training-coach">
+
+                                <span>
+                                    Coach
+                                </span>
+
+                                <strong>
+                                    {{ training["coach_first_name"] }}
+                                    {{ training["coach_last_name"] }}
+                                </strong>
+
+                            </div>
+
+
+                            {% if training["location"] %}
+
+                                <p class="public-training-location">
+                                    {{ training["location"] }}
+                                </p>
+
+                            {% endif %}
+
+
+                            <!-- MODAL DATA -->
+
+                            <div
+                                class="public-training-hidden-data"
+                                hidden
+                            >
+
+                                <span class="training-data-title">
+                                    {{ training["title"] }}
+                                </span>
+
+                                <span class="training-data-description">
+                                    {{ training["description"] or "" }}
+                                </span>
+
+                                <span class="training-data-coach">
+                                    {{ training["coach_first_name"] }}
+                                    {{ training["coach_last_name"] }}
+                                </span>
+
+                                <span class="training-data-profession">
+                                    {{ training["coach_profession"] or "" }}
+                                </span>
+
+                                <span class="training-data-date">
+                                    {{ training["training_date"] or "" }}
+                                </span>
+
+                                <span class="training-data-start">
+                                    {{ training["start_time"] or "" }}
+                                </span>
+
+                                <span class="training-data-end">
+                                    {{ training["end_time"] or "" }}
+                                </span>
+
+                                <span class="training-data-location">
+                                    {{ training["location"] or "" }}
+                                </span>
+
+                                <span class="training-data-term">
+                                    {{ training["term_names"] or "" }}
+                                </span>
+
+                                <span class="training-data-image">
+
+                                    {% if training["cover_media_id"] %}
+
+                                        {{ url_for(
+                                            'public.public_training_media',
+                                            training_media_id=training['cover_media_id']
+                                        ) }}
+
+                                    {% endif %}
+
+                                </span>
+
+                                <span class="training-data-registration">
+                                     {{ training["registration_link"] or "" }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </button>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="public-training-empty">
+
+                <span>
+                    LEARNING CONTINUES
+                </span>
+
+                <h3>
+                    No upcoming trainings yet
+                </h3>
+
+                <p>
+                    New learning sessions will appear here
+                    once they are scheduled.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- =====================================================
+         PAST TRAININGS
+         ===================================================== -->
+
+    <section class="public-trainings-section public-past-trainings-section">
+
+        <div class="public-trainings-section-header">
+
+            <div>
+
+                <span class="public-section-label">
+                    PREVIOUS SESSIONS
+                </span>
+
+                <h2>
+                    Past Trainings
+                </h2>
+
+            </div>
+
+            <span class="public-training-count">
+                {{ past_trainings|length }}
+            </span>
+
+        </div>
+
+
+        {% if past_trainings %}
+
+            <div class="public-past-trainings-grid">
+
+                {% for training in past_trainings %}
+
+                    <article
+                        class="
+                            public-training-card
+                            public-training-past-card
+                        "
+                    >
+
+                        <div class="public-training-image">
+
+                            {% if training["cover_media_id"] %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'public.public_training_media',
+                                        training_media_id=training['cover_media_id']
+                                    ) }}"
+                                    alt="{{ training['title'] }}"
+                                >
+
+                            {% else %}
+
+                                <div class="public-training-placeholder">
+
+                                    <span>
+                                        ORSC
+                                    </span>
+
+                                    <strong>
+                                        TRAINING
+                                    </strong>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <span class="public-training-status completed">
+                                Completed
+                            </span>
+
+                        </div>
+
+
+                        <div class="public-training-card-content">
+
+                            <div class="public-training-card-top">
+
+                                <span class="public-training-date">
+
+                                    {% if training["training_date"] %}
+
+                                        {{ training["training_date"] }}
+
+                                    {% else %}
+
+                                        Date unavailable
+
+                                    {% endif %}
+
+                                </span>
+
+                                <span class="public-training-arrow">
+                                    ↗
+                                </span>
+
+                            </div>
+
+
+                            <h3>
+                                {{ training["title"] }}
+                            </h3>
+
+
+                            <div class="public-training-coach">
+
+                                <span>
+                                    Coach
+                                </span>
+
+                                <strong>
+                                    {{ training["coach_first_name"] }}
+                                    {{ training["coach_last_name"] }}
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="public-training-empty">
+
+                <h3>
+                    No past trainings yet
+                </h3>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- =====================================================
+         TRAINING MODAL
+         ===================================================== -->
+
+    <div
+        class="public-training-modal"
+        id="publicTrainingModal"
+        aria-hidden="true"
+    >
+
+        <div class="public-training-modal-overlay"></div>
+
+
+        <div class="public-training-modal-card">
+
+            <button
+                type="button"
+                class="public-training-modal-close"
+                id="publicTrainingModalClose"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+
+            <div
+                class="public-training-modal-image"
+                id="publicTrainingModalImage"
+            >
+            </div>
+
+
+            <div class="public-training-modal-content">
+
+                <span class="public-section-label">
+                    ORSC TRAINING
+                </span>
+
+                <h2 id="publicTrainingModalTitle">
+                </h2>
+
+
+                <p
+                    class="public-training-modal-description"
+                    id="publicTrainingModalDescription"
+                >
+                </p>
+
+
+                <div class="public-training-modal-info">
+
+
+                    <div>
+
+                        <span>
+                            Coach
+                        </span>
+
+                        <strong id="publicTrainingModalCoach">
+                        </strong>
+
+                        <small id="publicTrainingModalProfession">
+                        </small>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Date
+                        </span>
+
+                        <strong id="publicTrainingModalDate">
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Time
+                        </span>
+
+                        <strong id="publicTrainingModalTime">
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Location
+                        </span>
+
+                        <strong id="publicTrainingModalLocation">
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Term
+                        </span>
+
+                        <strong id="publicTrainingModalTerm">
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+                <div
+                    class="public-training-registration"
+                    id="publicTrainingRegistration"
+                >
+
+                    <div class="public-training-registration-text">
+
+                        <span>
+                            REGISTRATION
+                        </span>
+
+                        <strong>
+                            Interested in this training?
+                        </strong>
+
+                        <p>
+                            Complete the registration form to participate
+                            in this training session.
+                        </p>
+
+                    </div>
+
+
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="public-training-register-button" id="publicTrainingRegisterButton">
+
+                        Register Now
+                        <span>
+                            ↗
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

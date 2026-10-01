@@ -1,0 +1,476 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ department["name"] }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="department-detail-page">
+
+
+    <!-- =====================================================
+         BACK
+    ====================================================== -->
+
+    <a
+        href="{{ url_for('departments.departments') }}"
+        class="department-back"
+    >
+        ← Back to Departments
+    </a>
+
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <section class="department-detail-header">
+
+        <div class="department-detail-icon">
+            ▤
+        </div>
+
+
+        <div class="department-detail-heading">
+
+            <span class="department-detail-label">
+                ORSC DEPARTMENT
+            </span>
+
+            <h1>
+                {{ department["name"] }}
+            </h1>
+
+            <p>
+                {{
+                    department["description"]
+                    or
+                    "No description available."
+                }}
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         INFORMATION CARDS
+    ====================================================== -->
+
+    <section class="department-detail-grid">
+
+
+        <!-- =================================================
+             HEAD
+        ================================================== -->
+
+        <div class="department-info-card">
+
+            <div class="department-info-icon">
+                ♙
+            </div>
+
+
+            <div class="department-info-content">
+
+                <span class="department-info-label">
+                    Department Head
+                </span>
+
+
+                {% if department_head %}
+
+                    <div class="department-info-person">
+
+                        <div class="department-info-avatar">
+
+                            {% if department_head["profile_photo"] %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'profile.profile_photo',
+                                        filename=department_head['profile_photo']
+                                    ) }}"
+                                    alt="Department Head"
+                                >
+
+                            {% else %}
+
+                                <span>
+                                    {{ department_head["first_name"][0] }}
+                                    {{ department_head["last_name"][0] }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                {{ department_head["first_name"] }}
+                                {{ department_head["last_name"] }}
+                            </strong>
+
+                            <span class="department-info-role">
+                                HEAD
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                {% else %}
+
+                    <strong>
+                        Not assigned
+                    </strong>
+
+                    <span class="department-info-role">
+                        HEAD
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             SUB HEAD
+        ================================================== -->
+
+        <div class="department-info-card">
+
+            <div class="department-info-icon">
+                ◇
+            </div>
+
+
+            <div class="department-info-content">
+
+                <span class="department-info-label">
+                    Department Sub-Head
+                </span>
+
+
+                {% if department_sub_head %}
+
+                    <div class="department-info-person">
+
+                        <div class="department-info-avatar">
+
+                            {% if department_sub_head["profile_photo"] %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'profile.profile_photo',
+                                        filename=department_sub_head['profile_photo']
+                                    ) }}"
+                                    alt="Department Sub-Head"
+                                >
+
+                            {% else %}
+
+                                <span>
+                                    {{ department_sub_head["first_name"][0] }}
+                                    {{ department_sub_head["last_name"][0] }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                {{ department_sub_head["first_name"] }}
+                                {{ department_sub_head["last_name"] }}
+                            </strong>
+
+                            <span class="department-info-role">
+                                SUB_HEAD
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                {% else %}
+
+                    <strong>
+                        Not assigned
+                    </strong>
+
+                    <span class="department-info-role">
+                        SUB_HEAD
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             MEMBERS
+        ================================================== -->
+
+        <div class="department-info-card">
+
+            <div class="department-info-icon">
+                ◎
+            </div>
+
+
+            <div class="department-info-content">
+
+                <span class="department-info-label">
+                    Members
+                </span>
+
+                <strong class="department-info-number">
+                    {{ total_members }}
+                </strong>
+
+                <span class="department-info-role">
+                    Current mandate
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ABOUT
+    ====================================================== -->
+
+    <section class="department-detail-section">
+
+
+        <div class="department-section-header">
+
+            <div>
+
+                <span class="department-section-label">
+                    DEPARTMENT OVERVIEW
+                </span>
+
+                <h2>
+                    About this department
+                </h2>
+
+                <p>
+                    Learn more about the role of this department
+                    inside ORSC.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="department-description-box">
+
+            <p>
+                {{
+                    department["description"]
+                    or
+                    "No description is currently available for this department."
+                }}
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MEMBERS
+    ====================================================== -->
+
+    <section class="department-detail-section">
+
+
+        <div class="department-section-header">
+
+            <div>
+
+                <span class="department-section-label">
+                    DEPARTMENT MEMBERS
+                </span>
+
+                <h2>
+                    Current team
+                </h2>
+
+                <p>
+                    Members assigned to this department
+                    during the current mandate.
+                </p>
+
+            </div>
+
+
+            <div class="department-members-count">
+
+                <span>
+                    Total
+                </span>
+
+                <strong>
+                    {{ total_members }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        {% if department_members %}
+
+
+            <div class="department-members-grid">
+
+
+                {% for member in department_members %}
+
+
+                    <div class="department-member-card">
+
+
+                        <!-- AVATAR -->
+
+                        <div class="department-member-avatar">
+
+                            {% if member["profile_photo"] %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'profile.profile_photo',
+                                        filename=member['profile_photo']
+                                    ) }}"
+                                    alt="{{ member['first_name'] }} {{ member['last_name'] }}"
+                                >
+
+                            {% else %}
+
+                                <span>
+                                    {{ member["first_name"][0] }}
+                                    {{ member["last_name"][0] }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- INFO -->
+
+                        <div class="department-member-info">
+
+                            <strong>
+                                {{ member["first_name"] }}
+                                {{ member["last_name"] }}
+                            </strong>
+
+
+                            <span
+                                class="
+                                    department-member-role
+
+                                    {% if member['role_name'] == 'HEAD' %}
+                                        head
+                                    {% elif member['role_name'] == 'SUB_HEAD' %}
+                                        sub-head
+                                    {% elif member['role_name'] == 'PRESIDENT' %}
+                                        president
+                                    {% elif member['role_name'] == 'VICE_PRESIDENT' %}
+                                        vice-president
+                                    {% else %}
+                                        member
+                                    {% endif %}
+                                "
+                            >
+
+                                {% if member["role_name"] == "SUB_HEAD" %}
+
+                                    SUB-HEAD
+
+                                {% elif member["role_name"] == "VICE_PRESIDENT" %}
+
+                                    VICE PRESIDENT
+
+                                {% else %}
+
+                                    {{ member["role_name"] }}
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <div class="department-empty-section">
+
+                <div class="department-empty-icon">
+                    ♙
+                </div>
+
+                <h3>
+                    No members to display
+                </h3>
+
+                <p>
+                    Department members will appear here
+                    once they are assigned.
+                </p>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</div>
+
+{% endblock %}

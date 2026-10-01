@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Relationship
+{% endblock %}
+
+
+{% block content %}
+
+<div class="new-organization-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="organization-form-header">
+
+        <div>
+
+            <span class="organizations-label">
+                EXTERNAL RELATIONS
+            </span>
+
+            <h1>
+                Edit Relationship
+            </h1>
+
+            <p>
+                Update the relationship between ORSC and
+                <strong>{{ organization["name"] }}</strong>.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for(
+                'organizations.organization_detail',
+                organization_id=organization['organization_id']
+            ) }}"
+            class="btn-secondary"
+        >
+            Back
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         FORM
+         ======================================== -->
+
+    <form
+        method="POST"
+        class="organization-form"
+    >
+
+        <div class="organization-form-section">
+
+
+            <div class="organization-form-section-header">
+
+                <span class="organization-form-number">
+                    01
+                </span>
+
+                <div>
+
+                    <h2>
+                        Relationship Information
+                    </h2>
+
+                    <p>
+                        Modify this relationship without affecting the other academic years.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ACADEMIC YEAR -->
+
+            <div class="organization-form-group">
+
+                <label for="term_id">
+                    Academic Year *
+                </label>
+
+                <select
+                    id="term_id"
+                    name="term_id"
+                    required
+                >
+
+                    {% for term in terms %}
+
+                        <option
+                            value="{{ term['term_id'] }}"
+                            {% if term["term_id"] == relation["term_id"] %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ term["name"] }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+
+            <!-- RELATION TYPE -->
+
+            <div class="organization-form-group">
+
+                <label for="relation_type">
+                    Relation Type *
+                </label>
+
+                <select
+                    id="relation_type"
+                    name="relation_type"
+                    required
+                >
+
+                    <option
+                        value="sponsor"
+                        {% if relation["relation_type"] == "sponsor" %}
+                            selected
+                        {% endif %}
+                    >
+                        Sponsor
+                    </option>
+
+                    <option
+                        value="partner"
+                        {% if relation["relation_type"] == "partner" %}
+                            selected
+                        {% endif %}
+                    >
+                        Partner
+                    </option>
+
+                    <option
+                        value="collaboration"
+                        {% if relation["relation_type"] == "collaboration" %}
+                            selected
+                        {% endif %}
+                    >
+                        Collaboration
+                    </option>
+
+                    <option
+                        value="other"
+                        {% if relation["relation_type"] == "other" %}
+                            selected
+                        {% endif %}
+                    >
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- START DATE -->
+
+            <div class="organization-form-group">
+
+                <label for="start_date">
+                    Start Date
+                </label>
+
+                <input
+                    type="date"
+                    id="start_date"
+                    name="start_date"
+                    value="{{ relation['start_date'] or '' }}"
+                >
+
+            </div>
+
+
+
+            <!-- END DATE -->
+
+            <div class="organization-form-group">
+
+                <label for="end_date">
+                    End Date
+                </label>
+
+                <input
+                    type="date"
+                    id="end_date"
+                    name="end_date"
+                    value="{{ relation['end_date'] or '' }}"
+                >
+
+            </div>
+
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="organization-form-group organization-form-full">
+
+                <label for="description">
+                    Relation Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="4"
+                >{{ relation["description"] or "" }}</textarea>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             ACTIONS
+             ======================================== -->
+
+        <div class="organization-form-actions">
+
+            <a
+                href="{{ url_for(
+                    'organizations.organization_detail',
+                    organization_id=organization['organization_id']
+                ) }}"
+                class="btn-secondary"
+            >
+                Cancel
+            </a>
+
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Save Changes
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

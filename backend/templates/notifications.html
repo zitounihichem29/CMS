@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="notifications-page">
+
+    <div class="notifications-header">
+
+        <div>
+            <span class="notifications-label">
+                NOTIFICATIONS
+            </span>
+
+            <h1>Notifications</h1>
+
+            <p>
+                Stay updated with your latest tasks and announcements.
+            </p>
+        </div>
+
+        {% if notifications %}
+            <form
+                method="POST"
+                action="{{ url_for('notifications.mark_all_as_read') }}"
+            >
+                <button type="submit">
+                    Mark all as read
+                </button>
+            </form>
+        {% endif %}
+
+    </div>
+
+
+    <div class="notifications-list">
+
+        {% if notifications %}
+
+            {% for notification in notifications %}
+
+                <a
+                    href="{{ url_for(
+                        'notifications.open_notification',
+                        notification_id=notification['notification_id']
+                    ) }}"
+                    class="
+                        notification-card
+                        {% if not notification['is_read'] %}
+                            notification-unread
+                        {% else %}
+                            notification-read
+                        {% endif %}
+                    "
+                >
+
+                    <div class="notification-icon">
+
+                        {% if notification["notification_type"] == "task" %}
+                            ✓
+                        {% elif notification["notification_type"] == "announcement" %}
+                            !
+                        {% else %}
+                            •
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="notification-content">
+
+                        <div class="notification-top">
+
+                            <h2>
+                                {{ notification["title"] }}
+                            </h2>
+
+                            {% if not notification["is_read"] %}
+                                <span class="notification-new">
+                                    New
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+
+                        <p>
+                            {{ notification["message"] }}
+                        </p>
+
+
+                        <span class="notification-date">
+                            {{ notification["created_at"] }}
+                        </span>
+
+                    </div>
+
+                </a>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="notifications-empty">
+
+                <h2>No notifications</h2>
+
+                <p>
+                    You don't have any notifications yet.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

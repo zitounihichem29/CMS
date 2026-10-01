@@ -1,0 +1,870 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Person
+{% endblock %}
+
+{% block content %}
+
+<div class="add-person-page">
+
+    <div class="member-form-header">
+
+        <div>
+
+            <span class="members-label">
+                ORSC MEMBERS
+            </span>
+
+            <h1>
+                Add Person
+            </h1>
+
+            <p>
+                Add a member, coach or alumni to the club database.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('members.members') }}"
+            class="btn-secondary"
+        >
+            Back to Members
+        </a>
+
+    </div>
+
+
+    <form
+        method="POST"
+        class="member-form"
+    >
+
+        <!-- ========================================
+             PERSON TYPE
+             ======================================== -->
+
+        <div class="member-form-group">
+
+            <label>
+                Person type *
+            </label>
+
+            <div class="person-type-options">
+
+                <label>
+                    <input
+                        type="radio"
+                        name="person_type"
+                        value="member"
+                        checked
+                    >
+                    Member
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="person_type"
+                        value="coach"
+                    >
+                    Coach
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="person_type"
+                        value="alumni"
+                    >
+                    Alumni
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================
+             PERSONAL INFORMATION
+             ======================================== -->
+
+        <div class="member-form-group">
+
+            <label for="first_name">
+                First name *
+            </label>
+
+            <input
+                type="text"
+                id="first_name"
+                name="first_name"
+                required
+            >
+
+        </div>
+
+
+        <div class="member-form-group">
+
+            <label for="last_name">
+                Last name *
+            </label>
+
+            <input
+                type="text"
+                id="last_name"
+                name="last_name"
+                required
+            >
+
+        </div>
+
+
+        <div class="member-form-group">
+
+            <label for="date_of_birth">
+                Date of birth
+            </label>
+
+            <input
+                type="date"
+                id="date_of_birth"
+                name="date_of_birth"
+            >
+
+        </div>
+
+
+        <div class="member-form-group">
+
+            <label for="phone">
+                Phone
+            </label>
+
+            <input
+                type="text"
+                id="phone"
+                name="phone"
+            >
+
+        </div>
+
+
+        <div class="member-form-group">
+
+            <label for="email">
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+            >
+
+        </div>
+
+
+        <div class="member-form-group">
+
+            <label for="university">
+                University
+            </label>
+
+            <input
+                type="text"
+                id="university"
+                name="university"
+            >
+
+        </div>
+
+
+        <div class="member-form-group">
+
+            <label for="faculty">
+                Faculty
+            </label>
+
+            <input
+                type="text"
+                id="faculty"
+                name="faculty"
+            >
+
+        </div>
+
+
+        <div class="member-form-group">
+
+            <label for="profession">
+                Profession
+            </label>
+
+            <input
+                type="text"
+                id="profession"
+                name="profession"
+            >
+
+        </div>
+
+
+        <div class="member-form-group">
+
+            <label for="bio">
+                Bio
+            </label>
+
+            <textarea
+                id="bio"
+                name="bio"
+                rows="5"
+            ></textarea>
+
+        </div>
+
+
+        <!-- ========================================
+             SOCIAL LINKS
+             ======================================== -->
+
+        <div class="member-form-group">
+
+            <label for="linkedin">
+                LinkedIn
+            </label>
+
+            <input
+                type="text"
+                id="linkedin"
+                name="linkedin"
+            >
+
+        </div>
+
+
+        <div class="member-form-group">
+
+            <label for="facebook">
+                Facebook
+            </label>
+
+            <input
+                type="text"
+                id="facebook"
+                name="facebook"
+            >
+
+        </div>
+
+
+        <div class="member-form-group">
+
+            <label for="discord">
+                Discord
+            </label>
+
+            <input
+                type="text"
+                id="discord"
+                name="discord"
+            >
+
+        </div>
+
+
+        <div class="member-form-group">
+
+            <label for="github">
+                GitHub
+            </label>
+
+            <input
+                type="text"
+                id="github"
+                name="github"
+            >
+
+        </div>
+
+
+        <!-- ========================================
+             MEMBER ONLY
+             ======================================== -->
+
+        <div
+            id="member-fields"
+            class="person-specific-fields"
+        >
+
+            <div class="member-form-group">
+
+                <label for="department_id">
+                    Department *
+                </label>
+
+                <select
+                    id="department_id"
+                    name="department_id"
+                >
+
+                    <option value="">
+                        Select a department
+                    </option>
+
+                    {% for department in departments %}
+
+                        <option value="{{ department['department_id'] }}">
+                            {{ department["name"] }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="member-form-group">
+
+                <label>
+                    Role
+                </label>
+
+                <input
+                    type="text"
+                    value="MEMBER"
+                    disabled
+                >
+
+                <small>
+                    New members are automatically added with the MEMBER role.
+                </small>
+
+            </div>
+
+        </div>
+
+
+                <!-- ========================================
+             MEMBER CMS ACCOUNT OPTION
+             ======================================== -->
+
+        <div
+            id="member-account-option"
+            class="person-specific-fields"
+        >
+
+            <div class="member-form-group">
+
+                <label class="member-account-checkbox">
+
+                    <input
+                        type="checkbox"
+                        id="create_account"
+                        name="create_account"
+                        value="1"
+                    >
+
+                    <span>
+                        Create a CMS account for this member
+                    </span>
+
+                </label>
+
+                <small>
+                    Leave this unchecked when you only want
+                    to register the member in the mandate
+                    history.
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================
+             CMS ACCOUNT
+             Optional for Member
+             Required for Alumni
+             ======================================== -->
+
+        <div
+            id="account-fields"
+            class="person-specific-fields"
+            style="display: none;"
+        >
+
+            <div class="member-form-group">
+
+                <label for="username">
+                    Username *
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    autocomplete="username"
+                >
+
+            </div>
+
+
+            <div class="member-form-group">
+
+                <label for="password">
+                    Temporary password *
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    autocomplete="new-password"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================
+             COACH INFORMATION
+             ======================================== -->
+
+        <div
+            id="coach-info"
+            style="display: none;"
+        >
+
+            <p>
+                A coach will be stored in the database without a user account
+                and without a club membership.
+            </p>
+
+        </div>
+
+
+
+        <!-- ========================================
+        ALUMNI INFORMATION
+         ======================================== -->
+
+        <div id="alumni-info" style="display: none;">
+
+            <div class="member-form-group">
+
+                <label for="alumni_term_id">
+                    Mandate *
+                </label>
+
+                <select id="alumni_term_id" name="alumni_term_id">
+
+                    <option value="">
+                        Select a mandate
+                    </option>
+
+                    {% for term in past_terms %}
+
+                    <option value="{{ term['term_id'] }}">
+                        {{ term["name"] }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="member-form-group">
+
+                <label for="alumni_department_id">
+                    Department *
+                </label>
+
+                <select id="alumni_department_id" name="alumni_department_id">
+
+                    <option value="">
+                        Select a department
+                    </option>
+
+                    {% for department in departments %}
+
+                    <option value="{{ department['department_id'] }}">
+                        {{ department["name"] }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="member-form-group">
+
+                <label for="alumni_role_id">
+                    Role *
+                </label>
+
+                <select id="alumni_role_id" name="alumni_role_id">
+
+                    <option value="">
+                        Select a role
+                    </option>
+
+                    {% for role in roles %}
+
+                    <option value="{{ role['role_id'] }}">
+                        {{ role["name"] }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================
+             ACTIONS
+             ======================================== -->
+
+        <div class="member-form-actions">
+
+            <a
+                href="{{ url_for('members.members') }}"
+                class="btn-secondary"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Add Person
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<script>
+
+    const typeInputs =
+        document.querySelectorAll(
+            'input[name="person_type"]'
+        );
+
+    const memberFields =
+        document.getElementById(
+            "member-fields"
+        );
+
+    const memberAccountOption =
+        document.getElementById(
+            "member-account-option"
+        );
+
+    const createAccount =
+        document.getElementById(
+            "create_account"
+        );
+
+    const accountFields =
+        document.getElementById(
+            "account-fields"
+        );
+
+    const coachInfo =
+        document.getElementById(
+            "coach-info"
+        );
+
+    const alumniInfo =
+        document.getElementById(
+            "alumni-info"
+        );
+
+    const department =
+        document.getElementById(
+            "department_id"
+        );
+
+    const username =
+        document.getElementById(
+            "username"
+        );
+
+    const password =
+        document.getElementById(
+            "password"
+        );
+
+    const alumniTerm =
+        document.getElementById(
+            "alumni_term_id"
+        );
+
+    const alumniDepartment =
+        document.getElementById(
+            "alumni_department_id"
+        );
+
+    const alumniRole =
+        document.getElementById(
+            "alumni_role_id"
+        );
+
+
+        function updateAccountFields() {
+
+        const selectedType =
+            document.querySelector(
+                'input[name="person_type"]:checked'
+            ).value;
+
+
+        // ==========================================
+        // MEMBER
+        // ==========================================
+
+        if (selectedType === "member") {
+
+            const wantsAccount =
+                createAccount.checked;
+
+
+            if (wantsAccount) {
+
+                accountFields.style.display =
+                    "block";
+
+                username.disabled = false;
+                password.disabled = false;
+
+                username.required = true;
+                password.required = true;
+
+            }
+
+            else {
+
+                accountFields.style.display =
+                    "none";
+
+                username.required = false;
+                password.required = false;
+
+                username.disabled = true;
+                password.disabled = true;
+
+                username.value = "";
+                password.value = "";
+
+            }
+
+        }
+
+
+        // ==========================================
+        // ALUMNI
+        // ==========================================
+
+        else if (
+            selectedType === "alumni"
+        ) {
+
+            accountFields.style.display =
+                "block";
+
+            username.disabled = false;
+            password.disabled = false;
+
+            username.required = true;
+            password.required = true;
+
+        }
+
+
+        // ==========================================
+        // COACH
+        // ==========================================
+
+        else {
+
+            accountFields.style.display =
+                "none";
+
+            username.required = false;
+            password.required = false;
+
+            username.disabled = true;
+            password.disabled = true;
+
+            username.value = "";
+            password.value = "";
+
+        }
+
+    }
+
+
+    function updatePersonType() {
+
+        const selectedType =
+            document.querySelector(
+                'input[name="person_type"]:checked'
+            ).value;
+
+
+        // ==========================================
+        // MEMBER
+        // ==========================================
+
+        if (
+            selectedType === "member"
+        ) {
+
+            memberFields.style.display =
+                "block";
+
+            memberAccountOption.style.display =
+                "block";
+
+            coachInfo.style.display =
+                "none";
+
+            alumniInfo.style.display =
+                "none";
+
+
+            department.disabled = false;
+
+            department.required = true;
+
+
+            alumniTerm.required = false;
+            alumniDepartment.required = false;
+            alumniRole.required = false;
+
+
+            createAccount.disabled = false;
+
+        }
+
+
+        // ==========================================
+        // COACH
+        // ==========================================
+
+        else if (
+            selectedType === "coach"
+        ) {
+
+            memberFields.style.display =
+                "none";
+
+            memberAccountOption.style.display =
+                "none";
+
+            coachInfo.style.display =
+                "block";
+
+            alumniInfo.style.display =
+                "none";
+
+
+            department.required = false;
+            department.disabled = true;
+
+
+            createAccount.checked = false;
+            createAccount.disabled = true;
+
+
+            alumniTerm.required = false;
+            alumniDepartment.required = false;
+            alumniRole.required = false;
+
+        }
+
+
+        // ==========================================
+        // ALUMNI
+        // ==========================================
+
+        else if (
+            selectedType === "alumni"
+        ) {
+
+            memberFields.style.display =
+                "none";
+
+            memberAccountOption.style.display =
+                "none";
+
+            coachInfo.style.display =
+                "none";
+
+            alumniInfo.style.display =
+                "block";
+
+
+            department.required = false;
+            department.disabled = true;
+
+
+            createAccount.checked = false;
+            createAccount.disabled = true;
+
+
+            alumniTerm.required = true;
+            alumniRole.required = true;
+
+
+            // Executive historical roles are
+            // already managed by the existing
+            // backend validation.
+            alumniDepartment.required = true;
+
+        }
+
+
+        updateAccountFields();
+
+    }
+
+
+    typeInputs.forEach(
+        input => {
+            input.addEventListener(
+                "change",
+                updatePersonType
+            );
+        }
+    );
+
+
+    createAccount.addEventListener(
+        "change",
+        updateAccountFields
+    );
+
+
+    updatePersonType();
+
+</script>
+
+{% endblock %}

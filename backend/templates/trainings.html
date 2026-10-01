@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}
+Trainings
+{% endblock %}
+
+{% block content %}
+
+<div class="trainings-page">
+
+    <!-- ========================================
+         PAGE HEADER
+         ======================================== -->
+
+    <div class="trainings-header">
+
+        <div>
+
+            <span class="trainings-label">
+                ORSC LEARNING
+            </span>
+
+            <h1>
+                Trainings
+            </h1>
+
+            <p>
+                Discover upcoming and past training sessions organized by ORSC.
+            </p>
+
+        </div>
+
+
+        {% if can_manage_trainings %}
+
+            <a
+                href="{{ url_for('trainings.new_training') }}"
+                class="btn-primary"
+            >
+                New Training
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ========================================
+         UPCOMING TRAININGS
+         ======================================== -->
+
+    <section class="trainings-section">
+
+        <div class="trainings-section-header">
+
+            <h2>
+                Upcoming Trainings
+            </h2>
+
+        </div>
+
+
+        <div class="trainings-list">
+
+            {% for training in upcoming_trainings %}
+
+                <a
+                    href="{{ url_for(
+                        'trainings.training_detail',
+                        training_id=training['training_id']
+                    ) }}"
+                    class="training-card-link"
+                >
+
+                    <article class="training-card">
+
+                        <div class="training-card-content">
+
+                            <h3>
+                                {{ training["title"] }}
+                            </h3>
+
+                            <p class="training-date">
+
+                                {% if training["training_date"] %}
+
+                                    {{ training["training_date"] }}
+
+                                {% else %}
+
+                                    Date TBD
+
+                                {% endif %}
+
+                            </p>
+
+                        </div>
+
+                    </article>
+
+                </a>
+
+
+            {% else %}
+
+                <div class="trainings-empty">
+
+                    <h3>
+                        No upcoming trainings
+                    </h3>
+
+                    <p>
+                        Upcoming training sessions will appear here.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================================
+         PAST TRAININGS
+         ======================================== -->
+
+    <section class="trainings-section">
+
+        <div class="trainings-section-header">
+
+            <h2>
+                Past Trainings
+            </h2>
+
+        </div>
+
+
+        <div class="trainings-list">
+
+            {% for training in past_trainings %}
+
+                <a
+                    href="{{ url_for(
+                        'trainings.training_detail',
+                        training_id=training['training_id']
+                    ) }}"
+                    class="training-card-link"
+                >
+
+                    <article class="training-card">
+
+                        <div class="training-card-content">
+
+                            <h3>
+                                {{ training["title"] }}
+                            </h3>
+
+                            <p class="training-date">
+                                {{ training["training_date"] }}
+                            </p>
+
+                        </div>
+
+                    </article>
+
+                </a>
+
+
+            {% else %}
+
+                <div class="trainings-empty">
+
+                    <h3>
+                        No past trainings
+                    </h3>
+
+                    <p>
+                        Completed training sessions will appear here.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

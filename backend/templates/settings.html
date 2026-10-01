@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="settings-page">
+
+    <div class="settings-header">
+
+        <div>
+            <!-- <span class="settings-label">
+                SETTINGS
+            </span> -->
+
+            <h1>Settings</h1>
+
+            <p>
+                Manage your account security and appearance preferences.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         ACCOUNT
+    ========================================== -->
+
+    <section class="settings-section">
+
+        <h2>Account</h2>
+
+        <div class="settings-account">
+
+            <div>
+
+                <strong>
+                    {{ user["first_name"] }}
+                    {{ user["last_name"] }}
+                </strong>
+
+                <p>
+                    @{{ user["username"] }}
+                </p>
+
+                <p>
+                    {{ user["email"] or "No email" }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         SECURITY
+    ========================================== -->
+
+    <section class="settings-section">
+
+        <div class="settings-section-header">
+
+            <div>
+
+                <h2>Security</h2>
+
+                <p>
+                    Manage your account password.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="settings-option">
+
+            <div>
+
+                <h3>Password</h3>
+
+                <p>
+                    Change your current password.
+                </p>
+
+            </div>
+
+            <a href="{{ url_for('settings.change_password') }}" class="settings-password-button">
+                
+                <span class="settings-password-button-icon">
+                    ✦
+                </span>
+
+                <span>
+                    Change Password
+                </span>
+
+                <span class="settings-password-button-arrow">
+                    →
+                </span>
+
+            </a>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

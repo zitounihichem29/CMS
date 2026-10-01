@@ -1,0 +1,447 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "records/_styles.html" %}
+
+<div class="records-page">
+
+    <div class="records-head">
+
+        <div>
+
+            <a
+                class="records-muted"
+                href="{{ url_for(
+                    'records.meetings',
+                    term_id=meeting['term_id']
+                ) }}"
+            >
+                ← Meetings
+            </a>
+
+            <h1>
+                {{ meeting["title"] }}
+            </h1>
+
+            <p class="records-muted">
+                {{ meeting["term_name"] }}
+                ·
+                organized by
+                {{ meeting["organizer_first_name"] }}
+                {{ meeting["organizer_last_name"] }}
+            </p>
+
+        </div>
+
+
+        <span class="records-badge">
+            {{ meeting["term_status"] }}
+        </span>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="records-error">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <div class="records-two">
+
+        <section class="records-section">
+
+            <h2>
+                Meeting Information
+            </h2>
+
+
+            {% if
+                can_manage
+                and meeting["term_status"] == "ACTIVE"
+            %}
+
+                <form
+                    method="POST"
+                    class="records-form-grid"
+                >
+
+                    <div class="records-field full">
+
+                        <label>
+                            Title
+                        </label>
+
+                        <input
+                            name="title"
+                            value="{{ meeting['title'] }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="records-field full">
+
+                        <label>
+                            Description
+                        </label>
+
+                        <textarea
+                            name="description"
+                            rows="4"
+                        >{{ meeting["description"] or "" }}</textarea>
+
+                    </div>
+
+
+                    <div class="records-field">
+
+                        <label>
+                            Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="meeting_date"
+                            value="{{ meeting['meeting_date'] }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="records-field">
+
+                        <label>
+                            Location
+                        </label>
+
+                        <input
+                            name="location"
+                            value="{{ meeting['location'] or '' }}"
+                        >
+
+                    </div>
+
+
+                    <div class="records-field">
+
+                        <label>
+                            Start time
+                        </label>
+
+                        <input
+                            type="time"
+                            name="start_time"
+                            value="{{ meeting['start_time'] or '' }}"
+                        >
+
+                    </div>
+
+
+                    <div class="records-field">
+
+                        <label>
+                            End time
+                        </label>
+
+                        <input
+                            type="time"
+                            name="end_time"
+                            value="{{ meeting['end_time'] or '' }}"
+                        >
+
+                    </div>
+
+
+                    <div class="records-actions full">
+
+                        <button
+                            class="records-btn primary"
+                            type="submit"
+                        >
+                            Save Meeting
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+            {% else %}
+
+                <p>
+                    <strong>Date:</strong>
+                    {{ meeting["meeting_date"] }}
+                </p>
+
+                <p>
+
+                    <strong>Time:</strong>
+
+                    {{ meeting["start_time"] or "—" }}
+
+                    {% if meeting["end_time"] %}
+
+                        –
+                        {{ meeting["end_time"] }}
+
+                    {% endif %}
+
+                </p>
+
+                <p>
+                    <strong>Location:</strong>
+                    {{ meeting["location"] or "—" }}
+                </p>
+
+                <p>
+                    {{
+                        meeting["description"]
+                        or "No description."
+                    }}
+                </p>
+
+            {% endif %}
+
+        </section>
+
+
+        {% if
+            can_manage
+            and meeting["term_status"] == "ACTIVE"
+        %}
+
+            <section class="records-section">
+
+                <h2>
+                    Delete Meeting
+                </h2>
+
+                <p class="records-muted">
+                    Attendance rows are removed
+                    with the meeting.
+                </p>
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'records.delete_meeting',
+                        meeting_id=meeting['meeting_id']
+                    ) }}"
+                    onsubmit="return confirm('Delete this meeting?');"
+                >
+
+                    <button
+                        class="records-btn danger"
+                        type="submit"
+                    >
+                        Delete Meeting
+                    </button>
+
+                </form>
+
+            </section>
+
+        {% endif %}
+
+    </div>
+
+
+    <section class="records-section">
+
+        <h2>
+            Participants & Attendance
+        </h2>
+
+
+        {% if
+            can_manage_attendance
+            and meeting["term_status"] == "ACTIVE"
+        %}
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'records.save_meeting_attendance',
+                    meeting_id=meeting['meeting_id']
+                ) }}"
+            >
+
+                <div class="records-table-wrap">
+
+                    <table class="records-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Member
+                                </th>
+
+                                <th>
+                                    Role
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for member in members %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ member["first_name"] }}
+                                        {{ member["last_name"] }}
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ member["role_name"] }}
+
+                                        {% if member["department_name"] %}
+
+                                            ·
+                                            {{ member["department_name"] }}
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <select
+                                            class="records-attendance-select"
+                                            name="status_{{ member['membership_id'] }}"
+                                        >
+
+                                            <option value="">
+                                                Not included
+                                            </option>
+
+                                            {% for status in [
+                                                "present",
+                                                "absent",
+                                                "late",
+                                                "excused"
+                                            ] %}
+
+                                                <option
+                                                    value="{{ status }}"
+                                                    {% if attendance.get(member['membership_id']) == status %}
+                                                        selected
+                                                    {% endif %}
+                                                >
+                                                    {{ status|title }}
+                                                </option>
+
+                                            {% endfor %}
+
+                                        </select>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div class="records-actions">
+
+                    <button
+                        class="records-btn primary"
+                        type="submit"
+                    >
+                        Save Attendance
+                    </button>
+
+                </div>
+
+            </form>
+
+
+        {% else %}
+
+            <div class="records-table-wrap">
+
+                <table class="records-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Member
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for member in members %}
+
+                            {% if attendance.get(member["membership_id"]) %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ member["first_name"] }}
+                                        {{ member["last_name"] }}
+                                    </td>
+
+                                    <td>
+                                        {{
+                                            attendance.get(
+                                                member["membership_id"]
+                                            )|title
+                                        }}
+                                    </td>
+
+                                </tr>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

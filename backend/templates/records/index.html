@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "records/_styles.html" %}
+
+<div class="records-page">
+
+    <div class="records-head">
+
+        <div>
+
+            <span class="records-eyebrow">
+                CLUB OPERATIONS
+            </span>
+
+            <h1>
+                Club Records
+            </h1>
+
+            <p class="records-muted">
+                Meetings, attendance, annual schedule,
+                HR notes, certificates and research references.
+            </p>
+
+        </div>
+
+        {% if term %}
+
+            <span class="records-badge">
+                {{ term["name"] }}
+                ·
+                {{ term["status"] }}
+            </span>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="records-grid">
+
+        <a
+            class="records-card"
+            href="{{ url_for(
+                'records.meetings'
+            ) }}"
+        >
+
+            <span class="records-eyebrow">
+                MEETINGS
+            </span>
+
+            <div class="records-count">
+                {{ counts["meetings"] }}
+            </div>
+
+            <h3>
+                General Meetings
+            </h3>
+
+            <p class="records-muted">
+                Plan meetings and record participants.
+            </p>
+
+        </a>
+
+
+        {% if can_manage_attendance %}
+
+            <a
+                class="records-card"
+                href="{{ url_for(
+                    'records.attendance_hub'
+                ) }}"
+            >
+
+                <span class="records-eyebrow">
+                    ATTENDANCE
+                </span>
+
+                <div class="records-count">
+                    {{
+                        counts["events"]
+                        +
+                        counts["trainings"]
+                    }}
+                </div>
+
+                <h3>
+                    Attendance
+                </h3>
+
+                <p class="records-muted">
+                    Events, trainings and meeting presence.
+                </p>
+
+            </a>
+
+        {% endif %}
+
+
+        <a
+            class="records-card"
+            href="{{ url_for(
+                'records.annual_schedule'
+            ) }}"
+        >
+
+            <span class="records-eyebrow">
+                PLANNING
+            </span>
+
+            <div class="records-count">
+                1
+            </div>
+
+            <h3>
+                Annual Schedule
+            </h3>
+
+            <p class="records-muted">
+                Official schedule for each mandate.
+            </p>
+
+        </a>
+
+
+        {% if can_manage_member_notes %}
+
+            <a
+                class="records-card"
+                href="{{ url_for(
+                    'records.member_notes'
+                ) }}"
+            >
+
+                <span class="records-eyebrow">
+                    HR PRIVATE
+                </span>
+
+                <div class="records-count">
+                    {{ counts["notes"] }}
+                </div>
+
+                <h3>
+                    Member Notes
+                </h3>
+
+                <p class="records-muted">
+                    Remarks, warnings,
+                    sanctions and positive notes.
+                </p>
+
+            </a>
+
+        {% endif %}
+
+
+        <a
+            class="records-card"
+            href="{{ url_for(
+                'records.certificates'
+            ) }}"
+        >
+
+            <span class="records-eyebrow">
+                CERTIFICATES
+            </span>
+
+            <div class="records-count">
+                {{ counts["certificates"] }}
+            </div>
+
+            <h3>
+                Certificates
+            </h3>
+
+            <p class="records-muted">
+                Issue and archive club certificates.
+            </p>
+
+        </a>
+
+
+        <a
+            class="records-card"
+            href="{{ url_for(
+                'records.references'
+            ) }}"
+        >
+
+            <span class="records-eyebrow">
+                RESEARCH
+            </span>
+
+            <div class="records-count">
+                {{ counts["references"] }}
+            </div>
+
+            <h3>
+                Source References
+            </h3>
+
+            <p class="records-muted">
+                Scientific reference library and article links.
+            </p>
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

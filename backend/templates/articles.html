@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Articles
+{% endblock %}
+
+
+{% block content %}
+
+<div class="articles-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="articles-header">
+
+        <div class="articles-header-content">
+
+            <span class="articles-label">
+                ORSC RESEARCH
+            </span>
+
+            <h1>
+                Articles
+            </h1>
+
+            <p>
+                Explore current and published ORSC scientific articles.
+            </p>
+
+        </div>
+
+
+        {% if can_create_article %}
+
+            <a
+                href="{{ url_for('articles.new_article') }}"
+                class="btn-primary"
+            >
+                <span class="btn-icon">
+                    +
+                </span>
+
+                <span>
+                    New Article
+                </span>
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- ========================================
+         ARTICLES GRID
+         ======================================== -->
+
+    <div class="articles-grid">
+
+
+        {% for article in articles %}
+
+
+            {% if not is_alumni %}
+
+                <!-- ========================================
+                     CURRENT MEMBERS
+                     ======================================== -->
+
+                <a
+                    href="{{ url_for(
+                        'articles.article_detail',
+                        article_id=article['scientific_article_id']
+                    ) }}"
+                    class="article-card-link"
+                >
+
+                    <article
+                        class="article-card
+                               article-status-{{ article['status'] }}"
+                    >
+
+
+                        <!-- STATUS -->
+
+                        <div class="article-card-top">
+
+                            <span
+                                class="article-status-badge
+                                       article-status-badge-{{ article['status'] }}"
+                            >
+                                {{ article["status"]|capitalize }}
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- CONTENT -->
+
+                        <div class="article-card-content">
+
+
+                            <h2 class="article-card-title">
+                                {{ article["title"] }}
+                            </h2>
+
+
+                            <div class="article-card-owner">
+
+                                <span class="article-info-label">
+                                    Idea Owner
+                                </span>
+
+                                <strong>
+                                    {{ article["owner_first_name"] }}
+                                    {{ article["owner_last_name"] }}
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- FOOTER -->
+
+                        <div class="article-card-footer">
+
+                            <span>
+                                View details
+                            </span>
+
+                            <span class="article-card-arrow">
+                                →
+                            </span>
+
+                        </div>
+
+
+                    </article>
+
+                </a>
+
+
+
+            {% else %}
+
+
+                <!-- ========================================
+                     ALUMNI
+                     COMPLETED ARTICLES ONLY
+                     NO DETAIL ACCESS
+                     ======================================== -->
+
+                <article
+                    class="article-card
+                           article-card-readonly
+                           article-status-completed"
+                >
+
+
+                    <div class="article-card-top">
+
+                        <span
+                            class="article-status-badge
+                                   article-status-badge-completed"
+                        >
+                            Completed
+                        </span>
+
+                        <span class="article-readonly-badge">
+                            View only
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="article-card-content">
+
+                        <h2 class="article-card-title">
+                            {{ article["title"] }}
+                        </h2>
+
+
+                        <div class="article-card-owner">
+
+                            <span class="article-info-label">
+                                Idea Owner
+                            </span>
+
+                            <strong>
+                                {{ article["owner_first_name"] }}
+                                {{ article["owner_last_name"] }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                </article>
+
+
+            {% endif %}
+
+
+        {% else %}
+
+
+            <!-- ========================================
+                 EMPTY STATE
+                 ======================================== -->
+
+            <div class="articles-empty">
+
+                <div class="articles-empty-icon">
+                    ▥
+                </div>
+
+                <h2>
+                    No articles yet
+                </h2>
+
+                <p>
+                    ORSC scientific articles will appear here once they are created.
+                </p>
+
+            </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+</div>
+
+{% endblock %}

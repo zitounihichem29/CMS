@@ -1,0 +1,631 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="application-detail-page">
+
+    <a href="{{ url_for('applications.applications') }}">
+        ← Back to Applications
+    </a>
+
+
+    <!-- ========================================
+         APPLICATION HEADER
+    ========================================= -->
+
+    <div class="application-detail-header">
+
+        <div>
+
+            <span>
+                APPLICATION
+            </span>
+
+            <h1>
+                {{ application["first_name"] }}
+                {{ application["last_name"] }}
+            </h1>
+
+            <p>
+                {{ application["period_name"] }}
+                ·
+                {{ application["term_name"] }}
+            </p>
+
+        </div>
+
+
+        <span
+            class="application-status application-status-{{ application['status'] }}"
+        >
+            {% if application["status"] == "meeting_required" %}
+                Meeting Required
+            {% else %}
+                {{ application["status"]|capitalize }}
+            {% endif %}
+        </span>
+
+    </div>
+
+
+
+    <!-- ========================================
+         PERSONAL INFORMATION
+    ========================================= -->
+
+    <div class="application-detail-section">
+
+        <h2>
+            Personal Information
+        </h2>
+
+
+        <p>
+            <strong>Email:</strong>
+
+            {{ application["email"] or "Not provided" }}
+        </p>
+
+
+        <p>
+            <strong>Phone:</strong>
+
+            {{ application["phone"] or "Not provided" }}
+        </p>
+
+
+        <p>
+            <strong>Date of Birth:</strong>
+
+            {{ application["date_of_birth"] or "Not provided" }}
+        </p>
+
+
+        <p>
+            <strong>University:</strong>
+
+            {{ application["university"] or "Not provided" }}
+        </p>
+
+
+        <p>
+            <strong>Faculty:</strong>
+
+            {{ application["faculty"] or "Not provided" }}
+        </p>
+
+
+        <p>
+            <strong>Profession:</strong>
+
+            {{ application["profession"] or "Not provided" }}
+        </p>
+
+
+        <p>
+
+            <strong>LinkedIn:</strong>
+
+            {% if application["linkedin"] %}
+
+                <a
+                    href="{{ application['linkedin'] }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Open LinkedIn
+                </a>
+
+            {% else %}
+
+                Not provided
+
+            {% endif %}
+
+        </p>
+
+    </div>
+
+
+
+    <!-- ========================================
+         MOTIVATION
+    ========================================= -->
+
+    <div class="application-detail-section">
+
+        <h2>
+            Motivation
+        </h2>
+
+        <p>
+            {{ application["motivation"] or "No motivation provided." }}
+        </p>
+
+    </div>
+
+
+
+    <!-- ========================================
+         SKILLS
+    ========================================= -->
+
+    <div class="application-detail-section">
+
+        <h2>
+            Skills
+        </h2>
+
+
+        {% if skills %}
+
+            <ul>
+
+                {% for skill in skills %}
+
+                    <li>
+                        {{ skill["skill"] }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>
+                No skills provided.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- ========================================
+         APPLICATION INFORMATION
+    ========================================= -->
+
+    <div class="application-detail-section">
+
+        <h2>
+            Application Information
+        </h2>
+
+
+        <p>
+            <strong>Status:</strong>
+
+            {% if application["status"] == "meeting_required" %}
+                Meeting Required
+            {% else %}
+                {{ application["status"]|capitalize }}
+            {% endif %}
+        </p>
+
+
+        <p>
+            <strong>Submitted:</strong>
+
+            {{ application["submitted_at"] }}
+        </p>
+
+    </div>
+
+
+
+    <!-- ========================================
+         MEETING
+         MEETING REQUIRED APPLICATIONS ONLY
+    ========================================= -->
+
+    {% if application["status"] == "meeting_required" %}
+
+        <div class="application-detail-section">
+
+            <h2>
+                Meeting
+            </h2>
+
+
+            <!-- ========================================
+                 EXISTING MEETING
+            ========================================= -->
+
+            {% if meeting %}
+
+
+                <p>
+                    <strong>Date:</strong>
+
+                    {{ meeting["meeting_date"] }}
+                </p>
+
+
+                <p>
+                    <strong>Time:</strong>
+
+                    {{ meeting["meeting_time"] }}
+                </p>
+
+
+                <p>
+                    <strong>Location:</strong>
+
+                    {{ meeting["location"] or "Not provided" }}
+                </p>
+
+                <p>
+                    <strong>Participants:</strong>
+                </p>
+                
+                {% if meeting_participants %}
+                
+                <ul>
+                    {% for participant in meeting_participants %}
+                    
+                    <li>
+                        {{ participant["first_name"] }}
+                        {{ participant["last_name"] }}
+                        —
+                        {{ participant["role_name"] }}
+                    </li>
+
+                {% endfor %}
+
+                </ul>
+
+                {% else %}
+                
+                <p>
+                    No participants assigned.
+                </p>
+
+                {% endif %}
+
+
+                {% if meeting["meeting_link"] %}
+
+                    <p>
+
+                        <strong>
+                            Meeting Link:
+                        </strong>
+
+                        <a
+                            href="{{ meeting['meeting_link'] }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Open Meeting
+                        </a>
+
+                    </p>
+
+                {% endif %}
+
+
+                <p>
+                    <strong>Information:</strong>
+
+                    {{ meeting["notes"] or "No additional information." }}
+                </p>
+
+
+                <p>
+                    <strong>Status:</strong>
+
+                    {{ meeting["status"]|capitalize }}
+                </p>
+
+
+                {% if
+                    meeting["status"] == "scheduled"
+                    and can_process
+                    and is_active_application
+                %}
+
+                    <form method="POST" action="{{ url_for('applications.complete_application_meeting',application_id=application['application_id'],meeting_id=meeting['meeting_id']) }}">
+
+                        <button type="submit">
+                            Mark Meeting as Completed
+                        </button>
+                    
+                    </form>
+                    
+                {% endif %}
+
+
+            {% elif can_process and is_active_application %}
+
+            <!-- ========================================
+                 SCHEDULE NEW MEETING
+            ========================================= -->
+
+          
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'applications.schedule_application_meeting',
+                        application_id=application['application_id']
+                    ) }}"
+                >
+
+
+                    <!-- DATE -->
+
+                    <div>
+
+                        <label for="meeting_date">
+                            Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="meeting_date"
+                            name="meeting_date"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <!-- TIME -->
+
+                    <div>
+
+                        <label for="meeting_time">
+                            Time
+                        </label>
+
+                        <input
+                            type="time"
+                            id="meeting_time"
+                            name="meeting_time"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <!-- LOCATION -->
+
+                    <div>
+
+                        <label for="location">
+                            Location
+                        </label>
+
+                        <input
+                            type="text"
+                            id="location"
+                            name="location"
+                            placeholder="ORS office, room..."
+                        >
+
+                    </div>
+
+
+
+                    <!-- MEETING LINK -->
+
+                    <div>
+
+                        <label for="meeting_link">
+                            Meeting Link
+                        </label>
+
+                        <input
+                            type="url"
+                            id="meeting_link"
+                            name="meeting_link"
+                            placeholder="https://..."
+                        >
+
+                    </div>
+
+
+
+                    <!-- PARTICIPANTS -->
+
+                    <div>
+
+                        <p>
+                            <strong>
+                                Participants
+                            </strong>
+                        </p>
+
+
+                        {% if rh_members %}
+
+
+                            {% for member in rh_members %}
+
+                                <label>
+
+                                    <input
+                                        type="checkbox"
+                                        name="participants"
+                                        value="{{ member['membership_id'] }}"
+                                    >
+
+                                    {{ member["first_name"] }}
+                                    {{ member["last_name"] }}
+
+                                    —
+
+                                    {{ member["role_name"] }}
+
+                                </label>
+
+                                <br>
+
+                            {% endfor %}
+
+
+                        {% else %}
+
+                            <p>
+                                No RH members available.
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- INFORMATION -->
+
+                    <div>
+
+                        <label for="notes">
+                            Information
+                        </label>
+
+                        <textarea
+                            id="notes"
+                            name="notes"
+                            rows="4"
+                            placeholder="Meeting instructions or additional information..."
+                        ></textarea>
+
+                    </div>
+
+
+
+                    <!-- BUTTON -->
+
+                    <button type="submit">
+                        Schedule Meeting
+                    </button>
+
+
+                </form>
+
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+
+
+    <!-- ========================================
+     APPLICATION ACTIONS
+    ========================================= -->
+
+    {% if can_process and is_active_application %}
+
+    <div class="application-actions">
+
+
+        <!-- ========================================
+         PENDING APPLICATION
+        ========================================= -->
+
+        {% if application["status"] == "pending" %}
+
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'applications.accept_application',
+                    application_id=application['application_id']
+                ) }}"
+            >
+
+                <button type="submit">
+                    Accept Application
+                </button>
+
+            </form>
+
+
+            <form 
+                method="POST" 
+                action="{{ url_for(
+                    'applications.send_application_to_meeting',
+                    application_id=application['application_id']
+                ) }}"
+            >
+
+                <button type="submit">
+                    Invite to Meeting
+                </button>
+
+            </form>
+
+
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'applications.reject_application',
+                    application_id=application['application_id']
+                ) }}"
+            >
+
+                <button type="submit">
+                    Reject Application
+                </button>
+
+            </form>
+
+
+        <!-- ========================================
+         AFTER COMPLETED MEETING
+        ========================================= -->
+
+        {% elif application["status"] == "meeting_required"
+            and meeting
+            and meeting["status"] == "completed" %}
+
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'applications.accept_application',
+                    application_id=application['application_id']
+                ) }}"
+            >
+
+                <button type="submit">
+                    Accept After Meeting
+                </button>
+
+            </form>
+
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'applications.reject_application_definitely',
+                    application_id=application['application_id']
+                ) }}"
+            >
+
+                <button type="submit">
+                    Reject Definitely
+                </button>
+
+            </form>
+
+
+        {% endif %}
+
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

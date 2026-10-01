@@ -1,0 +1,287 @@
+{% extends "public/base_public.html" %}
+
+{% block content %}
+
+<div class="apply-page">
+
+    {% if active_period %}
+
+        <div class="apply-header">
+
+            <span>JOIN ORSC</span>
+
+            <h1>
+                Application Form
+            </h1>
+
+            <p>
+                Recruitment period:
+                <strong>{{ active_period["name"] }}</strong>
+            </p>
+
+            <p>
+                Academic Year:
+                <strong>{{ active_period["term_name"] }}</strong>
+            </p>
+
+        </div>
+
+
+        {% if success %}
+
+            <div class="application-success">
+
+                <h2>
+                    Application Submitted
+                </h2>
+
+                <p>
+                    Your application has been successfully submitted.
+                    Please check your email regularly, including your spam or junk folder,
+                    for updates from ORSC regarding your application.
+                </p>
+
+            </div>
+
+        {% else %}
+
+
+            {% if error %}
+
+                <div class="form-error">
+                    {{ error }}
+                </div>
+
+            {% endif %}
+
+
+            <form method="POST" class="application-form">
+
+                <div class="form-group">
+
+                    <label for="first_name">
+                        First Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="first_name"
+                        name="first_name"
+                        value="{{ request.form.get('first_name', '') }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="last_name">
+                        Last Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="last_name"
+                        name="last_name"
+                        value="{{ request.form.get('last_name', '') }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="date_of_birth">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date_of_birth"
+                        name="date_of_birth"
+                        value="{{ request.form.get('date_of_birth', '') }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        value="{{ request.form.get('phone', '') }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value="{{ request.form.get('email', '') }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="university">
+                        University
+                    </label>
+
+                    <input
+                        type="text"
+                        id="university"
+                        name="university"
+                        value="{{ request.form.get('university', '') }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="faculty">
+                        Faculty
+                    </label>
+
+                    <input
+                        type="text"
+                        id="faculty"
+                        name="faculty"
+                        value="{{ request.form.get('faculty', '') }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="profession">
+                        Profession
+                    </label>
+
+                    <input
+                        type="text"
+                        id="profession"
+                        name="profession"
+                        value="{{ request.form.get('profession', '') }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="linkedin">
+                        LinkedIn
+                    </label>
+
+                    <input
+                        type="url"
+                        id="linkedin"
+                        name="linkedin"
+                        value="{{ request.form.get('linkedin', '') }}"
+                        placeholder="https://..."
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="skills">
+                        Skills
+                    </label>
+
+                    <input
+                        type="text"
+                        id="skills"
+                        name="skills"
+                        value="{{ request.form.get('skills', '') }}"
+                        placeholder="Python, Design, Communication..."
+                    >
+
+                    <small>
+                        Separate skills with commas.
+                    </small>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="motivation">
+                        Motivation
+                    </label>
+
+                    <textarea
+                        id="motivation"
+                        name="motivation"
+                        rows="6"
+                        required
+                    >{{ request.form.get('motivation', '') }}</textarea>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button type="submit" class="public-apply-submit-btn">
+                        <span class="public-apply-submit-text">
+                            Submit Application
+                        </span>
+                        
+                        <span class="public-apply-submit-arrow">
+                            →
+                        </span>
+                    </button>
+
+                </div>
+
+            </form>
+
+        {% endif %}
+
+
+    {% else %}
+
+        <div class="applications-closed">
+
+            <span>JOIN ORSC</span>
+
+            <h1>
+                Applications Closed
+            </h1>
+
+            <p>
+                There is currently no active recruitment period.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

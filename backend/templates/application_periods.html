@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="application-periods-page">
+
+    <div class="application-periods-header">
+
+        <div>
+            <span>RECRUITMENT</span>
+
+            <h1>
+                Application Periods
+            </h1>
+
+            <p>
+                Manage club recruitment periods.
+            </p>
+        </div>
+
+        <a href="{{ url_for('applications.new_application_period') }}">
+            + New Period
+        </a>
+
+    </div>
+
+
+    <div class="application-periods-list">
+
+        {% if periods %}
+
+            {% for period in periods %}
+
+                <div class="application-period-card">
+
+                    <div>
+
+                        <h2>
+                            {{ period["name"] }}
+                        </h2>
+
+                        <p>
+                            {{ period["term_name"] }}
+                        </p>
+
+                    </div>
+
+
+                    <div>
+
+                        <p>
+                            <strong>Start:</strong>
+                            {{ period["start_date"] }}
+                        </p>
+
+                        <p>
+                            <strong>End:</strong>
+                            {{ period["end_date"] }}
+                        </p>
+
+                        <a href="{{ url_for('applications.edit_application_period', application_period_id=period['application_period_id']) }}">
+                            Edit
+                        </a>
+
+                        <form method="POST" action="{{ url_for('applications.delete_application_period', application_period_id=period['application_period_id']) }}">
+                            
+                            <button type="submit" onclick="return confirm('Delete this recruitment period?');">
+                                Delete
+                            </button>
+                        
+                        </form>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="application-periods-empty">
+
+                <h2>
+                    No recruitment periods yet
+                </h2>
+
+                <p>
+                    Create the first recruitment period to open applications.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

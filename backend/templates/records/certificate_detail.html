@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "records/_styles.html" %}
+
+<div class="records-page">
+
+    <div class="records-head">
+
+        <div>
+
+            <a
+                class="records-muted"
+                href="{{ url_for(
+                    'records.certificates',
+                    term_id=certificate['term_id']
+                ) }}"
+            >
+                ← Certificates
+            </a>
+
+            <h1>
+                {{ certificate["name"] }}
+            </h1>
+
+            <p class="records-muted">
+                {{ certificate["term_name"] }}
+                ·
+                {{
+                    certificate["certificate_type"]
+                    or "Certificate"
+                }}
+            </p>
+
+        </div>
+
+        <span class="records-badge">
+            {{ certificate["term_status"] }}
+        </span>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="records-error">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <div class="records-two">
+
+        <section class="records-section">
+
+            <h2>
+                Certificate
+            </h2>
+
+
+            {% if certificate["file_path"] %}
+
+                <a
+                    class="records-btn"
+                    href="{{ url_for(
+                        'records.certificate_file',
+                        certificate_id=certificate['certificate_id']
+                    ) }}"
+                >
+                    Open PDF
+                </a>
+
+            {% endif %}
+
+
+            <p>
+                <strong>
+                    Issued:
+                </strong>
+
+                {{ certificate["issued_date"] or "—" }}
+            </p>
+
+
+            <p>
+                {{
+                    certificate["description"]
+                    or "No description."
+                }}
+            </p>
+
+        </section>
+
+
+        <section class="records-section">
+
+            <h2>
+                Recipients at Issue Time
+            </h2>
+
+
+            {% for person in recipients %}
+
+                <div>
+                    {{
+                        person["recipient_name_snapshot"]
+                        or (
+                            person["first_name"]
+                            ~ " "
+                            ~ person["last_name"]
+                        )
+                    }}
+                </div>
+
+            {% else %}
+
+                <div class="records-empty">
+                    No recipients.
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+    </div>
+
+
+    {% if
+        can_manage
+        and certificate["term_status"] == "ACTIVE"
+    %}
+
+        <section class="records-section">
+
+            <h2>
+                Edit Certificate
+            </h2>
+
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+                class="records-form-grid"
+            >
+
+                <div class="records-field">
+
+                    <label>
+                        Name
+                    </label>
+
+                    <input
+                        name="name"
+                        value="{{ certificate['name'] }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="records-field">
+
+                    <label>
+                        Type
+                    </label>
+
+                    <input
+                        name="certificate_type"
+                        value="{{ certificate['certificate_type'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="records-field">
+
+                    <label>
+                        Issued date
+                    </label>
+
+                    <input
+                        type="date"
+                        name="issued_date"
+                        value="{{ certificate['issued_date'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="records-field">
+
+                    <label>
+                        Replace PDF
+                    </label>
+
+                    <input
+                        type="file"
+                        name="certificate_file"
+                        accept=".pdf"
+                    >
+
+                </div>
+
+
+                <div class="records-field full">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <textarea
+                        name="description"
+                        rows="3"
+                    >{{ certificate["description"] or "" }}</textarea>
+
+                </div>
+
+
+                <div class="records-field full">
+
+                    <label>
+                        Recipients
+                    </label>
+
+                    <select
+                        name="recipient_ids"
+                        multiple
+                        size="9"
+                        required
+                    >
+
+                        {% for person in people %}
+
+                            <option
+                                value="{{ person['person_id'] }}"
+                                {% if person["person_id"] in recipient_ids %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ person["first_name"] }}
+                                {{ person["last_name"] }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="records-actions full">
+
+                    <button
+                        class="records-btn primary"
+                        type="submit"
+                    >
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <section class="records-section">
+
+            <h2>
+                Delete
+            </h2>
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'records.delete_certificate',
+                    certificate_id=certificate['certificate_id']
+                ) }}"
+                onsubmit="return confirm('Delete this certificate record?');"
+            >
+
+                <button
+                    class="records-btn danger"
+                    type="submit"
+                >
+                    Delete Certificate
+                </button>
+
+            </form>
+
+        </section>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

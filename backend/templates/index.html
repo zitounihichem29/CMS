@@ -1,0 +1,2962 @@
+{% extends "base.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+<div class="home-page">
+
+    <!-- =====================================================
+         WELCOME SECTION
+    ====================================================== -->
+
+    <section class="welcome-section">
+
+        <div class="welcome-text">
+
+            <span class="welcome-label">
+                ORSC CMS
+            </span>
+
+            <h1>
+                Good morning,
+                {{ first_name }} {{ last_name }} 👋
+            </h1>
+
+            <p>
+                Welcome back to your ORSC workspace.
+                Here is a quick overview of your club activity.
+            </p>
+
+        </div>
+
+
+        <div class="user-id-box">
+
+            <span>
+                User ID
+            </span>
+
+            <strong>
+                #{{ "%05d"|format(user_id) }}
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         QUICK OVERVIEW
+    ====================================================== -->
+
+    <section class="home-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    Quick overview
+                </h2>
+
+                <p>
+                    Your most important information at a glance.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-cards">
+
+
+            <!-- NEXT EVENT -->
+
+            <div class="quick-card">
+
+                <div class="quick-card-icon">
+                    ◫
+                </div>
+
+                <div class="quick-card-content">
+
+                    <span>
+                        Next event
+                    </span>
+
+                    {% if next_event %}
+
+                        <strong>
+                            {{ next_event["title"] }}
+                        </strong>
+
+                        <p>
+
+                            {{ next_event["event_date"] }}
+
+                            {% if next_event["start_time"] %}
+                                · {{ next_event["start_time"][:5] }}
+                            {% endif %}
+
+                            {% if next_event["location"] %}
+                                <br>
+                                {{ next_event["location"] }}
+                            {% endif %}
+
+                        </p>
+
+                    {% else %}
+
+                        <strong>
+                            No upcoming event
+                        </strong>
+
+                        <p>
+                            No event is currently scheduled.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- PENDING TASKS -->
+
+            <div class="quick-card">
+
+                <div class="quick-card-icon">
+                    ✓
+                </div>
+
+                <div class="quick-card-content">
+
+                    <span>
+                        Pending tasks
+                    </span>
+
+                    {% if pending_tasks_count > 0 %}
+
+                        <strong>
+                            {{ pending_tasks_count }}
+                            pending
+                            task{% if pending_tasks_count != 1 %}s{% endif %}
+                        </strong>
+
+                        <p>
+                            You still have work waiting for you.
+                        </p>
+
+                    {% else %}
+
+                        <strong>
+                            No pending tasks
+                        </strong>
+
+                        <p>
+                            You are all caught up.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- NOTIFICATIONS -->
+
+            <div class="quick-card">
+
+                <div class="quick-card-icon">
+                    ♧
+                </div>
+
+                <div class="quick-card-content">
+
+                    <span>
+                        Notifications
+                    </span>
+
+                    {% if unread_notification_count > 0 %}
+
+                        <strong>
+                            {{ unread_notification_count }}
+                            unread
+                            notification{% if unread_notification_count != 1 %}s{% endif %}
+                        </strong>
+
+                        <p>
+                            You have new notifications waiting for you.
+                        </p>
+
+                    {% else %}
+
+                        <strong>
+                            No new notifications
+                        </strong>
+
+                        <p>
+                            You are all caught up.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SECOND ROW
+         COUNTDOWN + COMING UP
+    ====================================================== -->
+
+    <section class="home-section">
+
+        <div class="home-second-row">
+
+
+            <!-- =================================================
+                 EVENT COUNTDOWN
+            ================================================== -->
+
+            <div class="quick-card quick-card-countdown">
+
+                <div class="event-countdown-card-header">
+                    Prochain événement
+                </div>
+
+                {% if next_event %}
+
+                    <div class="event-countdown-card-body">
+
+
+                        <!-- EVENT INFO -->
+
+                        <div class="event-countdown-main">
+
+                            {% if next_event_image %}
+
+                                <div class="event-countdown-image">
+
+                                    <img
+                                        src="{{ url_for(
+                                            'events.view_event_media',
+                                            event_media_id=next_event_image['event_media_id']
+                                        ) }}"
+                                        alt="{{ next_event['title'] }}"
+                                    >
+
+                                </div>
+
+                            {% else %}
+
+                                <div
+                                    class="
+                                        event-countdown-image
+                                        event-countdown-image-placeholder
+                                    "
+                                >
+                                    ◫
+                                </div>
+
+                            {% endif %}
+
+
+                            <div class="event-countdown-info">
+
+                                <h3>
+                                    {{ next_event["title"] }}
+                                </h3>
+
+                                <p class="event-countdown-description">
+                                    {{
+                                        next_event["description"]
+                                        or
+                                        "Upcoming ORSC event."
+                                    }}
+                                </p>
+
+                                <p class="event-countdown-date">
+
+                                    {{ next_event["event_date"] }}
+
+                                    {% if next_event["start_time"] %}
+                                        · {{ next_event["start_time"][:5] }}
+                                    {% endif %}
+
+                                </p>
+
+                                <p class="event-countdown-location">
+                                    {{
+                                        next_event["location"]
+                                        or
+                                        "Location not specified"
+                                    }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- COUNTDOWN -->
+
+                        {% if next_event_datetime %}
+
+                            <div
+                                class="event-countdown-timer"
+                                id="homeEventCountdown"
+                                data-target="{{ next_event_datetime }}"
+                            >
+
+                                <div class="event-countdown-unit">
+
+                                    <strong id="countdownDays">
+                                        --
+                                    </strong>
+
+                                    <span>
+                                        JOURS
+                                    </span>
+
+                                </div>
+
+
+                                <div class="event-countdown-divider">
+                                </div>
+
+
+                                <div class="event-countdown-unit">
+
+                                    <strong id="countdownHours">
+                                        --
+                                    </strong>
+
+                                    <span>
+                                        HEURES
+                                    </span>
+
+                                </div>
+
+
+                                <div class="event-countdown-divider">
+                                </div>
+
+
+                                <div class="event-countdown-unit">
+
+                                    <strong id="countdownMinutes">
+                                        --
+                                    </strong>
+
+                                    <span>
+                                        MIN
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        {% else %}
+
+                            <div
+                                class="
+                                    event-countdown-timer
+                                    event-countdown-no-time
+                                "
+                            >
+
+                                <p>
+                                    L’heure de début n’est pas encore définie.
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- EVENT BUTTON -->
+
+                        <a
+                            href="{{ url_for(
+                                'events.event_detail',
+                                event_id=next_event['event_id']
+                            ) }}"
+                            class="event-countdown-button"
+                        >
+                            Voir l’événement
+                        </a>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="event-countdown-empty">
+
+                        <div class="event-countdown-empty-icon">
+                            ◷
+                        </div>
+
+                        <h3>
+                            Aucun événement à venir
+                        </h3>
+
+                        <p>
+                            Le prochain événement apparaîtra ici.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- =================================================
+                 COMING UP FOR YOU
+            ================================================== -->
+
+            <div class="home-coming-up-card">
+
+                <div class="home-coming-up-header">
+
+                    <div>
+
+                        <span>
+                            YOUR SCHEDULE
+                        </span>
+
+                        <h2>
+                            Coming up for you
+                        </h2>
+
+                        <p>
+                            Your next important activities.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="home-coming-up-list">
+
+
+                    <!-- NEXT TASK -->
+
+                    <div class="home-coming-up-item">
+
+                        <div class="home-coming-up-icon task">
+                            ✓
+                        </div>
+
+                        <div class="home-coming-up-content">
+
+                            <span class="home-coming-up-type">
+                                NEXT TASK
+                            </span>
+
+                            {% if next_task %}
+
+                                <strong>
+                                    {{ next_task["title"] }}
+                                </strong>
+
+                                <p>
+
+                                    {% if next_task["due_date"] %}
+
+                                        Due
+                                        {{ next_task["due_date"] }}
+
+                                    {% else %}
+
+                                        No deadline
+
+                                    {% endif %}
+
+                                </p>
+
+                            {% else %}
+
+                                <strong>
+                                    No upcoming task
+                                </strong>
+
+                                <p>
+                                    Nothing pending for now.
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- NEXT TRAINING -->
+
+                    <div class="home-coming-up-item">
+
+                        <div class="home-coming-up-icon training">
+                            ☆
+                        </div>
+
+                        <div class="home-coming-up-content">
+
+                            <span class="home-coming-up-type">
+                                NEXT TRAINING
+                            </span>
+
+                            {% if next_training %}
+
+                                <strong>
+                                    {{ next_training["title"] }}
+                                </strong>
+
+                                <p>
+
+                                    {{ next_training["training_date"] }}
+
+                                    {% if next_training["start_time"] %}
+                                        · {{ next_training["start_time"][:5] }}
+                                    {% endif %}
+
+                                    {% if next_training["location"] %}
+                                        · {{ next_training["location"] }}
+                                    {% endif %}
+
+                                </p>
+
+                            {% else %}
+
+                                <strong>
+                                    No upcoming training
+                                </strong>
+
+                                <p>
+                                    No training is currently scheduled.
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- NEXT MEETING -->
+
+                    <div class="home-coming-up-item">
+
+                        <div class="home-coming-up-icon meeting">
+                            ◇
+                        </div>
+
+                        <div class="home-coming-up-content">
+
+                            <span class="home-coming-up-type">
+                                NEXT MEETING
+                            </span>
+
+                            {% if next_meeting %}
+
+                                <strong>
+                                    {{ next_meeting["title"] }}
+                                </strong>
+
+                                <p>
+
+                                    {{ next_meeting["meeting_date"] }}
+
+                                    {% if next_meeting["start_time"] %}
+                                        · {{ next_meeting["start_time"][:5] }}
+                                    {% endif %}
+
+                                    {% if next_meeting["location"] %}
+                                        · {{ next_meeting["location"] }}
+                                    {% endif %}
+
+                                </p>
+
+                            {% else %}
+
+                                <strong>
+                                    No upcoming meeting
+                                </strong>
+
+                                <p>
+                                    You have no scheduled meeting.
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         ORSC INTERNAL RULEBOOK
+    ========================================================= -->
+
+    <section class="home-section home-rulebook">
+
+        <div class="rulebook-heading">
+
+            <div>
+
+                <span class="rulebook-label">
+                    CLUB GOVERNANCE
+                </span>
+
+                <h2>
+                    ORSC Internal Rulebook
+                </h2>
+
+                <p>
+                    Rules, responsibilities and systems that guide
+                    the Operations Research Society Club.
+                </p>
+
+            </div>
+
+            <div class="rulebook-badge">
+                Internal
+            </div>
+
+        </div>
+
+
+        <div class="rulebook-parts">
+
+
+            <!-- =================================================
+                 PART I — GENERAL RULES
+                 ALL USERS
+            ================================================== -->
+
+            <details class="rulebook-part">
+
+                <summary class="rulebook-part-header">
+
+                    <div class="rulebook-part-number">
+                        I
+                    </div>
+
+                    <div class="rulebook-part-title">
+
+                        <span>
+                            PART I
+                        </span>
+
+                        <h3>
+                            General Rules
+                        </h3>
+
+                        <p>
+                            Attendance, club room, communication,
+                            conduct and quality standards.
+                        </p>
+
+                    </div>
+
+                    <div class="rulebook-chevron">
+                        +
+                    </div>
+
+                </summary>
+
+
+                <div class="rulebook-part-content">
+
+
+                    <!-- 01 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>01</span>
+                            Attendance &amp; Activity
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                Every member must complete at least one
+                                assigned task per week. Weeks with zero
+                                output without a valid excuse count as
+                                an absence.
+                            </p>
+
+                            <p>
+                                Three consecutive unexplained absences
+                                result in a formal warning. A fourth
+                                triggers a review meeting with the
+                                department leader, which may result
+                                in removal.
+                            </p>
+
+                            <p>
+                                Members on a break due to exams or
+                                personal reasons must notify their
+                                department leader in advance.
+                                Silence is not an excuse.
+                            </p>
+
+                            <p>
+                                Each semester, every member must
+                                participate in at least 2 to 3
+                                club-wide initiatives or events,
+                                not just department-level work.
+                            </p>
+
+                            <p>
+                                Beyond assigned tasks, every member
+                                must stay active within their department
+                                through training, skill-building, or
+                                practice relevant to the department's
+                                work at least once every 2 to 3 weeks.
+                            </p>
+
+                            <p>
+                                Extended inactivity results in a warning,
+                                and continued inactivity may lead to
+                                removal from the department's group chat
+                                and the department itself.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 02 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>02</span>
+                            Club Room
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                The club room is a shared, institutional
+                                space. It is a privilege, not a right.
+                            </p>
+
+                            <p>
+                                Maximum noise level must be kept reasonable
+                                at all times. Between 8:00 AM and 2:30 PM,
+                                this is strictly enforced — conversations
+                                stay calm, music is either off or through
+                                headphones only, and no shouting under
+                                any circumstances.
+                            </p>
+
+                            <p>
+                                After 2:30 PM, moderate volume is acceptable,
+                                but you are still inside a university.
+                                Neighboring classrooms, offices, and
+                                corridors must be respected at all times.
+                            </p>
+
+                            <p>
+                                During exam periods, silence is mandatory
+                                for the entire day without exception.
+                                The club room during exams is for studying
+                                only.
+                            </p>
+
+                            <p>
+                                Every member is responsible for their own
+                                space and their own garbage. Clean up after
+                                yourself before you leave.
+                            </p>
+
+                            <p>
+                                Full meals are not permitted inside the
+                                club room. Light snacks such as juice,
+                                chocolate, biscuits, and similar items are
+                                acceptable as long as the space is left
+                                clean. Full meals must be eaten outside.
+                            </p>
+
+                            <p>
+                                No games are allowed inside the club room
+                                between 8:00 AM and 2:30 PM unless they
+                                are on a personal device with headphones.
+                            </p>
+
+                            <p>
+                                After hours, games are acceptable only as
+                                a group activity agreed on by everyone in
+                                the room and approved by the president,
+                                vice president, or an HR member who is
+                                present and supervising.
+                            </p>
+
+                            <p>
+                                No outsiders are allowed in the room without
+                                explicit permission from the president or
+                                a department leader.
+                            </p>
+
+                            <p>
+                                Personal belongings left in the room are
+                                the owner's responsibility. The club is
+                                not liable for any loss.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 03 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>03</span>
+                            Communication &amp; Tasks
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                All official club communication currently
+                                goes through department Messenger group
+                                chats. Once the club platform launches,
+                                all official communication will transition
+                                there.
+                            </p>
+
+                            <p>
+                                You only take tasks assigned through your
+                                department leader, the president, or the
+                                vice president.
+                            </p>
+
+                            <p>
+                                Tasks given informally by other members
+                                carry no obligation unless one of the
+                                authorized leaders has explicitly granted
+                                that member authority to assign work.
+                            </p>
+
+                            <p>
+                                Members must respond to messages from
+                                their department leader within 24 hours
+                                on working days.
+                            </p>
+
+                            <p>
+                                Personal conflicts must either remain
+                                private without affecting club work, or
+                                be brought confidentially to HR.
+                                The president or vice president is the
+                                last resort when HR cannot resolve the
+                                matter.
+                            </p>
+
+                            <p>
+                                Taking conflicts to public chats or airing
+                                them in the club room is not acceptable.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 04 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>04</span>
+                            Conduct &amp; Boundaries
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                There is no hierarchy of respect.
+                                Every member, leader, and officer is
+                                respected equally as a peer and as a
+                                friend. The club is meant to remain
+                                a family environment.
+                            </p>
+
+                            <p>
+                                Boundaries still exist. Interactions must
+                                remain professional enough that nobody
+                                feels uncomfortable, targeted, or
+                                disrespected. Banter is fine; crossing
+                                the line is not.
+                            </p>
+
+                            <p>
+                                The president and vice president have the
+                                final word on club decisions.
+                                Disagreement is allowed through the
+                                appropriate channels, not through public
+                                pushback or ignoring decisions.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 05 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>05</span>
+                            Deliverables &amp; Quality
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                Submitted work must meet the minimum
+                                quality standard set by the department
+                                leader.
+                            </p>
+
+                            <p>
+                                Rushed, incomplete, or careless work will
+                                be sent back and counts as a missed
+                                deadline until corrected.
+                            </p>
+
+                            <p>
+                                Deadlines are set by the department leader.
+                                Extensions must be requested before the
+                                deadline, not after.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+                </div>
+
+            </details>
+
+
+            <!-- =================================================
+                 PART VI — LEADERSHIP STRUCTURE & RULES
+                 HEAD ONLY
+            ================================================== -->
+
+            {% if current_user and current_user["role_name"] == "HEAD" %}
+
+            <details class="rulebook-part rulebook-part-restricted">
+
+                <summary class="rulebook-part-header">
+
+                    <div class="rulebook-part-number">
+                        VI
+                    </div>
+
+                    <div class="rulebook-part-title">
+
+                        <span>
+                            PART VI · HEAD ONLY
+                        </span>
+
+                        <h3>
+                            Leadership Structure &amp; Rules
+                        </h3>
+
+                        <p>
+                            Leadership roles, expectations,
+                            activity management and accountability.
+                        </p>
+
+                    </div>
+
+                    <div class="rulebook-chevron">
+                        +
+                    </div>
+
+                </summary>
+
+
+                <div class="rulebook-part-content">
+
+
+                    <!-- 01 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>01</span>
+                            Leadership Roles
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                The club is led by the following core
+                                figures: President, Vice President,
+                                Secretary, DCM Department Leader,
+                                HR Department Leader, DPA Department
+                                Leader, and ER Department Leader.
+                            </p>
+
+                            <p>
+                                Together, these figures form the club's
+                                leadership body. Major decisions,
+                                replacements, and structural changes
+                                go through them collectively.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 02 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>02</span>
+                            Elections &amp; Appointments
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                At the start of each year, all leadership
+                                positions are filled through a club-wide
+                                vote. Every member has a vote, including
+                                the candidates themselves.
+                            </p>
+
+                            <p>
+                                The president and vice president together
+                                hold confirmed agreement over each
+                                department leader elected. If they cannot
+                                both agree on a result, the matter is
+                                discussed openly within the full
+                                leadership body.
+                            </p>
+
+                            <p>
+                                Previous holders of a position may express
+                                a preference for their successor.
+                                This is welcomed and considered, but
+                                carries no obligation — it is a
+                                recommendation, not an appointment.
+                            </p>
+
+                            <p>
+                                If a leader steps down, becomes inactive,
+                                or is removed during the semester, any
+                                member of the leadership body may nominate
+                                a replacement candidate.
+                            </p>
+
+                            <p>
+                                The president has final say on a
+                                mid-semester replacement, but the decision
+                                is discussed and agreed upon between the
+                                president, vice president, and remaining
+                                department leaders. No replacement is
+                                made unilaterally.
+                            </p>
+
+                            <p>
+                                Mid-semester replacements do not require
+                                a club-wide vote, but the new appointment
+                                must be announced transparently to all
+                                members.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 03 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>03</span>
+                            General Leader Expectations
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                Leaders are members first. All general
+                                rules apply to them without exception.
+                            </p>
+
+                            <p>
+                                Leaders are held to a noticeably higher
+                                standard than regular members.
+                                Where a member is expected to do their
+                                part, a leader is expected to ensure that
+                                everyone around them does theirs as well.
+                            </p>
+
+                            <p>
+                                A leader who is inactive, disengaged, or
+                                consistently unavailable will be addressed
+                                faster and more seriously than a regular
+                                member in the same situation.
+                            </p>
+
+                            <p>
+                                Department leaders are the first line of
+                                response for issues within their department,
+                                including workload problems, conflicts,
+                                quality issues, and attendance concerns.
+                            </p>
+
+                            <p>
+                                These issues should not reach the president
+                                unless the leader has genuinely exhausted
+                                their options first.
+                            </p>
+
+                            <p>
+                                If a problem is escalating and the leader
+                                needs support, they bring it to HR first.
+                                The president and vice president are the
+                                last resort, not the first call.
+                            </p>
+
+                            <p>
+                                A leader who consistently escalates small
+                                problems upward without attempting to
+                                handle them internally is not fulfilling
+                                the role.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 04 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>04</span>
+                            Keeping Members Active
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                Each department leader is fully responsible
+                                for the activity level of their department.
+                                If members are idle — no tasks, no projects,
+                                no active period — it is the leader's job
+                                to fill that gap.
+                            </p>
+
+                            <p>
+                                During low-task periods, leaders must still
+                                keep members engaged through skill-building,
+                                internal learning, or collaborative practice
+                                relevant to the department.
+                            </p>
+
+                            <p>
+                                <strong>DCM:</strong>
+                                color theory exercises, building palettes,
+                                practicing layout, and peer skill-sharing
+                                between members.
+                            </p>
+
+                            <p>
+                                <strong>DPA:</strong>
+                                researching activity ideas, reviewing past
+                                event reports, and preparing briefs for
+                                upcoming initiatives.
+                            </p>
+
+                            <p>
+                                <strong>HR:</strong>
+                                reviewing member logs, checking in on
+                                department morale, and preparing for the
+                                next recruitment cycle.
+                            </p>
+
+                            <p>
+                                <strong>ER:</strong>
+                                mapping potential partners, drafting
+                                outreach templates, and staying informed
+                                on what other clubs or institutions are
+                                doing.
+                            </p>
+
+                            <p>
+                                Leaders must check in with each of their
+                                members at least once a week, even when
+                                nothing urgent is happening.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 05 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>05</span>
+                            Secretary — Specific Responsibilities
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                The secretary is responsible for maintaining
+                                the club's official records: meeting notes,
+                                decisions made by the leadership body,
+                                member logs, and formal documents.
+                            </p>
+
+                            <p>
+                                Every leadership meeting must produce a
+                                written summary, prepared by the secretary
+                                and shared with all leaders within 48 hours.
+                            </p>
+
+                            <p>
+                                The secretary does not manage a department
+                                but sits within the leadership body with
+                                equal voice in collective decisions.
+                            </p>
+
+                            <p>
+                                The secretary works closely with HR to
+                                ensure that logs, reports, and records
+                                are consistent and up to date.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 06 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>06</span>
+                            HR Leader — Specific Responsibilities
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                The HR leader must be the most visible
+                                example of conduct in the entire club.
+                                If the standard is not being modeled at
+                                the top of HR, it cannot be enforced below.
+                            </p>
+
+                            <p>
+                                HR members are the ones actively maintaining
+                                logs and reporting to the HR leader.
+                                The HR leader's job is to receive, organize,
+                                and act on those reports — not to do all
+                                the logging themselves.
+                            </p>
+
+                            <p>
+                                Every incident, conflict, warning, or strike
+                                issued anywhere in the club must be
+                                documented by HR, stored by the HR leader,
+                                and reported to the president in the
+                                monthly summary.
+                            </p>
+
+                            <p>
+                                The HR leader takes full responsibility
+                                for the accuracy and completeness of those
+                                records. Missing or inconsistent logs
+                                reflect directly on them.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 07 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>07</span>
+                            ER Leader — Specific Responsibilities
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                The ER leader must keep the president
+                                personally informed of every active
+                                external relationship, ongoing conversation,
+                                or potential partnership — not just at
+                                monthly summaries, but as things develop.
+                            </p>
+
+                            <p>
+                                No external communication goes out without
+                                the ER leader's approval. No agreement is
+                                made without the president's sign-off.
+                            </p>
+
+                            <p>
+                                The ER leader is the club's external face.
+                                Their conduct, professionalism, and
+                                reliability in outside interactions directly
+                                shape how the club is perceived.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 08 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>08</span>
+                            Leader Strikes &amp; Demotion
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                Leaders follow the same 5-strike system as
+                                all members, with the same semester reset.
+                            </p>
+
+                            <p>
+                                Given their responsibilities, certain
+                                failures that might earn a member a warning
+                                will earn a leader a strike directly.
+                                Consistent departmental inactivity, repeated
+                                failure to report, or handling conflicts
+                                poorly after multiple instances are clear
+                                examples.
+                            </p>
+
+                            <p>
+                                At strike 5, a leader is reviewed.
+                                The review is conducted by the president,
+                                vice president, and at least one other
+                                department leader not involved in the
+                                situation.
+                            </p>
+
+                            <p>
+                                <strong>Demotion —</strong>
+                                the person is removed from the leadership
+                                role but continues as a regular member.
+                            </p>
+
+                            <p>
+                                <strong>Removal —</strong>
+                                if the offenses are serious enough that
+                                demotion is not appropriate, the member
+                                is removed under the same terms as any
+                                other member.
+                            </p>
+
+                            <p>
+                                <strong>Reinstatement with conditions —</strong>
+                                when context clearly warrants it, the
+                                leader may remain in their role under
+                                defined conditions and a probation period
+                                agreed upon by the leadership body.
+                            </p>
+
+                            <p>
+                                A demoted leader is not treated with less
+                                respect than any other member. The demotion
+                                is structural, not personal.
+                            </p>
+
+                            <p>
+                                A leader cannot use their position to
+                                shield themselves from consequences that
+                                would apply to any regular member.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+                </div>
+
+            </details>
+
+            {% endif %}
+
+
+            <!-- =================================================
+                 PART VII — PRESIDENT & VICE PRESIDENT
+                 PRESIDENT + VICE_PRESIDENT ONLY
+            ================================================== -->
+
+            {% if current_user and current_user["role_name"] in ["PRESIDENT", "VICE_PRESIDENT"] %}
+
+            <details class="rulebook-part rulebook-part-restricted">
+
+                <summary class="rulebook-part-header">
+
+                    <div class="rulebook-part-number">
+                        VII
+                    </div>
+
+                    <div class="rulebook-part-title">
+
+                        <span>
+                            PART VII · EXECUTIVE
+                        </span>
+
+                        <h3>
+                            President &amp; Vice President
+                        </h3>
+
+                        <p>
+                            Responsibilities, accessibility and
+                            commitment to the club.
+                        </p>
+
+                    </div>
+
+                    <div class="rulebook-chevron">
+                        +
+                    </div>
+
+                </summary>
+
+
+                <div class="rulebook-part-content">
+
+
+                    <!-- 01 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>01</span>
+                            Role &amp; Responsibility
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                The president holds the highest authority
+                                in the club, and with it, the highest level
+                                of responsibility and accountability.
+                            </p>
+
+                            <p>
+                                The vice president shares that responsibility
+                                wherever the president is unavailable,
+                                in conflict, or has delegated authority.
+                                The vice president is not simply a backup —
+                                they are a co-pillar of the club's leadership.
+                            </p>
+
+                            <p>
+                                Together, the president and vice president
+                                are responsible for the overall health,
+                                direction, and culture of the club.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 02 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>02</span>
+                            What the President &amp; Vice President Are Responsible For
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                Ensuring every department is functioning
+                                and every department leader has the support
+                                they need.
+                            </p>
+
+                            <p>
+                                Making final decisions on leadership
+                                replacements, removals, review-level
+                                sanctions, and external agreements.
+                            </p>
+
+                            <p>
+                                Being present and reachable — not just
+                                visible at events, but available when
+                                members or leaders genuinely need them.
+                            </p>
+
+                            <p>
+                                Reviewing the monthly HR report and making
+                                sure necessary action is taken.
+                            </p>
+
+                            <p>
+                                Holding the leadership body accountable
+                                to the same standards expected from every
+                                member.
+                            </p>
+
+                            <p>
+                                Setting the club's semester goals,
+                                priorities, and expectations.
+                            </p>
+
+                            <p>
+                                Protecting the club's reputation inside
+                                and outside the university.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 03 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>03</span>
+                            How to Reach Us
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                Every member has the right to reach the
+                                president or vice president directly.
+                                There is no rule against it.
+                            </p>
+
+                            <p>
+                                However, members are asked to respect the
+                                club's structure. If an issue can be
+                                handled by the department leader, it
+                                should go there first. If it requires HR,
+                                it should go to HR.
+                            </p>
+
+                            <p>
+                                If the department leader is the problem,
+                                if HR is handling something unfairly, or
+                                if the issue is serious enough that the
+                                normal structure cannot resolve it,
+                                members may come directly to the president
+                                or vice president.
+                            </p>
+
+                            <p>
+                                No member will face consequences for
+                                raising a genuine concern directly when
+                                the situation calls for it.
+                            </p>
+
+                            <p>
+                                The president and vice president are meant
+                                to remain approachable. The structure
+                                exists for efficiency, not distance.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 04 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>04</span>
+                            Our Commitment to the Club
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                Lead by example.
+                            </p>
+
+                            <p>
+                                Be fair in decisions and consequences.
+                            </p>
+
+                            <p>
+                                Remain present and available.
+                            </p>
+
+                            <p>
+                                Listen before making decisions.
+                            </p>
+
+                            <p>
+                                Protect the culture and values of the club.
+                            </p>
+
+                            <p>
+                                Be honest and transparent with members.
+                            </p>
+
+                            <p>
+                                Carry the club forward and leave it stronger
+                                than it was at the beginning of the term.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+                </div>
+
+            </details>
+
+            {% endif %}
+
+
+            <!-- =================================================
+                 PART VIII — STRIKE SYSTEM
+                 ALL USERS
+            ================================================== -->
+
+            <details class="rulebook-part">
+
+                <summary class="rulebook-part-header">
+
+                    <div class="rulebook-part-number">
+                        VIII
+                    </div>
+
+                    <div class="rulebook-part-title">
+
+                        <span>
+                            PART VIII
+                        </span>
+
+                        <h3>
+                            Strike System
+                        </h3>
+
+                        <p>
+                            Formal warnings, the five-strike scale,
+                            reviews and semester resets.
+                        </p>
+
+                    </div>
+
+                    <div class="rulebook-chevron">
+                        +
+                    </div>
+
+                </summary>
+
+
+                <div class="rulebook-part-content">
+
+
+                    <div class="rulebook-topic-content rulebook-intro-text">
+
+                        <p>
+                            The strike system is a formal mechanism for
+                            genuine, intentional, or repeated misconduct.
+                            It is not designed to punish honest mistakes,
+                            reasonable explanations, or accidents that
+                            are acknowledged and apologized for.
+                            Context matters.
+                        </p>
+
+                    </div>
+
+
+                    <!-- 01 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>01</span>
+                            How Strikes Are Issued
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                A strike may only be issued by the president
+                                or an HR member.
+                            </p>
+
+                            <p>
+                                The president determines the severity of
+                                the offense and the corresponding point
+                                deduction.
+                            </p>
+
+                            <p>
+                                HR records the member, the offense, the
+                                date, and the point deduction in the
+                                official log.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 02 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>02</span>
+                            Five-Strike Scale
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <div class="rulebook-table-wrap">
+
+                                <table class="rulebook-table">
+
+                                    <thead>
+
+                                        <tr>
+                                            <th>Strike</th>
+                                            <th>Level</th>
+                                            <th>Examples</th>
+                                            <th>Action</th>
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td>Strike 1</td>
+                                            <td>Minor / first-time</td>
+                                            <td>
+                                                Late task without notice,
+                                                minor club-room violation
+                                            </td>
+                                            <td>
+                                                Logged warning and informal
+                                                conversation with the
+                                                department leader.
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Strike 2</td>
+                                            <td>
+                                                Repeated minor or one
+                                                moderate offense
+                                            </td>
+                                            <td>
+                                                Repeated minor behavior
+                                                or a moderate breach
+                                            </td>
+                                            <td>
+                                                Written warning from HR.
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Strike 3</td>
+                                            <td>
+                                                Continued pattern or
+                                                serious offense
+                                            </td>
+                                            <td>
+                                                Repeated misconduct or
+                                                a serious breach
+                                            </td>
+                                            <td>
+                                                Formal meeting with the
+                                                department leader and HR.
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Strike 4</td>
+                                            <td>
+                                                Serious or repeated after
+                                                Strike 3
+                                            </td>
+                                            <td>
+                                                Serious breach or continued
+                                                behavior after the formal
+                                                meeting
+                                            </td>
+                                            <td>
+                                                President is notified and
+                                                a formal warning is issued.
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Strike 5</td>
+                                            <td>Final breach</td>
+                                            <td>
+                                                Final breach of the scale
+                                            </td>
+                                            <td>
+                                                Membership review by the
+                                                president, vice president,
+                                                and HR.
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 03 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>03</span>
+                            Membership Review &amp; Removal
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                At Strike 5, the member is reviewed by the
+                                president, vice president, and HR.
+                            </p>
+
+                            <p>
+                                Removal is not permanent. A removed member
+                                may reapply after one full year.
+                            </p>
+
+                            <p>
+                                A sixth offense following the review, or
+                                an offense serious enough to bypass the
+                                normal scale, results in immediate removal.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 04 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>04</span>
+                            Semester Reset
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                Strikes reset every semester. Every member
+                                begins the new semester with a clean active
+                                strike count.
+                            </p>
+
+                            <p>
+                                Records are still kept internally by HR.
+                                After the reset, the previous history
+                                remains visible to the president and HR
+                                and may be considered as context when
+                                necessary.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 05 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>05</span>
+                            Important Clarifications
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                Strikes are for deliberate or repeated
+                                behavior, not misunderstandings, honest
+                                mistakes, or situations that were properly
+                                communicated and resolved.
+                            </p>
+
+                            <p>
+                                An accidental issue that is acknowledged
+                                and apologized for does not automatically
+                                result in a strike.
+                            </p>
+
+                            <p>
+                                Leaders use the same strike scale as all
+                                members, but are held to a higher standard
+                                because of their responsibilities.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+                </div>
+
+            </details>
+
+
+            <!-- =================================================
+                 PART IX — POINT SYSTEM
+                 ALL USERS
+            ================================================== -->
+
+            <details class="rulebook-part">
+
+                <summary class="rulebook-part-header">
+
+                    <div class="rulebook-part-number">
+                        IX
+                    </div>
+
+                    <div class="rulebook-part-title">
+
+                        <span>
+                            PART IX
+                        </span>
+
+                        <h3>
+                            Point System
+                        </h3>
+
+                        <p>
+                            Earning, spending, balances, the red line
+                            and end-of-semester recognition.
+                        </p>
+
+                    </div>
+
+                    <div class="rulebook-chevron">
+                        +
+                    </div>
+
+                </summary>
+
+
+                <div class="rulebook-part-content">
+
+
+                    <div class="rulebook-topic-content rulebook-intro-text">
+
+                        <p>
+                            The point system rewards members who stay
+                            active and contribute to the club.
+                            Points can be saved, spent, used as a safety
+                            net, and form part of the member's
+                            end-of-semester record.
+                        </p>
+
+                    </div>
+
+
+                    <!-- 01 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>01</span>
+                            Earning Points
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <div class="rulebook-table-wrap">
+
+                                <table class="rulebook-table">
+
+                                    <thead>
+
+                                        <tr>
+                                            <th>Action</th>
+                                            <th>Points</th>
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td>
+                                                Complete an assigned task
+                                            </td>
+                                            <td>
+                                                2
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                Teach a skill to other
+                                                members
+                                            </td>
+                                            <td>
+                                                2
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                Attend or participate
+                                                in an event
+                                            </td>
+                                            <td>
+                                                3
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                            <p>
+                                Points are awarded by the department
+                                leader and logged with the member,
+                                action, and date.
+                            </p>
+
+                            <p>
+                                The president has visibility across all
+                                departments and all point logs.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 02 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>02</span>
+                            Spending Points
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <div class="rulebook-table-wrap">
+
+                                <table class="rulebook-table">
+
+                                    <thead>
+
+                                        <tr>
+                                            <th>Use</th>
+                                            <th>Cost</th>
+                                            <th>Approval</th>
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td>
+                                                Skip one task
+                                            </td>
+                                            <td>
+                                                5 points
+                                            </td>
+                                            <td>
+                                                Department leader
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                Request removal of one
+                                                strike
+                                            </td>
+                                            <td>
+                                                10 points
+                                            </td>
+                                            <td>
+                                                President or HR
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                            <p>
+                                A task-skip request is not guaranteed.
+                                The member submits a request and the
+                                department leader accepts or denies it.
+                            </p>
+
+                            <p>
+                                Strike removal is also a request, not an
+                                automatic exchange. The president or HR
+                                makes the final decision, and the 10 points
+                                are deducted only if the request is approved.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 03 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>03</span>
+                            Three Point Values
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                <strong>Total:</strong>
+                                the member's lifetime cumulative points.
+                                It normally only increases. It decreases
+                                only when previous-semester credits are
+                                used to escape the red line.
+                            </p>
+
+                            <p>
+                                <strong>Available:</strong>
+                                the points available during the current
+                                semester. This value resets to zero at
+                                the beginning of every semester.
+                            </p>
+
+                            <p>
+                                <strong>Remaining:</strong>
+                                lifetime Total minus all points that have
+                                been spent or deducted.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 04 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>04</span>
+                            Strikes &amp; Point Deductions
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                The president determines the point
+                                deduction associated with a strike
+                                according to the severity of the offense.
+                            </p>
+
+                            <p>
+                                The deduction is taken from the member's
+                                Available points.
+                            </p>
+
+                            <p>
+                                A strike deducts its assigned points
+                                automatically. If the member later wants
+                                to request removal of that strike, an
+                                additional 10 points are required if the
+                                removal request is approved.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 05 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>05</span>
+                            Red Line
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                A member crosses the red line when their
+                                Available points are less than or equal
+                                to zero.
+                            </p>
+
+                            <p>
+                                If a member is already at or below zero
+                                when a new strike is issued, that new
+                                offense counts as a double strike.
+                            </p>
+
+                            <p>
+                                Available points may become negative.
+                                The member must work back upward by
+                                completing tasks, teaching skills, or
+                                participating in events.
+                            </p>
+
+                            <p>
+                                Further offenses while in the red-line
+                                state carry heavier consequences.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 06 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>06</span>
+                            Previous Semester Credits — Safety Net
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                If a new deduction would push the member
+                                below zero, the system immediately checks
+                                the Remaining points from the immediately
+                                previous semester only.
+                            </p>
+
+                            <p>
+                                The member may be prompted to use enough
+                                of those previous-semester credits to
+                                bring the current Available value exactly
+                                to zero, never above zero.
+                            </p>
+
+                            <p>
+                                Credits used this way are deducted from
+                                the previous semester's Remaining value
+                                and from the lifetime Total.
+                                This is the only situation in which
+                                lifetime Total decreases.
+                            </p>
+
+                            <p>
+                                If the previous semester does not contain
+                                enough Remaining points to reach zero,
+                                the member stays below zero and enters
+                                the red-line state.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 07 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>07</span>
+                            End-Semester Recognition
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                At the end of each semester, members may
+                                be shown on a leaderboard based on raw
+                                points earned during that semester,
+                                before deductions.
+                            </p>
+
+                            <p>
+                                The leaderboard is for recognition only
+                                and does not carry prizes.
+                            </p>
+
+                            <p>
+                                The member's full point history remains
+                                archived and carries forward in their
+                                profile.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+                </div>
+
+            </details>
+
+
+            <!-- =================================================
+                 PART X — PLATFORM FEATURES OVERVIEW
+                 ALL USERS
+            ================================================== -->
+
+            <details class="rulebook-part">
+
+                <summary class="rulebook-part-header">
+
+                    <div class="rulebook-part-number">
+                        X
+                    </div>
+
+                    <div class="rulebook-part-title">
+
+                        <span>
+                            PART X
+                        </span>
+
+                        <h3>
+                            Platform Features Overview
+                        </h3>
+
+                        <p>
+                            How the rulebook's systems translate
+                            into the CMS.
+                        </p>
+
+                    </div>
+
+                    <div class="rulebook-chevron">
+                        +
+                    </div>
+
+                </summary>
+
+
+                <div class="rulebook-part-content">
+
+
+                    <div class="rulebook-topic-content rulebook-intro-text">
+
+                        <p>
+                            This section is a reference for how the
+                            rulebook's systems are represented on the
+                            platform. It describes platform behavior
+                            and access; it does not replace the rules
+                            themselves.
+                        </p>
+
+                    </div>
+
+
+                    <!-- 01 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>01</span>
+                            Member Profiles
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                Each member profile displays the three
+                                point values: Total, Available, and
+                                Remaining.
+                            </p>
+
+                            <p>
+                                The profile should display Total
+                                prominently, together with the
+                                current-semester or current-year context,
+                                and show Remaining and Available clearly.
+                            </p>
+
+                            <p>
+                                Strike logs are visible to the member
+                                concerned, their department leader,
+                                HR, and the president.
+                            </p>
+
+                            <p>
+                                Semester history is archived.
+                                Past totals, remaining balances, and
+                                strike history remain visible to the
+                                president and HR.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 02 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>02</span>
+                            Point Management
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                Department leaders can award points to
+                                members of their own department by
+                                selecting the relevant action.
+                                The corresponding point value is filled
+                                automatically.
+                            </p>
+
+                            <p>
+                                The president has full read and write
+                                visibility across all departments.
+                            </p>
+
+                            <p>
+                                Every point entry is logged.
+                            </p>
+
+                            <p>
+                                Members can submit a task-skip request
+                                through the platform. The department
+                                leader accepts or denies it.
+                            </p>
+
+                            <p>
+                                Members can also submit a strike-removal
+                                request. The president or HR handles the
+                                request, and points are deducted only
+                                after approval.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 03 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>03</span>
+                            Strike Management
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                The president and HR can issue strikes.
+                                The president determines the severity
+                                and point deduction.
+                            </p>
+
+                            <p>
+                                If a strike deduction would take Available
+                                points below zero, the platform checks
+                                the immediately previous semester and
+                                prompts the member when eligible
+                                previous-semester credits exist.
+                            </p>
+
+                            <p>
+                                Credits used from the previous semester
+                                reduce both the previous semester's
+                                Remaining balance and the lifetime Total.
+                            </p>
+
+                            <p>
+                                If the member is already at or below zero
+                                when a new strike is issued, the platform
+                                applies the double-strike rule automatically.
+                            </p>
+
+                            <p>
+                                Red-line status is visible to the president,
+                                HR, and the member's department leader.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+
+                    <!-- 04 -->
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>04</span>
+                            Access Levels
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <div class="rulebook-table-wrap">
+
+                                <table class="rulebook-table">
+
+                                    <thead>
+
+                                        <tr>
+                                            <th>Role</th>
+                                            <th>Platform Access</th>
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+
+                                            <td>
+                                                Member
+                                            </td>
+
+                                            <td>
+                                                Own profile, own points,
+                                                own strikes, and the ability
+                                                to send task-skip and
+                                                strike-removal requests.
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td>
+                                                Department Leader
+                                            </td>
+
+                                            <td>
+                                                Own department members;
+                                                award and deduct points;
+                                                accept or deny task-skip
+                                                requests.
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td>
+                                                HR
+                                            </td>
+
+                                            <td>
+                                                Issue strikes, handle
+                                                strike-removal requests,
+                                                and access all member logs.
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td>
+                                                President
+                                            </td>
+
+                                            <td>
+                                                Full access to all logs
+                                                and requests; issue strikes,
+                                                set deductions, and confirm
+                                                removals.
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </details>
+
+                </div>
+
+            </details>
+
+
+            <!-- =================================================
+                 PART XI — PRESIDENTIAL TERM
+                 ALL USERS
+            ================================================== -->
+
+            <details class="rulebook-part">
+
+                <summary class="rulebook-part-header">
+
+                    <div class="rulebook-part-number">
+                        XI
+                    </div>
+
+                    <div class="rulebook-part-title">
+
+                        <span>
+                            PART XI
+                        </span>
+
+                        <h3>
+                            Presidential Term
+                        </h3>
+
+                        <p>
+                            Term limits, succession and transition
+                            of responsibilities.
+                        </p>
+
+                    </div>
+
+                    <div class="rulebook-chevron">
+                        +
+                    </div>
+
+                </summary>
+
+
+                <div class="rulebook-part-content">
+
+                    <details class="rulebook-topic">
+
+                        <summary>
+                            <span>01</span>
+                            Presidential Term
+                        </summary>
+
+                        <div class="rulebook-topic-content">
+
+                            <p>
+                                The president may serve for a maximum
+                                of one academic year. A new presidential
+                                election is held at the end of that year.
+                            </p>
+
+                            <p>
+                                The outgoing president may recommend a
+                                successor, but the recommendation is
+                                non-binding and does not replace the
+                                election process.
+                            </p>
+
+                            <p>
+                                A proper transition must take place
+                                between the outgoing president, the
+                                incoming president, and the vice president.
+                                This includes transferring access, records,
+                                responsibilities, ongoing matters, and the
+                                institutional knowledge necessary to
+                                continue the club's work.
+                            </p>
+
+                            <p>
+                                A former president remains a member in
+                                good standing and may serve the club in
+                                another role if elected or appointed to
+                                that role.
+                            </p>
+
+                            <p>
+                                No individual may serve as president for
+                                more than one consecutive academic year.
+                            </p>
+
+                        </div>
+
+                    </details>
+
+                </div>
+
+            </details>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- =========================================================
+     EVENT COUNTDOWN SCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const countdown =
+            document.getElementById(
+                "homeEventCountdown"
+            );
+
+        if (!countdown) {
+            return;
+        }
+
+
+        const targetValue =
+            countdown.dataset.target;
+
+        if (!targetValue) {
+            return;
+        }
+
+
+        const targetDate =
+            new Date(targetValue);
+
+
+        const daysElement =
+            document.getElementById(
+                "countdownDays"
+            );
+
+        const hoursElement =
+            document.getElementById(
+                "countdownHours"
+            );
+
+        const minutesElement =
+            document.getElementById(
+                "countdownMinutes"
+            );
+
+
+        function updateCountdown() {
+
+            const now =
+                new Date();
+
+            const difference =
+                targetDate.getTime()
+                -
+                now.getTime();
+
+
+            if (difference <= 0) {
+
+                if (daysElement) {
+                    daysElement.textContent =
+                        "00";
+                }
+
+                if (hoursElement) {
+                    hoursElement.textContent =
+                        "00";
+                }
+
+                if (minutesElement) {
+                    minutesElement.textContent =
+                        "00";
+                }
+
+                return;
+            }
+
+
+            const days =
+                Math.floor(
+                    difference
+                    /
+                    (
+                        1000
+                        *
+                        60
+                        *
+                        60
+                        *
+                        24
+                    )
+                );
+
+
+            const hours =
+                Math.floor(
+                    (
+                        difference
+                        %
+                        (
+                            1000
+                            *
+                            60
+                            *
+                            60
+                            *
+                            24
+                        )
+                    )
+                    /
+                    (
+                        1000
+                        *
+                        60
+                        *
+                        60
+                    )
+                );
+
+
+            const minutes =
+                Math.floor(
+                    (
+                        difference
+                        %
+                        (
+                            1000
+                            *
+                            60
+                            *
+                            60
+                        )
+                    )
+                    /
+                    (
+                        1000
+                        *
+                        60
+                    )
+                );
+
+
+            if (daysElement) {
+
+                daysElement.textContent =
+                    String(
+                        days
+                    ).padStart(
+                        2,
+                        "0"
+                    );
+
+            }
+
+
+            if (hoursElement) {
+
+                hoursElement.textContent =
+                    String(
+                        hours
+                    ).padStart(
+                        2,
+                        "0"
+                    );
+
+            }
+
+
+            if (minutesElement) {
+
+                minutesElement.textContent =
+                    String(
+                        minutes
+                    ).padStart(
+                        2,
+                        "0"
+                    );
+
+            }
+
+        }
+
+
+        updateCountdown();
+
+
+        setInterval(
+            updateCountdown,
+            60000
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

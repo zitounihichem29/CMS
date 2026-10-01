@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Edit Event
+{% endblock %}
+
+
+{% block content %}
+
+<div class="event-form-page edit-event-page">
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="event-form-header">
+
+        <div class="event-form-header-content">
+
+            <span class="events-label">
+                ORSC EVENTS
+            </span>
+
+            <h1>
+                Edit Event
+            </h1>
+
+            <p>
+                Update the event information.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for(
+                'events.event_detail',
+                event_id=event['event_id']
+            ) }}"
+            class="btn-secondary"
+        >
+            Back to Event
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         FORM
+         ======================================== -->
+
+    <form
+        method="POST"
+        class="event-main-form"
+    >
+
+
+        <!-- ========================================
+             GENERAL INFORMATION
+             ======================================== -->
+
+        <section class="event-form-section">
+
+            <div class="event-form-section-header">
+
+                <span class="event-form-section-number">
+                    01
+                </span>
+
+                <div>
+
+                    <h2>
+                        General Information
+                    </h2>
+
+                    <p>
+                        Update the main information of the event.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- TITLE -->
+
+            <div class="event-form-group">
+
+                <label for="title">
+                    Event Title
+                    <span class="required-mark">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    value="{{ event['title'] }}"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="event-form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="6"
+                    placeholder="Describe the event..."
+                >{{ event["description"] or "" }}</textarea>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================
+             DATE & TIME
+             ======================================== -->
+
+        <section class="event-form-section">
+
+            <div class="event-form-section-header">
+
+                <span class="event-form-section-number">
+                    02
+                </span>
+
+                <div>
+
+                    <h2>
+                        Date & Time
+                    </h2>
+
+                    <p>
+                        Update when the event starts and ends.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="event-form-grid">
+
+
+                <!-- START DATE -->
+
+                <div class="event-form-group">
+
+                    <label for="event_date">
+                        Start Date
+                        <span class="required-mark">*</span>
+                    </label>
+
+                    <input
+                        type="date"
+                        id="event_date"
+                        name="event_date"
+                        value="{{ event['event_date'] }}"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- END DATE -->
+
+                <div class="event-form-group">
+
+                    <label for="end_date">
+                        End Date
+                        <span class="required-mark">*</span>
+                    </label>
+
+                    <input
+                        type="date"
+                        id="end_date"
+                        name="end_date"
+                        value="{{ event['end_date'] }}"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- START TIME -->
+
+                <div class="event-form-group">
+
+                    <label for="start_time">
+                        Start Time
+                    </label>
+
+                    <input
+                        type="time"
+                        id="start_time"
+                        name="start_time"
+                        value="{{ event['start_time'] or '' }}"
+                    >
+
+                </div>
+
+
+
+                <!-- END TIME -->
+
+                <div class="event-form-group">
+
+                    <label for="end_time">
+                        End Time
+                    </label>
+
+                    <input
+                        type="time"
+                        id="end_time"
+                        name="end_time"
+                        value="{{ event['end_time'] or '' }}"
+                    >
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================
+             LOCATION
+             ======================================== -->
+
+        <section class="event-form-section">
+
+            <div class="event-form-section-header">
+
+                <span class="event-form-section-number">
+                    03
+                </span>
+
+                <div>
+
+                    <h2>
+                        Location
+                    </h2>
+
+                    <p>
+                        Update where the event will take place.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="event-form-group">
+
+                <label for="location">
+                    Event Location
+                </label>
+
+                <input
+                    type="text"
+                    id="location"
+                    name="location"
+                    value="{{ event['location'] or '' }}"
+                    placeholder="Example: USTHB - Auditorium"
+                >
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================
+             ACTIONS
+             ======================================== -->
+
+        <div class="event-form-actions">
+
+            <a
+                href="{{ url_for(
+                    'events.event_detail',
+                    event_id=event['event_id']
+                ) }}"
+                class="btn-secondary"
+            >
+                Cancel
+            </a>
+
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Save Changes
+            </button>
+
+        </div>
+
+
+    </form>
+
+
+</div>
+
+{% endblock %}

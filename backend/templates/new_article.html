@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+New Article
+{% endblock %}
+
+
+{% block content %}
+
+<div class="new-article-page">
+
+
+    <div class="article-form-header">
+
+        <div>
+
+            <span class="articles-label">
+                ORSC RESEARCH
+            </span>
+
+            <h1>
+                New Article
+            </h1>
+
+            <p>
+                Create a new ORSC research article.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('articles.articles') }}"
+            class="btn-secondary"
+        >
+            ← Back to Articles
+        </a>
+
+    </div>
+
+
+
+    <form
+        method="POST"
+        class="article-form"
+    >
+
+
+        <!-- TITLE -->
+
+        <div class="article-form-group">
+
+            <label for="title">
+                Article Title *
+            </label>
+
+            <input
+                type="text"
+                id="title"
+                name="title"
+                placeholder="Enter the article title"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="article-form-group">
+
+            <label for="description">
+                Description *
+            </label>
+
+            <textarea
+                id="description"
+                name="description"
+                placeholder="Describe the article and its research idea"
+                required
+            ></textarea>
+
+        </div>
+
+
+
+        <!-- IDEA OWNER -->
+
+        <div class="article-form-group">
+
+            <label for="article_owner_membership_id">
+                Idea Owner *
+            </label>
+
+            <select
+                id="article_owner_membership_id"
+                name="article_owner_membership_id"
+                required
+            >
+
+                <option value="">
+                    Select the idea owner
+                </option>
+
+
+                {% for owner in idea_owners %}
+
+                    <option value="{{ owner['membership_id'] }}">
+
+                        {{ owner["first_name"] }}
+                        {{ owner["last_name"] }}
+
+                        —
+                        {{ owner["department_name"] }}
+
+                        —
+                        {{ owner["role_name"] }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+
+        <!-- PUBLICATION DATE -->
+
+        <div class="article-form-group">
+
+            <label for="publication_date">
+                Publication Date
+            </label>
+
+            <input
+                type="date"
+                id="publication_date"
+                name="publication_date"
+            >
+
+            <small class="article-form-help">
+                Optional. It can remain empty while the article is being prepared.
+            </small>
+
+        </div>
+
+
+
+        <div class="article-form-info">
+
+            <p>
+                The article starts as
+                <strong>Active</strong>.
+                The publication link will be added later,
+                after the final team is selected.
+            </p>
+
+        </div>
+
+
+
+        <div class="article-form-actions">
+
+            <a
+                href="{{ url_for('articles.articles') }}"
+                class="btn-secondary"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Create Article
+            </button>
+
+        </div>
+
+
+    </form>
+
+
+</div>
+
+{% endblock %}

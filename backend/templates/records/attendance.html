@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "records/_styles.html" %}
+
+<div class="records-page">
+
+    <div class="records-head">
+
+        <div>
+
+            <a
+                class="records-muted"
+                href="{{ url_for(
+                    'records.records_home'
+                ) }}"
+            >
+                ← Club Records
+            </a>
+
+            <h1>
+                Attendance
+            </h1>
+
+            <p class="records-muted">
+                Manage attendance for the active mandate.
+            </p>
+
+        </div>
+
+
+        <span class="records-badge">
+            {{ term["name"] }}
+        </span>
+
+    </div>
+
+
+    <section class="records-section">
+
+        <h2>
+            Events
+        </h2>
+
+        {% if events %}
+
+            <div class="records-table-wrap">
+
+                <table class="records-table">
+
+                    <tbody>
+
+                        {% for item in events %}
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        {{ item["title"] }}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    {{ item["item_date"] }}
+                                </td>
+
+                                <td>
+                                    {{ item["attendance_count"] }}
+                                    recorded
+                                </td>
+
+                                <td>
+
+                                    <a
+                                        class="records-btn"
+                                        href="{{ url_for(
+                                            'records.attendance_detail',
+                                            kind='event',
+                                            item_id=item['item_id']
+                                        ) }}"
+                                    >
+                                        Attendance
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% else %}
+
+            <div class="records-empty">
+                No events in the active mandate.
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <section class="records-section">
+
+        <h2>
+            Trainings
+        </h2>
+
+        {% if trainings %}
+
+            <div class="records-table-wrap">
+
+                <table class="records-table">
+
+                    <tbody>
+
+                        {% for item in trainings %}
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        {{ item["title"] }}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    {{
+                                        item["item_date"]
+                                        or "Date not set"
+                                    }}
+                                </td>
+
+                                <td>
+                                    {{ item["attendance_count"] }}
+                                    recorded
+                                </td>
+
+                                <td>
+
+                                    <a
+                                        class="records-btn"
+                                        href="{{ url_for(
+                                            'records.attendance_detail',
+                                            kind='training',
+                                            item_id=item['item_id']
+                                        ) }}"
+                                    >
+                                        Attendance
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% else %}
+
+            <div class="records-empty">
+                No trainings in the active mandate.
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <section class="records-section">
+
+        <h2>
+            Meetings
+        </h2>
+
+        {% if meetings %}
+
+            <div class="records-table-wrap">
+
+                <table class="records-table">
+
+                    <tbody>
+
+                        {% for item in meetings %}
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        {{ item["title"] }}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    {{ item["item_date"] }}
+                                </td>
+
+                                <td>
+                                    {{ item["attendance_count"] }}
+                                    recorded
+                                </td>
+
+                                <td>
+
+                                    <a
+                                        class="records-btn"
+                                        href="{{ url_for(
+                                            'records.meeting_detail',
+                                            meeting_id=item['item_id']
+                                        ) }}"
+                                    >
+                                        Open Meeting
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% else %}
+
+            <div class="records-empty">
+                No meetings in the active mandate.
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

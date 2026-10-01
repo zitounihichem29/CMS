@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+New Project
+{% endblock %}
+
+
+{% block content %}
+
+<div class="new-project-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="project-form-header">
+
+        <div>
+
+            <span class="projects-label">
+                ORSC PROJECTS
+            </span>
+
+            <h1>
+                New Project
+            </h1>
+
+            <p>
+                Create a new ORSC project.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('projects.projects') }}"
+            class="btn-secondary"
+        >
+            Back to Projects
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         NEW PROJECT FORM
+         ======================================== -->
+
+    <form
+        method="POST"
+        class="project-form"
+    >
+
+
+        <!-- PROJECT NAME -->
+
+        <div class="project-form-group">
+
+            <label for="name">
+                Project Name *
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter project name"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="project-form-group">
+
+            <label for="description">
+                Description
+            </label>
+
+            <textarea
+                id="description"
+                name="description"
+                rows="6"
+                placeholder="Describe the project..."
+            ></textarea>
+
+        </div>
+
+
+
+        <div class="project-form-group">
+
+            <label for="project_link">
+                Project Link
+            </label>
+
+            <input
+                type="url"
+                id="project_link"
+                name="project_link"
+                placeholder="https://example.com"
+            >
+
+            <small>
+                Optional. Add a GitHub repository, demo, website or project link.
+            </small>
+
+        </div>
+
+
+
+        <!-- IDEA OWNER -->
+
+        <div class="project-form-group">
+
+            <label for="idea_owner_membership_id">
+                Idea Owner *
+            </label>
+
+            <select
+                id="idea_owner_membership_id"
+                name="idea_owner_membership_id"
+                required
+            >
+
+                <option value="">
+                    Select the idea owner
+                </option>
+
+
+                {% for owner in idea_owners %}
+
+                    <option value="{{ owner['membership_id'] }}">
+
+                        {{ owner["first_name"] }}
+                        {{ owner["last_name"] }}
+
+                        —
+                        {{ owner["department_name"] }}
+
+                        —
+                        {{ owner["role_name"] }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+
+        <!-- INFORMATION -->
+
+        <div class="project-form-info">
+
+            <p>
+                The project will be created with status
+                <strong>Active</strong>
+                and linked to the current term.
+            </p>
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="project-form-actions">
+
+            <a
+                href="{{ url_for('projects.projects') }}"
+                class="btn-secondary"
+            >
+                Cancel
+            </a>
+
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Create Project
+            </button>
+
+        </div>
+
+
+    </form>
+
+
+</div>
+
+{% endblock %}

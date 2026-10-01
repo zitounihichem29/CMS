@@ -1,0 +1,426 @@
+{% extends "public/base_public.html" %}
+
+
+{% block title %}
+Events | ORSC
+{% endblock %}
+
+
+{% block content %}
+
+<div class="public-events-page">
+
+
+    <!-- ========================================
+         HERO
+         ======================================== -->
+
+    <section class="public-events-hero">
+
+        <span class="public-section-label">
+            ORSC EVENTS
+        </span>
+
+        <h1>
+            Events
+        </h1>
+
+        <p>
+            Discover ORSC events, upcoming experiences
+            and the moments that shaped our community.
+        </p>
+
+    </section>
+
+
+
+    <!-- ========================================
+         NEXT / CURRENT EVENT
+         ======================================== -->
+
+    <section class="public-events-section">
+
+        <div class="public-events-section-heading">
+
+            <span class="public-section-label">
+                WHAT'S NEXT
+            </span>
+
+            <h2>
+                Next Event
+            </h2>
+
+        </div>
+
+
+        {% if next_event %}
+
+            <div class="public-next-event-card">
+
+
+                <!-- DATE -->
+
+                <div class="public-next-event-date">
+
+                    <span>
+                        {{ next_event["event_date"] }}
+                    </span>
+
+                    {% if next_event["end_date"]
+                          and next_event["end_date"] != next_event["event_date"] %}
+
+                        <small>
+                            to {{ next_event["end_date"] }}
+                        </small>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- MAIN INFORMATION -->
+
+                <div class="public-next-event-content">
+
+                    {% if event_in_progress %}
+
+                        <span class="public-event-status active">
+                            Event in Progress
+                        </span>
+
+                    {% else %}
+
+                        <span class="public-event-status">
+                            Upcoming Event
+                        </span>
+
+                    {% endif %}
+
+
+                    <h3>
+                        {{ next_event["title"] }}
+                    </h3>
+
+
+                    {% if next_event["description"] %}
+
+                        <p class="public-next-event-description">
+                            {{ next_event["description"] }}
+                        </p>
+
+                    {% endif %}
+
+
+                    <div class="public-next-event-meta">
+
+
+                        <!-- TIME -->
+
+                        {% if next_event["start_time"] %}
+
+                            <div class="public-event-meta-item">
+
+                                <span class="public-event-meta-label">
+                                    Time
+                                </span>
+
+                                <strong>
+
+                                    {{ next_event["start_time"] }}
+
+                                    {% if next_event["end_time"] %}
+                                        – {{ next_event["end_time"] }}
+                                    {% endif %}
+
+                                </strong>
+
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- LOCATION -->
+
+                        {% if next_event["location"] %}
+
+                            <div class="public-event-meta-item">
+
+                                <span class="public-event-meta-label">
+                                    Location
+                                </span>
+
+                                <strong>
+                                    {{ next_event["location"] }}
+                                </strong>
+
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- EVENT LEADER -->
+
+                        <div class="public-event-meta-item">
+
+                            <span class="public-event-meta-label">
+                                Event Leader
+                            </span>
+
+                            <strong>
+                                {{ next_event["leader_first_name"] }}
+                                {{ next_event["leader_last_name"] }}
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ========================================
+                     COUNTDOWN
+                     ======================================== -->
+
+                <div class="public-next-event-countdown">
+
+
+                    {% if event_in_progress %}
+
+                        <div class="public-event-live">
+
+                            <span class="public-event-live-dot"></span>
+
+                            <strong>
+                                Happening Now
+                            </strong>
+
+                        </div>
+
+
+                    {% elif next_event_datetime %}
+
+                        <div
+                            class="public-countdown"
+                            id="publicEventCountdown"
+                            data-target="{{ next_event_datetime }}"
+                        >
+
+                            <div class="public-countdown-unit">
+
+                                <strong id="publicCountdownDays">
+                                    --
+                                </strong>
+
+                                <span>
+                                    Days
+                                </span>
+
+                            </div>
+
+
+                            <div class="public-countdown-divider">
+                                :
+                            </div>
+
+
+                            <div class="public-countdown-unit">
+
+                                <strong id="publicCountdownHours">
+                                    --
+                                </strong>
+
+                                <span>
+                                    Hours
+                                </span>
+
+                            </div>
+
+
+                            <div class="public-countdown-divider">
+                                :
+                            </div>
+
+
+                            <div class="public-countdown-unit">
+
+                                <strong id="publicCountdownMinutes">
+                                    --
+                                </strong>
+
+                                <span>
+                                    Minutes
+                                </span>
+
+                            </div>
+
+
+                            <div class="public-countdown-divider">
+                                :
+                            </div>
+
+
+                            <div class="public-countdown-unit">
+
+                                <strong id="publicCountdownSeconds">
+                                    --
+                                </strong>
+
+                                <span>
+                                    Seconds
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="public-countdown-no-time">
+                            Date announced — time coming soon.
+                        </div>
+
+                    {% endif %}
+
+
+                </div>
+
+            </div>
+
+
+        {% else %}
+
+            <div class="public-events-empty">
+
+                <span>
+                    No upcoming event
+                </span>
+
+                <p>
+                    There is currently no upcoming ORSC event scheduled.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+
+    <!-- ========================================
+         PAST EVENTS
+         ======================================== -->
+
+    <section class="public-events-section public-past-events-section">
+
+        <div class="public-events-section-heading">
+
+            <span class="public-section-label">
+                OUR JOURNEY
+            </span>
+
+            <h2>
+                Past Events
+            </h2>
+
+            <p>
+                Explore the events that brought the ORSC community together.
+            </p>
+
+        </div>
+
+
+        {% if past_events %}
+
+            <div class="public-past-events-grid">
+
+                {% for event in past_events %}
+
+                    <a
+                        href="/website/events/{{ event['event_id'] }}"
+                        class="public-past-event-card"
+                    >
+
+                        <div class="public-past-event-top">
+
+                            <span class="public-past-event-date">
+
+                                {{ event["event_date"] }}
+
+                                {% if event["end_date"]
+                                      and event["end_date"] != event["event_date"] %}
+
+                                    – {{ event["end_date"] }}
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="public-past-event-body">
+
+                            <h3>
+                                {{ event["title"] }}
+                            </h3>
+
+
+                            {% if event["location"] %}
+
+                                <p>
+                                    {{ event["location"] }}
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="public-past-event-footer">
+
+                            <span>
+                                View Event
+                            </span>
+
+                            <span class="public-past-event-arrow">
+                                →
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="public-events-empty">
+
+                <span>
+                    No past events
+                </span>
+
+                <p>
+                    Past ORSC events will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Training
+{% endblock %}
+
+{% block content %}
+
+<div class="edit-training-page">
+
+    <div class="training-form-header">
+
+        <div>
+
+            <span class="trainings-label">
+                ORSC LEARNING
+            </span>
+
+            <h1>
+                Edit Training
+            </h1>
+
+            <p>
+                Update the training information.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for(
+                'trainings.training_detail',
+                training_id=training['training_id']
+            ) }}"
+            class="btn-secondary"
+        >
+            Back to Training
+        </a>
+
+    </div>
+
+
+    <form
+        method="POST"
+        class="training-form"
+    >
+
+        <!-- TITLE -->
+
+        <div class="training-form-group">
+
+            <label for="title">
+                Title *
+            </label>
+
+            <input
+                type="text"
+                id="title"
+                name="title"
+                value="{{ training['title'] }}"
+                required
+            >
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="training-form-group">
+
+            <label for="description">
+                Description
+            </label>
+
+            <textarea
+                id="description"
+                name="description"
+                rows="6"
+            >{{ training["description"] or "" }}</textarea>
+
+        </div>
+
+
+        <!-- COACH -->
+
+        <div class="training-form-group">
+
+            <label for="coach_person_id">
+                Coach *
+            </label>
+
+            <select
+                id="coach_person_id"
+                name="coach_person_id"
+                required
+            >
+
+                {% for coach in coaches %}
+
+                    <option
+                        value="{{ coach['person_id'] }}"
+
+                        {% if coach["person_id"] == training["coach_person_id"] %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ coach["first_name"] }}
+                        {{ coach["last_name"] }}
+
+                        {% if coach["profession"] %}
+                            — {{ coach["profession"] }}
+                        {% endif %}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <!-- DATE -->
+
+        <div class="training-form-group">
+
+            <label for="training_date">
+                Date
+            </label>
+
+            <input
+                type="date"
+                id="training_date"
+                name="training_date"
+                value="{{ training['training_date'] or '' }}"
+            >
+
+        </div>
+
+
+        <!-- START TIME -->
+
+        <div class="training-form-group">
+
+            <label for="start_time">
+                Start time
+            </label>
+
+            <input
+                type="time"
+                id="start_time"
+                name="start_time"
+                value="{{ training['start_time'] or '' }}"
+            >
+
+        </div>
+
+
+        <!-- END TIME -->
+
+        <div class="training-form-group">
+
+            <label for="end_time">
+                End time
+            </label>
+
+            <input
+                type="time"
+                id="end_time"
+                name="end_time"
+                value="{{ training['end_time'] or '' }}"
+            >
+
+        </div>
+
+
+        <!-- LOCATION -->
+
+        <div class="training-form-group">
+
+            <label for="location">
+                Location
+            </label>
+
+            <input
+                type="text"
+                id="location"
+                name="location"
+                value="{{ training['location'] or '' }}"
+            >
+
+        </div>
+
+
+
+        <!-- REGISTRATION FORM LINK -->
+
+        <div class="training-form-group">
+
+            <label for="registration_link">
+                Registration Form Link
+            </label>
+
+            <input
+                type="url"
+                id="registration_link"
+                name="registration_link"
+                value="{{ training['registration_link'] or '' }}"
+                placeholder="https://forms.gle/..."
+            >
+
+            <small>
+                Optional. Update or remove the external registration form link.
+            </small>
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="training-form-actions">
+
+            <a
+                href="{{ url_for(
+                    'trainings.training_detail',
+                    training_id=training['training_id']
+                ) }}"
+                class="btn-secondary"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Save Changes
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

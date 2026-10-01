@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="mandates-page">
+
+    <!-- ========================================= -->
+    <!-- HEADER -->
+    <!-- ========================================= -->
+
+    <div class="mandates-header">
+
+        <div class="mandates-header-text">
+
+            <span class="mandates-label">
+                GOVERNANCE
+            </span>
+
+            <h1>
+                Mandate Management
+            </h1>
+
+            <p>
+                Manage the current mandate, prepare the next board
+                and preserve ORSC governance history.
+            </p>
+
+        </div>
+
+
+        {% if can_create_draft and not draft_term %}
+
+            <a
+                href="{{ url_for('mandates.create_draft') }}"
+                class="mandates-create-button"
+            >
+                Create Next Mandate
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- PLATFORM ADMIN NOTICE -->
+    <!-- ========================================= -->
+
+    {% if is_platform_admin %}
+
+        <div class="mandates-admin-notice">
+
+            <strong>
+                Platform Administrator
+            </strong>
+
+            <span>
+                Emergency mandate-management access is enabled
+                for this account.
+            </span>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ========================================= -->
+    <!-- CURRENT STATE -->
+    <!-- ========================================= -->
+
+    <section class="mandates-overview">
+
+        <!-- ACTIVE -->
+
+        <div class="mandate-overview-card active">
+
+            <div class="mandate-overview-top">
+
+                <span class="mandate-status-dot"></span>
+
+                <span class="mandate-status-text">
+                    ACTIVE MANDATE
+                </span>
+
+            </div>
+
+
+            {% if active_term %}
+
+                <h2>
+                    {{ active_term["name"] }}
+                </h2>
+
+                <p>
+                    {{ active_term["start_date"] }}
+                    —
+                    {{ active_term["end_date"] }}
+                </p>
+
+
+                <a
+                    href="{{ url_for(
+                        'mandates.mandate_detail',
+                        term_id=active_term['term_id']
+                    ) }}"
+                    class="mandate-view-link"
+                >
+                    View Mandate
+                </a>
+
+            {% else %}
+
+                <h2>
+                    No active mandate
+                </h2>
+
+                <p>
+                    The system currently has no active mandate.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- DRAFT -->
+
+        <div class="mandate-overview-card draft">
+
+            <div class="mandate-overview-top">
+
+                <span class="mandate-status-dot"></span>
+
+                <span class="mandate-status-text">
+                    NEXT MANDATE
+                </span>
+
+            </div>
+
+
+            {% if draft_term %}
+
+                <h2>
+                    {{ draft_term["name"] }}
+                </h2>
+
+                <p>
+                    {{ draft_term["start_date"] }}
+                    —
+                    {{ draft_term["end_date"] }}
+                </p>
+
+
+                <a
+                    href="{{ url_for(
+                        'mandates.mandate_detail',
+                        term_id=draft_term['term_id']
+                    ) }}"
+                    class="mandate-view-link"
+                >
+                    Continue Preparation
+                </a>
+
+            {% else %}
+
+                <h2>
+                    No draft mandate
+                </h2>
+
+                <p>
+                    No future mandate is currently being prepared.
+                </p>
+
+
+                {% if can_create_draft %}
+
+                    <a
+                        href="{{ url_for('mandates.create_draft') }}"
+                        class="mandate-view-link"
+                    >
+                        Prepare Next Mandate
+                    </a>
+
+                {% endif %}
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================================= -->
+    <!-- MANDATE HISTORY -->
+    <!-- ========================================= -->
+
+    <section class="mandates-history">
+
+        <div class="mandates-section-header">
+
+            <div>
+
+                <span class="mandates-section-label">
+                    DIGITAL LEGACY
+                </span>
+
+                <h2>
+                    Mandate History
+                </h2>
+
+            </div>
+
+            <span class="mandates-count">
+                {{ terms|length }} mandates
+            </span>
+
+        </div>
+
+
+        {% if terms %}
+
+            <div class="mandates-list">
+
+                {% for term in terms %}
+
+                    <a
+                        href="{{ url_for(
+                            'mandates.mandate_detail',
+                            term_id=term['term_id']
+                        ) }}"
+                        class="
+                            mandate-card
+                            mandate-card-{{ term['status']|lower }}
+                        "
+                    >
+
+                        <div class="mandate-card-main">
+
+                            <div class="mandate-card-icon">
+
+                                {% if term["status"] == "ACTIVE" %}
+                                    A
+
+                                {% elif term["status"] == "DRAFT" %}
+                                    D
+
+                                {% else %}
+                                    H
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="mandate-card-info">
+
+                                <div class="mandate-card-title-row">
+
+                                    <h3>
+                                        {{ term["name"] }}
+                                    </h3>
+
+
+                                    <span
+                                        class="
+                                            mandate-status-badge
+                                            mandate-status-{{ term['status']|lower }}
+                                        "
+                                    >
+                                        {{ term["status"] }}
+                                    </span>
+
+                                </div>
+
+
+                                <p>
+                                    {{ term["start_date"] }}
+                                    —
+                                    {{ term["end_date"] }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="mandate-card-right">
+
+                            <div class="mandate-member-count">
+
+                                <strong>
+                                    {{ term["membership_count"] }}
+                                </strong>
+
+                                <span>
+                                    {% if term["membership_count"] == 1 %}
+                                        member
+                                    {% else %}
+                                        members
+                                    {% endif %}
+                                </span>
+
+                            </div>
+
+
+                            <span class="mandate-arrow">
+                                →
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="mandates-empty">
+
+                <h3>
+                    No mandates found
+                </h3>
+
+                <p>
+                    No governance mandate has been registered yet.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

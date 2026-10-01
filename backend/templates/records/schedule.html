@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "records/_styles.html" %}
+
+<div class="records-page">
+
+    <div class="records-head">
+
+        <div>
+
+            <a
+                class="records-muted"
+                href="{{ url_for(
+                    'records.records_home'
+                ) }}"
+            >
+                ← Club Records
+            </a>
+
+            <h1>
+                Annual Schedule
+            </h1>
+
+            <p class="records-muted">
+                One official planning document per mandate.
+            </p>
+
+        </div>
+
+        <span class="records-badge">
+            {{ term["name"] }}
+        </span>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="records-error">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    {% if can_manage %}
+
+        <section class="records-section">
+
+            <h2>
+
+                {% if current_schedule %}
+
+                    Update Current Schedule
+
+                {% else %}
+
+                    Publish Current Schedule
+
+                {% endif %}
+
+            </h2>
+
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+                class="records-form-grid"
+            >
+
+                <div class="records-field full">
+
+                    <label>
+                        Title
+                    </label>
+
+                    <input
+                        name="title"
+                        value="{{ current_schedule['title'] if current_schedule else '' }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="records-field full">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <textarea
+                        name="description"
+                        rows="3"
+                    >{{ current_schedule["description"] if current_schedule and current_schedule["description"] else "" }}</textarea>
+
+                </div>
+
+
+                <div class="records-field full">
+
+                    <label>
+                        Schedule file
+                    </label>
+
+                    <input
+                        type="file"
+                        name="schedule_file"
+                        accept=".pdf,.doc,.docx,.xls,.xlsx"
+                    >
+
+                    <small class="records-muted">
+                        PDF, Word or Excel.
+                        Uploading a new file replaces the current one.
+                    </small>
+
+                </div>
+
+
+                <div class="records-actions full">
+
+                    <button
+                        class="records-btn primary"
+                        type="submit"
+                    >
+                        Save Annual Schedule
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    {% endif %}
+
+
+    <section class="records-section">
+
+        <h2>
+            Schedule Archive
+        </h2>
+
+
+        {% if schedules %}
+
+            <div class="records-table-wrap">
+
+                <table class="records-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Mandate
+                            </th>
+
+                            <th>
+                                Schedule
+                            </th>
+
+                            <th>
+                                Created by
+                            </th>
+
+                            <th>
+                                File
+                            </th>
+
+                            <th></th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for item in schedules %}
+
+                            <tr>
+
+                                <td>
+
+                                    <span class="records-badge">
+                                        {{ item["term_name"] }}
+                                        ·
+                                        {{ item["term_status"] }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        {{ item["title"] }}
+                                    </strong>
+
+                                    <br>
+
+                                    <span class="records-muted">
+                                        {{ item["description"] or "" }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+                                    {{ item["first_name"] }}
+                                    {{ item["last_name"] }}
+                                </td>
+
+
+                                <td>
+
+                                    {% if item["file_path"] %}
+
+                                        <a
+                                            class="records-btn"
+                                            href="{{ url_for(
+                                                'records.annual_schedule_file',
+                                                schedule_id=item['annual_schedule_id']
+                                            ) }}"
+                                        >
+                                            Open file
+                                        </a>
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if
+                                        can_manage
+                                        and item["term_status"] == "ACTIVE"
+                                    %}
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for(
+                                                'records.delete_annual_schedule',
+                                                schedule_id=item['annual_schedule_id']
+                                            ) }}"
+                                            onsubmit="return confirm('Delete current annual schedule?');"
+                                        >
+
+                                            <button
+                                                class="records-btn danger"
+                                                type="submit"
+                                            >
+                                                Delete
+                                            </button>
+
+                                        </form>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        {% else %}
+
+            <div class="records-empty">
+                No annual schedule has been published yet.
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

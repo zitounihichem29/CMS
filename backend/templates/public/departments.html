@@ -1,0 +1,96 @@
+{% extends "public/base_public.html" %}
+
+
+{% block title %}
+Departments - ORSC
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="public-departments-page">
+
+
+    <!-- ========================================
+         HEADER
+    ========================================= -->
+
+    <section class="departments-hero">
+
+        <span class="departments-label">
+            OUR ORGANIZATION
+        </span>
+
+        <h1>
+            ORSC Departments
+        </h1>
+
+        <p>
+            Discover the departments that organize, support,
+            communicate, and bring ORSC projects and activities to life.
+        </p>
+
+    </section>
+
+
+
+    <!-- ========================================
+         DEPARTMENTS GRID
+    ========================================= -->
+
+    <section class="public-departments-section">
+
+        {% if departments %}
+
+            <div class="public-departments-grid">
+
+                {% for department in departments %}
+
+                    <a
+                        href="{{ url_for('public.department_detail', department_id=department['department_id']) }}"
+                        class="public-department-card"
+                    >
+
+                        <div class="public-department-number">
+                            {{ "%02d"|format(loop.index) }}
+                        </div>
+
+                        <div class="public-department-content">
+
+                            <span>
+                                ORSC DEPARTMENT
+                            </span>
+
+                            <h2>
+                                {{ department["name"] }}
+                            </h2>
+
+                            <div class="public-department-link">
+                                Discover Department
+                                <span>→</span>
+                            </div>
+
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="home-empty-state">
+                No departments available.
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+</section>
+
+
+{% endblock %}

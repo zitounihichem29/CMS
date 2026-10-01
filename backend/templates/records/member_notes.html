@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "records/_styles.html" %}
+
+<div class="records-page">
+
+    <div class="records-head">
+
+        <div>
+
+            <a
+                class="records-muted"
+                href="{{ url_for(
+                    'records.records_home'
+                ) }}"
+            >
+                ← Club Records
+            </a>
+
+            <h1>
+                Member Notes
+            </h1>
+
+            <p class="records-muted">
+                Private HR/governance record.
+                Not visible to ordinary members.
+            </p>
+
+        </div>
+
+        <span class="records-badge">
+            {{ term["name"] }}
+        </span>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="records-error">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <section class="records-section">
+
+        <h2>
+            Add Note
+        </h2>
+
+
+        <form
+            method="POST"
+            class="records-form-grid"
+        >
+
+            <div class="records-field">
+
+                <label>
+                    Member
+                </label>
+
+                <select
+                    name="membership_id"
+                    required
+                >
+
+                    <option value="">
+                        Select member
+                    </option>
+
+                    {% for member in members %}
+
+                        <option
+                            value="{{ member['membership_id'] }}"
+                        >
+                            {{ member["first_name"] }}
+                            {{ member["last_name"] }}
+                            ·
+                            {{ member["role_name"] }}
+
+                            {% if member["department_name"] %}
+
+                                /
+                                {{ member["department_name"] }}
+
+                            {% endif %}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="records-field">
+
+                <label>
+                    Type
+                </label>
+
+                <select name="note_type">
+
+                    {% for note_type in note_types %}
+
+                        <option value="{{ note_type }}">
+                            {{ note_type }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="records-field full">
+
+                <label>
+                    Note
+                </label>
+
+                <textarea
+                    name="note"
+                    rows="4"
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <div class="records-actions full">
+
+                <button
+                    class="records-btn primary"
+                    type="submit"
+                >
+                    Add Private Note
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <section class="records-section">
+
+        <h2>
+            Current Mandate Notes
+        </h2>
+
+
+        <form
+            method="GET"
+            class="records-filter"
+        >
+
+            <div class="records-field">
+
+                <label>
+                    Filter member
+                </label>
+
+                <select name="membership_id">
+
+                    <option value="">
+                        All members
+                    </option>
+
+                    {% for member in members %}
+
+                        <option
+                            value="{{ member['membership_id'] }}"
+                            {% if selected_membership_id == member["membership_id"] %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ member["first_name"] }}
+                            {{ member["last_name"] }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="records-btn"
+                type="submit"
+            >
+                Filter
+            </button>
+
+
+            <a
+                class="records-btn"
+                href="{{ url_for(
+                    'records.member_notes'
+                ) }}"
+            >
+                Reset
+            </a>
+
+        </form>
+
+
+        {% if notes %}
+
+            {% for item in notes %}
+
+                <div class="records-note {{ item['note_type'] }}">
+
+                    <div class="records-inline">
+
+                        <span class="records-badge">
+                            {{ item["note_type"] }}
+                        </span>
+
+                        <strong>
+                            {{ item["target_first_name"] }}
+                            {{ item["target_last_name"] }}
+                        </strong>
+
+                    </div>
+
+
+                    <p>
+                        {{ item["note"] }}
+                    </p>
+
+
+                    <div class="records-kpi">
+                        By
+                        {{ item["giver_first_name"] }}
+                        {{ item["giver_last_name"] }}
+                        ·
+                        {{ item["created_at"] }}
+                    </div>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'records.delete_member_note',
+                            note_id=item['member_note_id']
+                        ) }}"
+                        onsubmit="return confirm('Delete this private note?');"
+                    >
+
+                        <button
+                            class="records-btn danger"
+                            type="submit"
+                        >
+                            Delete
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endfor %}
+
+
+        {% else %}
+
+            <div class="records-empty">
+                No notes recorded.
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

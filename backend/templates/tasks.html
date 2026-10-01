@@ -1,0 +1,672 @@
+{% extends "base.html" %}
+
+{% block title %}
+Tasks
+{% endblock %}
+
+{% block content %}
+
+<div class="tasks-page">
+
+
+    <!-- =========================
+         PAGE HEADER
+         ========================= -->
+
+    <div class="tasks-header">
+
+        <div class="tasks-header-content">
+
+            <span class="tasks-label">
+                ORSC TASK MANAGEMENT
+            </span>
+
+
+            <h1>
+
+                {% if current_role == "MEMBER" %}
+
+                    My Tasks
+
+                {% elif current_role in ["PRESIDENT", "VICE_PRESIDENT"] %}
+
+                    Assigned Tasks
+
+                {% else %}
+
+                    Department Tasks
+
+                {% endif %}
+
+            </h1>
+
+
+            <p>
+
+                {% if current_role == "MEMBER" %}
+
+                    Manage, follow and complete your assigned tasks.
+
+                {% elif current_role in ["PRESIDENT", "VICE_PRESIDENT"] %}
+
+                    Create tasks for club members and follow their progress.
+
+                {% else %}
+
+                    Create, manage and follow tasks within your department.
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+        {% if can_create_task %}
+
+            <a
+                href="{{ url_for('tasks.new_task') }}"
+                class="new-task-button"
+            >
+                <span>+</span>
+                New Task
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- =========================
+         SUMMARY
+         ========================= -->
+
+    <div class="tasks-summary">
+
+
+        <div class="task-summary-card">
+
+            <div>
+
+                <span class="task-summary-label">
+                    All Tasks
+                </span>
+
+                <strong>
+                    {{ all_tasks_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="task-summary-card">
+
+            <div>
+
+                <span class="task-summary-label">
+                    To Do
+                </span>
+
+                <strong>
+                    {{ pending_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="task-summary-card">
+
+            <div>
+
+                <span class="task-summary-label">
+                    In Progress
+                </span>
+
+                <strong>
+                    {{ in_progress_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="task-summary-card">
+
+            <div>
+
+                <span class="task-summary-label">
+                    Completed
+                </span>
+
+                <strong>
+                    {{ completed_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         TASK SECTION
+         ========================= -->
+
+    <div class="tasks-section">
+
+
+        <div class="tasks-section-header">
+
+            <div>
+
+                <span class="tasks-section-label">
+                    TASK LIST
+                </span>
+
+
+                <h2>
+
+                    {% if current_role == "MEMBER" %}
+
+                        Your Tasks
+
+                    {% elif current_role in ["PRESIDENT", "VICE_PRESIDENT"] %}
+
+                        Tasks You Assigned
+
+                    {% else %}
+
+                        Department Tasks
+
+                    {% endif %}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             FILTERS
+             ========================= -->
+
+        <div class="tasks-filters">
+
+
+            <a
+                href="{{ url_for('tasks.tasks', status='all') }}"
+                class="task-filter
+                {% if request.args.get('status', 'all') == 'all' %}
+                    active
+                {% endif %}
+                "
+            >
+                All Tasks
+            </a>
+
+
+            <a
+                href="{{ url_for('tasks.tasks', status='pending') }}"
+                class="task-filter
+                {% if request.args.get('status') == 'pending' %}
+                    active
+                {% endif %}
+                "
+            >
+                To Do
+            </a>
+
+
+            <a
+                href="{{ url_for('tasks.tasks', status='in_progress') }}"
+                class="task-filter
+                {% if request.args.get('status') == 'in_progress' %}
+                    active
+                {% endif %}
+                "
+            >
+                In Progress
+            </a>
+
+
+            <a
+                href="{{ url_for('tasks.tasks', status='completed') }}"
+                class="task-filter
+                {% if request.args.get('status') == 'completed' %}
+                    active
+                {% endif %}
+                "
+            >
+                Completed
+            </a>
+
+
+        </div>
+
+
+
+        <!-- =========================
+             TASKS
+             ========================= -->
+
+        {% if tasks %}
+
+
+            <div class="tasks-list">
+
+
+                {% for task in tasks %}
+
+
+                    <div class="task-list-card review-{{ task['review_status'] }}">
+
+
+                        <!-- =========================
+                             TOP
+                             ========================= -->
+
+                        <div class="task-list-card-top">
+
+
+                            <div class="task-title-area">
+
+
+                                <span
+                                    class="task-status-dot status-dot-{{ task['status'] }}"
+                                >
+                                </span>
+
+
+                                <div>
+
+
+                                    <h3>
+
+                                        <a
+                                            href="{{ url_for(
+                                                'tasks.task_detail',
+                                                task_id=task['task_id']
+                                            ) }}"
+                                        >
+                                            {{ task["title"] }}
+                                        </a>
+
+                                    </h3>
+
+
+
+                                    <!-- REVIEW STATUS -->
+
+                                    {% if task["review_status"] == "pending_review" %}
+
+                                        <span class="review-badge review-pending">
+                                            Pending review
+                                        </span>
+
+
+                                    {% elif task["review_status"] == "approved" %}
+
+                                        <span class="review-badge review-approved">
+                                            Approved
+                                        </span>
+
+
+                                    {% elif task["review_status"] == "rejected" %}
+
+                                        <span class="review-badge review-rejected">
+                                            Rejected
+                                        </span>
+
+
+                                    {% elif task["review_status"] == "corrected" %}
+
+                                        <span class="review-badge review-corrected">
+                                            Corrected & closed
+                                        </span>
+
+                                    {% endif %}
+
+
+
+                                    {% if task["description"] %}
+
+                                        <p class="task-preview">
+                                            {{ task["description"] }}
+                                        </p>
+
+                                    {% endif %}
+
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- =========================
+                                 STATUS
+                                 ========================= -->
+
+                            <div class="task-status-area">
+
+
+                                {% if
+                                    current_membership_id
+                                    in task_assignee_ids[task["task_id"]]
+                                    and task["review_status"] == "not_reviewed"
+                                %}
+
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for(
+                                            'tasks.update_task_status',
+                                            task_id=task['task_id']
+                                        ) }}"
+                                    >
+
+
+                                        <select
+                                            name="status"
+                                            class="task-status-select status-select-{{ task['status'] }}"
+                                            onchange="this.form.submit()"
+                                        >
+
+
+                                            <option
+                                                value="pending"
+                                                {% if task["status"] == "pending" %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                To Do
+                                            </option>
+
+
+                                            <option
+                                                value="in_progress"
+                                                {% if task["status"] == "in_progress" %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                In Progress
+                                            </option>
+
+
+                                            <option
+                                                value="completed"
+                                                {% if task["status"] == "completed" %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                Completed
+                                            </option>
+
+
+                                        </select>
+
+
+                                    </form>
+
+
+                                {% else %}
+
+
+                                    <span class="task-status-badge status-{{ task['status'] }}">
+
+
+                                        {% if task["status"] == "pending" %}
+
+                                            To Do
+
+                                        {% elif task["status"] == "in_progress" %}
+
+                                            In Progress
+
+                                        {% elif task["status"] == "completed" %}
+
+                                            Completed
+
+                                        {% endif %}
+
+
+                                    </span>
+
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- =========================
+                             INFORMATION
+                             ========================= -->
+
+                        <div class="task-list-info">
+
+
+                            <div class="task-list-info-item">
+
+                                <span>
+                                    Due date
+                                </span>
+
+
+                                <strong>
+
+                                    {% if task["due_date"] %}
+
+                                        {{ task["due_date"] }}
+
+                                    {% else %}
+
+                                        No due date
+
+                                    {% endif %}
+
+                                </strong>
+
+                            </div>
+
+
+
+                            <div class="task-list-info-item">
+
+                                <span>
+                                    Created by
+                                </span>
+
+
+                                <strong>
+
+                                    {{ task["creator_first_name"] }}
+                                    {{ task["creator_last_name"] }}
+
+                                </strong>
+
+                            </div>
+
+
+
+                            <div class="task-list-info-item task-assignees-info">
+
+
+                                <span>
+                                    Assigned to
+                                </span>
+
+
+                                <div class="task-member-chips">
+
+
+                                    {% if task_assignees[task["task_id"]] %}
+
+
+                                        {% for member in task_assignees[task["task_id"]] %}
+
+
+                                            <span class="task-member-chip">
+
+                                                {{ member["first_name"] }}
+                                                {{ member["last_name"] }}
+
+                                            </span>
+
+
+                                        {% endfor %}
+
+
+                                    {% else %}
+
+
+                                        <strong>
+                                            No members assigned
+                                        </strong>
+
+
+                                    {% endif %}
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- =========================
+                             FOOTER
+                             ========================= -->
+
+                        <div class="task-list-card-footer">
+
+
+                            <span class="task-created-date">
+
+                                Created {{ task["created_at"] }}
+
+                            </span>
+
+
+                            <a
+                                href="{{ url_for(
+                                    'tasks.task_detail',
+                                    task_id=task['task_id']
+                                ) }}"
+                                class="task-details-link"
+                            >
+
+                                View details
+
+                                <span>
+                                    →
+                                </span>
+
+                            </a>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- =========================
+                 EMPTY STATE
+                 ========================= -->
+
+            <div class="tasks-empty">
+
+
+                <div class="tasks-empty-icon">
+                    ✓
+                </div>
+
+
+                <h3>
+                    No tasks found
+                </h3>
+
+
+                <p>
+
+
+                    {% if request.args.get("status", "all") != "all" %}
+
+                        There are no tasks with this status.
+
+
+                    {% elif current_role == "MEMBER" %}
+
+                        Tasks assigned to you will appear here.
+
+
+                    {% elif current_role in ["PRESIDENT", "VICE_PRESIDENT"] %}
+
+                        Tasks you assign to club members will appear here.
+
+
+                    {% else %}
+
+                        Tasks created for your department will appear here.
+
+
+                    {% endif %}
+
+
+                </p>
+
+
+                {% if can_create_task %}
+
+                    <a
+                        href="{{ url_for('tasks.new_task') }}"
+                        class="new-task-button"
+                    >
+                        <span>+</span>
+                        Create First Task
+                    </a>
+
+                {% endif %}
+
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</div>
+
+{% endblock %}

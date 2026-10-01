@@ -1,0 +1,654 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Profile
+{% endblock %}
+
+
+{% block content %}
+
+<div class="profile-page">
+
+
+    <!-- =====================================================
+         PROFILE HERO
+    ====================================================== -->
+
+    <section class="profile-hero">
+
+        <div class="profile-hero-main">
+
+
+            <!-- PHOTO -->
+
+            <div class="profile-main-avatar">
+
+                {% if profile["profile_photo"] %}
+
+                    <img
+                        src="{{ url_for(
+                            'profile.profile_photo',
+                            filename=profile['profile_photo']
+                        ) }}"
+                        alt="Profile photo"
+                        class="profile-main-avatar-image"
+                    >
+
+                {% else %}
+
+                    <span>
+                        {{ profile["first_name"][0] }}
+                        {{ profile["last_name"][0] }}
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- IDENTITY -->
+
+            <div class="profile-identity">
+
+                <span class="profile-eyebrow">
+                    MY PROFILE
+                </span>
+
+                <h1>
+                    {{ profile["first_name"] }}
+                    {{ profile["last_name"] }}
+                </h1>
+
+                <p class="profile-username">
+                    @{{ profile["username"] }}
+                </p>
+
+
+                <div class="profile-badges">
+
+                    {% if is_alumni %}
+
+                        <span class="profile-status alumni">
+                            <span class="profile-status-dot"></span>
+                            Alumni
+                        </span>
+
+                    {% else %}
+
+                        <span class="profile-status active">
+                            <span class="profile-status-dot"></span>
+                            Active Member
+                        </span>
+
+                    {% endif %}
+
+
+                    {% if current_membership %}
+
+                        <span class="profile-role-badge">
+                            {{ current_membership["role_name"] }}
+                        </span>
+
+                        <span class="profile-department-badge">
+                            {{ current_membership["department_name"] }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ACTION -->
+
+        <div class="profile-hero-actions">
+
+            <a
+                href="{{ url_for('profile.edit_profile') }}"
+                class="profile-edit-button"
+            >
+                Edit Profile
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PROFILE CONTENT
+    ====================================================== -->
+
+    <div class="profile-content-grid">
+
+
+        <!-- =================================================
+             LEFT COLUMN
+        ================================================== -->
+
+        <div class="profile-content-main">
+
+
+            <!-- =============================================
+                 PERSONAL INFORMATION
+            ============================================== -->
+
+            <section class="profile-card">
+
+                <div class="profile-card-header">
+
+                    <div>
+
+                        <span class="profile-card-icon">
+                            ♙
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Personal Information
+                            </h2>
+
+                            <p>
+                                Your personal and academic details.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-info-grid">
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong>
+                            {{ profile["email"] or "—" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            Phone
+                        </span>
+
+                        <strong>
+                            {{ profile["phone"] or "—" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            Date of Birth
+                        </span>
+
+                        <strong>
+                            {{ profile["date_of_birth"] or "—" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            University
+                        </span>
+
+                        <strong>
+                            {{ profile["university"] or "—" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            Faculty
+                        </span>
+
+                        <strong>
+                            {{ profile["faculty"] or "—" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            Profession
+                        </span>
+
+                        <strong>
+                            {{ profile["profession"] or "—" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 ABOUT
+            ============================================== -->
+
+            <section class="profile-card">
+
+                <div class="profile-card-header">
+
+                    <div>
+
+                        <span class="profile-card-icon">
+                            ◇
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                About
+                            </h2>
+
+                            <p>
+                                A short introduction about you.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-bio">
+
+                    {% if profile["bio"] %}
+
+                        <p>
+                            {{ profile["bio"] }}
+                        </p>
+
+                    {% else %}
+
+                        <p class="profile-empty-text">
+                            No bio added yet.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 MEMBERSHIP HISTORY
+            ============================================== -->
+
+            <section class="profile-card">
+
+                <div class="profile-card-header">
+
+                    <div>
+
+                        <span class="profile-card-icon">
+                            ◫
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Membership History
+                            </h2>
+
+                            <p>
+                                Your journey inside ORSC.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {% if membership_history %}
+
+                    <div class="profile-history">
+
+                        {% for membership in membership_history %}
+
+                            <div class="profile-history-item">
+
+
+                                <div class="profile-history-line">
+
+                                    <span class="profile-history-dot">
+                                    </span>
+
+                                </div>
+
+
+                                <div class="profile-history-content">
+
+                                    <div class="profile-history-top">
+
+                                        <div>
+
+                                            <h3>
+                                                {{ membership["term_name"] }}
+                                            </h3>
+
+                                            <p>
+                                                {{ membership["department_name"] }}
+                                            </p>
+
+                                        </div>
+
+
+                                        <span class="profile-history-role">
+                                            {{ membership["role_name"] }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="profile-empty-state">
+
+                        <p>
+                            No membership history available.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT COLUMN
+        ================================================== -->
+
+        <aside class="profile-content-side">
+
+
+            <!-- =============================================
+                 CLUB INFORMATION
+            ============================================== -->
+
+            <section class="profile-card profile-club-card">
+
+                <div class="profile-card-header">
+
+                    <div>
+
+                        <span class="profile-card-icon">
+                            ☆
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Club Information
+                            </h2>
+
+                            <p>
+                                Your ORSC membership.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-club-list">
+
+
+                    <div class="profile-club-item">
+
+                        <span>
+                            Joined
+                        </span>
+
+                        <strong>
+
+                            {% if year_joined %}
+                                {{ year_joined }}
+                            {% else %}
+                                —
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-club-item">
+
+                        <span>
+                            Department
+                        </span>
+
+                        <strong>
+
+                            {% if current_membership %}
+                                {{ current_membership["department_name"] }}
+                            {% else %}
+                                —
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-club-item">
+
+                        <span>
+                            Role
+                        </span>
+
+                        <strong>
+
+                            {% if current_membership %}
+                                {{ current_membership["role_name"] }}
+                            {% else %}
+                                —
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-club-item">
+
+                        <span>
+                            Mandate
+                        </span>
+
+                        <strong>
+
+                            {% if current_membership %}
+                                {{ current_membership["term_name"] }}
+                            {% else %}
+                                —
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 SOCIAL LINKS
+            ============================================== -->
+
+            <section class="profile-card">
+
+                <div class="profile-card-header">
+
+                    <div>
+
+                        <span class="profile-card-icon">
+                            ⌁
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Social Links
+                            </h2>
+
+                            <p>
+                                Your connected platforms.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-social-list">
+
+
+                    <div class="profile-social-item">
+
+                        <span class="profile-social-icon">
+                            in
+                        </span>
+
+                        <div>
+
+                            <span>
+                                LinkedIn
+                            </span>
+
+                            <strong>
+                                {{ profile["linkedin"] or "Not added" }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="profile-social-item">
+
+                        <span class="profile-social-icon">
+                            GH
+                        </span>
+
+                        <div>
+
+                            <span>
+                                GitHub
+                            </span>
+
+                            <strong>
+                                {{ profile["github"] or "Not added" }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="profile-social-item">
+
+                        <span class="profile-social-icon">
+                            DC
+                        </span>
+
+                        <div>
+
+                            <span>
+                                Discord
+                            </span>
+
+                            <strong>
+                                {{ profile["discord"] or "Not added" }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="profile-social-item">
+
+                        <span class="profile-social-icon">
+                            f
+                        </span>
+
+                        <div>
+
+                            <span>
+                                Facebook
+                            </span>
+
+                            <strong>
+                                {{ profile["facebook"] or "Not added" }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </aside>
+
+    </div>
+
+</div>
+
+{% endblock %}

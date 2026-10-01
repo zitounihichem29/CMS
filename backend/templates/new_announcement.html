@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}
+New Announcement
+{% endblock %}
+
+{% block content %}
+
+<div class="new-announcement-page">
+
+    <div class="new-announcement-header">
+
+        <div>
+            <span>ORSC COMMUNITY</span>
+
+            <h1>
+                New Announcement
+            </h1>
+
+            <p>
+                Share a note, reminder or internal information with ORSC members.
+            </p>
+        </div>
+
+    </div>
+
+
+    <form
+        method="POST"
+        class="new-announcement-form"
+    >
+
+        <!-- TITLE -->
+
+        <div class="form-group">
+
+            <label for="title">
+                Title
+            </label>
+
+            <input
+                type="text"
+                id="title"
+                name="title"
+                required
+            >
+
+        </div>
+
+
+        <!-- MESSAGE -->
+
+        <div class="form-group">
+
+            <label for="message">
+                Message
+            </label>
+
+            <textarea
+                id="message"
+                name="message"
+                rows="6"
+                required
+            ></textarea>
+
+        </div>
+
+
+        <!-- VISIBILITY -->
+
+        <div class="form-group">
+
+            <label>
+                Visibility
+            </label>
+
+
+            {% if can_create_personalized %}
+
+                <div class="announcement-visibility-options">
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="visibility"
+                            value="public"
+                            checked
+                        >
+
+                        Public
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="visibility"
+                            value="personalized"
+                        >
+
+                        Personalized
+
+                    </label>
+
+                </div>
+
+            {% else %}
+
+                <input
+                    type="hidden"
+                    name="visibility"
+                    value="public"
+                >
+
+                <p>
+                    Public
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- RECIPIENT -->
+
+        {% if can_create_personalized %}
+
+            <div
+                class="form-group"
+                id="recipient-group"
+                style="display: none;"
+            >
+
+                <label for="recipient_membership_id">
+                    Recipient
+                </label>
+
+                <select
+                    id="recipient_membership_id"
+                    name="recipient_membership_id"
+                >
+
+                    <option value="">
+                        Select a member
+                    </option>
+
+                    {% for recipient in recipients %}
+
+                        <option
+                            value="{{ recipient['membership_id'] }}"
+                        >
+
+                            {{ recipient["first_name"] }}
+                            {{ recipient["last_name"] }}
+
+                            —
+                            {{ recipient["role_name"] }}
+
+                            —
+                            {{ recipient["department_name"] }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ACTIONS -->
+
+        <div class="form-actions">
+
+            <a
+                href="{{ url_for('announcements.announcements') }}"
+            >
+                Cancel
+            </a>
+
+            <button type="submit">
+                Publish Announcement
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+{% if can_create_personalized %}
+
+<script>
+
+    const visibilityInputs =
+        document.querySelectorAll(
+            'input[name="visibility"]'
+        );
+
+    const recipientGroup =
+        document.getElementById(
+            "recipient-group"
+        );
+
+    const recipientSelect =
+        document.getElementById(
+            "recipient_membership_id"
+        );
+
+
+    function updateRecipientVisibility() {
+
+        const selectedVisibility =
+            document.querySelector(
+                'input[name="visibility"]:checked'
+            ).value;
+
+
+        if (
+            selectedVisibility === "personalized"
+        ) {
+
+            recipientGroup.style.display = "block";
+
+            recipientSelect.required = true;
+
+        } else {
+
+            recipientGroup.style.display = "none";
+
+            recipientSelect.required = false;
+
+            recipientSelect.value = "";
+
+        }
+
+    }
+
+
+    visibilityInputs.forEach(
+        function(input) {
+
+            input.addEventListener(
+                "change",
+                updateRecipientVisibility
+            );
+
+        }
+    );
+
+
+    updateRecipientVisibility();
+
+</script>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,198 @@
+{% extends "public/base_public.html" %}
+
+
+{% block title %}
+{{ department["name"] }} - ORSC
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="department-detail-page">
+
+
+    <!-- ========================================
+         BACK
+    ========================================= -->
+
+    <div class="department-detail-back">
+
+        <a href="{{ url_for('public.departments') }}">
+            ← All Departments
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         HERO
+    ========================================= -->
+
+    <section class="department-detail-hero">
+
+        <span>
+            ORSC DEPARTMENT
+        </span>
+
+        <h1>
+            {{ department["name"] }}
+        </h1>
+
+        <p>
+            Meet the team, discover the department’s role,
+            and explore its contribution to ORSC.
+        </p>
+
+    </section>
+
+
+
+    <!-- ========================================
+         ABOUT THE DEPARTMENT
+    ========================================= -->
+
+    <section class="department-about-section">
+
+        <div class="department-section-heading">
+
+            <span>
+                ABOUT
+            </span>
+
+            <h2>
+                About the Department
+            </h2>
+
+        </div>
+
+
+        <div class="department-about-card">
+
+            <div class="department-about-number">
+                01
+            </div>
+
+            <p>
+                {{ description }}
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================
+         LEADERSHIP
+    ========================================= -->
+
+    <section class="department-public-section">
+
+        <div class="department-section-heading">
+
+            <span>
+                LEADERSHIP
+            </span>
+
+            <h2>
+                Department Leadership
+            </h2>
+
+        </div>
+
+
+        {% if leadership %}
+
+            <div class="department-leadership-grid">
+
+                {% for leader in leadership %}
+
+                    <article class="department-leader-card">
+
+
+                        <!-- PHOTO -->
+
+                        {% if leader["profile_photo"] %}
+
+                            <div class="department-person-photo">
+
+                                <img
+                                    src="{{ leader['profile_photo'] }}"
+                                    alt="{{ leader['first_name'] }} {{ leader['last_name'] }}"
+                                >
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="department-person-avatar">
+
+                                {{ leader["first_name"][0] }}
+                                {{ leader["last_name"][0] }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- INFO -->
+
+                        <div class="department-person-info">
+
+                            <h3>
+                                {{ leader["first_name"] }}
+                                {{ leader["last_name"] }}
+                            </h3>
+
+
+                            {% if leader["role_name"] == "HEAD" %}
+
+                                <span>
+                                    Head of Department
+                                </span>
+
+                            {% elif leader["role_name"] == "SUB_HEAD" %}
+
+                                <span>
+                                    Sub-Head of Department
+                                </span>
+
+                            {% else %}
+
+                                <span>
+                                    {{ leader["role_name"] }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="department-public-empty">
+
+                Leadership information is not available yet.
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    
+
+
+</section>
+
+
+{% endblock %}

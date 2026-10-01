@@ -1,0 +1,328 @@
+{% extends "public/base_public.html" %}
+
+
+{% block title %}
+Gallery | ORSC
+{% endblock %}
+
+
+{% block content %}
+
+<div class="public-gallery-page">
+
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <section class="public-gallery-hero">
+
+        <div class="public-gallery-hero-inner">
+
+            <span class="public-section-label">
+                MOMENTS • PEOPLE • IMPACT
+            </span>
+
+            <h1>
+                Gallery
+            </h1>
+
+            <p>
+                Discover the moments that bring ORSC to life
+                through our events, activities and training sessions.
+            </p>
+
+        </div>
+
+
+        <div class="public-gallery-hero-visual">
+
+            <div
+                class="gallery-orbit gallery-orbit-one"
+            ></div>
+
+            <div
+                class="gallery-orbit gallery-orbit-two"
+            ></div>
+
+
+            <div class="gallery-hero-symbol">
+
+                <span>
+                    OR
+                </span>
+
+                <strong>
+                    MOMENTS
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         GALLERY
+         ===================================================== -->
+
+    <section class="public-gallery-section">
+
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
+        <div class="public-gallery-header">
+
+            <div>
+
+                <span class="public-section-label">
+                    OUR MOMENTS
+                </span>
+
+                <h2>
+                    Explore the Gallery
+                </h2>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 FILTERS
+                 ============================================= -->
+
+            <div
+                class="public-gallery-filters"
+                aria-label="Gallery filters"
+            >
+
+                <button
+                    type="button"
+                    class="public-gallery-filter active"
+                    data-gallery-filter="all"
+                >
+                    All
+                </button>
+
+
+                <button
+                    type="button"
+                    class="public-gallery-filter"
+                    data-gallery-filter="event"
+                >
+                    Events
+                </button>
+
+
+                <button
+                    type="button"
+                    class="public-gallery-filter"
+                    data-gallery-filter="training"
+                >
+                    Trainings
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             GALLERY IMAGES
+             ================================================= -->
+
+        {% if gallery_items %}
+
+            <div class="public-gallery-grid">
+
+
+                {% for item in gallery_items %}
+
+
+                    <!-- =====================================
+                         IMAGE URL
+                         ===================================== -->
+
+                    {% if item["source_type"] == "event" %}
+
+                        {% set image_url = url_for(
+                            'public.public_event_media',
+                            event_media_id=item['media_id']
+                        ) %}
+
+                    {% else %}
+
+                        {% set image_url = url_for(
+                            'public.public_training_media',
+                            training_media_id=item['media_id']
+                        ) %}
+
+                    {% endif %}
+
+
+
+                    <!-- =====================================
+                         GALLERY ITEM
+                         ===================================== -->
+
+                    <article
+                        class="public-gallery-item"
+                        data-gallery-type="{{ item['source_type'] }}"
+                        data-gallery-image="{{ image_url }}"
+                        data-gallery-title="{{ item['source_title'] }}"
+                        role="button"
+                        tabindex="0"
+                        aria-label="Open {{ item['source_title'] }}"
+                    >
+
+
+                        <!-- IMAGE -->
+
+                        <div class="public-gallery-image">
+
+                            <img
+                                src="{{ image_url }}"
+                                alt="{{ item['source_title'] }}"
+                                loading="lazy"
+                            >
+
+                        </div>
+
+
+
+                        <!-- =================================
+                             OVERLAY
+                             TITLE ONLY
+                             ================================= -->
+
+                        <div class="public-gallery-overlay">
+
+                            <h3>
+                                {{ item["source_title"] }}
+                            </h3>
+
+                        </div>
+
+
+                    </article>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- =============================================
+                 EMPTY STATE
+                 ============================================= -->
+
+            <div class="public-gallery-empty">
+
+                <div class="public-gallery-empty-symbol">
+                    OR
+                </div>
+
+                <h3>
+                    No photos yet
+                </h3>
+
+                <p>
+                    Published event and training photos
+                    will appear here.
+                </p>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         LIGHTBOX
+         IMAGE + TITLE ONLY
+         ===================================================== -->
+
+    <div
+        class="public-gallery-lightbox"
+        id="publicGalleryLightbox"
+        aria-hidden="true"
+    >
+
+
+        <!-- OVERLAY -->
+
+        <div
+            class="public-gallery-lightbox-overlay"
+            id="publicGalleryLightboxOverlay"
+        ></div>
+
+
+
+        <!-- LIGHTBOX CARD -->
+
+        <div
+            class="public-gallery-lightbox-card"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Gallery image"
+        >
+
+
+            <!-- CLOSE -->
+
+            <button
+                type="button"
+                class="public-gallery-lightbox-close"
+                id="publicGalleryLightboxClose"
+                aria-label="Close image"
+            >
+                ×
+            </button>
+
+
+
+            <!-- IMAGE -->
+
+            <div class="public-gallery-lightbox-image">
+
+                <img
+                    src=""
+                    alt=""
+                    id="publicGalleryLightboxImage"
+                >
+
+            </div>
+
+
+
+            <!-- TITLE ONLY -->
+
+            <div class="public-gallery-lightbox-title">
+
+                <h2 id="publicGalleryLightboxTitle">
+                </h2>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+            ORSC - Operations Research Society Club
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/public.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for(
+            'static',
+            filename='css/public-ui-v4.css'
+        ) }}"
+    >
+
+    <meta
+        name="csrf-token"
+        content="{{ csrf_token() }}"
+    >
+
+</head>
+
+
+<body class="public-site">
+
+
+    <!-- ========================================
+         NAVBAR
+    ========================================= -->
+
+    <header class="navbar">
+
+
+        <!-- ====================================
+             LOGOS
+        ===================================== -->
+
+        <div class="navbar-left">
+
+            <a
+                href="{{ url_for('public.home') }}"
+                class="logo-group"
+            >
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='images/orsc-logo.png'
+                    ) }}"
+                    alt="ORSC"
+                >
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='images/usthb-logo.png'
+                    ) }}"
+                    alt="USTHB"
+                >
+
+            </a>
+
+        </div>
+
+
+
+        <!-- ====================================
+             DESKTOP NAVIGATION
+        ===================================== -->
+
+        <nav class="main-nav">
+
+            <a
+                href="{{ url_for('public.home') }}"
+                class="{% if request.endpoint == 'public.home' %}active{% endif %}"
+            >
+                Home
+            </a>
+
+            <a href="{{ url_for('public.about') }}" class="{% if request.endpoint == 'public.about' %}active{% endif %}">
+                About
+            </a>
+
+            <a href="{{ url_for('public_alumni.alumni') }}" class="{% if request.endpoint in ['public_alumni.alumni','public_alumni.alumni_detail'] %}active{% endif %}">
+                Alumni
+            </a>
+
+            <a href="{{ url_for('public.departments') }}" class="{% if request.endpoint in ['public.departments', 'public.department_detail'] %}active{% endif %}">
+                Departments
+            </a>
+
+            <a href="{{ url_for('public.events') }}" class="{% if request.endpoint in ['public.events', 'public.event_detail'] %}active{% endif %}">
+                Events
+            </a>
+
+            <a href="{{ url_for('public.research_innovation') }}" class="{% if request.endpoint == 'public.research_innovation' %}active{% endif %}">
+                Research & Innovation
+            </a>
+
+            <a href="{{ url_for('public.trainings') }}" class="{% if request.endpoint == 'public.trainings' %}active{% endif %}">
+                Trainings
+            </a>
+
+            <a href="{{ url_for('public.gallery') }}" class="{% if request.endpoint == 'public.gallery' %}active{% endif %}">
+                Gallery
+            </a>
+
+            <a href="{{ url_for('public.contact') }}" class="{% if request.endpoint == 'public.contact' %}active{% endif %}">
+                Contact
+            </a>
+
+        </nav>
+
+
+
+        <!-- ====================================
+             NAVBAR ACTIONS
+        ===================================== -->
+
+        <div class="navbar-actions">
+
+            <button
+                type="button"
+                class="theme-button"
+                id="themeToggle"
+                aria-label="Change theme"
+            >
+                ☼
+            </button>
+
+
+            <a
+                href="/login"
+                class="member-login-button"
+            >
+                Member Login
+            </a>
+
+            <a href="{{ url_for('applications.apply') }}" class="join-button">
+                Join ORSC
+            </a>
+
+        </div>
+
+
+
+        <!-- ====================================
+             MOBILE MENU BUTTON
+        ===================================== -->
+
+        <button
+            type="button"
+            class="mobile-menu-button"
+            id="mobileMenuButton"
+            aria-label="Open menu"
+        >
+            ☰
+        </button>
+
+
+    </header>
+
+
+
+    <!-- ========================================
+         MOBILE MENU
+    ========================================= -->
+
+    <div
+        class="mobile-menu"
+        id="mobileMenu"
+    >
+
+        <a href="{{ url_for('public.home') }}">
+            Home
+        </a>
+
+        <a href="{{ url_for('public.about') }}" class="{% if request.endpoint == 'public.about' %}active{% endif %}">
+            About
+        </a>
+
+        <a href="{{ url_for('public_alumni.alumni') }}" class="{% if request.endpoint in ['public_alumni.alumni','public_alumni.alumni_detail'] %}active{% endif %}">
+            Alumni
+        </a>
+
+        <a href="{{ url_for('public.departments') }}" class="{% if request.endpoint in ['public.departments', 'public.department_detail'] %}active{% endif %}">
+            Departments
+        </a>
+
+        <a href="{{ url_for('public.events') }}" class="{% if request.endpoint in ['public.events', 'public.event_detail'] %}active{% endif %}">
+            Events
+        </a>
+
+        <a href="{{ url_for('public.research_innovation') }}" class="{% if request.endpoint == 'public.research_innovation' %}active{% endif %}">
+            Research & Innovation
+        </a>
+
+        <a href="{{ url_for('public.trainings') }}" class="{% if request.endpoint == 'public.trainings' %}active{% endif %}">
+            Trainings
+        </a>
+
+        <a href="{{ url_for('public.gallery') }}" class="{% if request.endpoint == 'public.gallery' %}active{% endif %}">
+            Gallery
+        </a>
+
+        <a href="{{ url_for('public.contact') }}" class="{% if request.endpoint == 'public.contact' %}active{% endif %}">
+            Contact
+        </a>
+
+
+        <a
+            href="/login"
+            class="member-login-button"
+        >
+            Member Login
+        </a>
+
+        <a href="{{ url_for('applications.apply') }}" class="join-button">
+            Join ORSC
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         PAGE CONTENT
+    ========================================= -->
+
+    <main>
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+
+    <!-- ========================================
+         FOOTER
+    ========================================= -->
+
+    <footer class="footer">
+
+
+        <div class="footer-brand">
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='images/orsc-logo.png'
+                ) }}"
+                alt="ORSC"
+            >
+
+            <p>
+                Operations Research Society Club
+            </p>
+
+        </div>
+
+
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('public.about') }}" class="{% if request.endpoint == 'public.about' %}active{% endif %}">
+                About
+            </a>
+
+            <a href="{{ url_for('public_alumni.alumni') }}" class="{% if request.endpoint in ['public_alumni.alumni','public_alumni.alumni_detail'] %}active{% endif %}">
+                Alumni
+            </a>
+
+            <a href="{{ url_for('public.departments') }}" class="{% if request.endpoint == 'public.departments' %}active{% endif %}">
+                Departments
+            </a>
+
+            <a href="{{ url_for('public.events') }}" class="{% if request.endpoint == 'public.events' %}active{% endif %}">
+                Events
+            </a>
+
+            <a href="{{ url_for('public.research_innovation') }}" class="{% if request.endpoint == 'public.research_innovation' %}active{% endif %}">
+                Research & Innovation
+            </a>
+
+            <a href="{{ url_for('public.trainings') }}" class="{% if request.endpoint == 'public.trainings' %}active{% endif %}">
+                Trainings
+            </a>
+
+            <a href="{{ url_for('public.gallery') }}" class="{% if request.endpoint == 'public.gallery' %}active{% endif %}">
+                Gallery
+            </a>
+
+            <a href="{{ url_for('public.contact') }}" class="{% if request.endpoint == 'public.contact' %}active{% endif %}">
+                Contact
+            </a>
+
+        </div>
+
+
+
+        <div class="footer-bottom">
+
+            <span>
+                © 2026 ORSC - USTHB. All rights reserved.
+            </span>
+
+        </div>
+
+
+    </footer>
+
+
+
+    <!-- ========================================
+         JS
+    ========================================= -->
+
+    <script
+        src="{{ url_for(
+            'static',
+            filename='js/public.js'
+        ) }}"
+    ></script>
+
+
+    <script
+        src="{{ url_for(
+            'static',
+            filename='js/public-ui-v4.js'
+        ) }}"
+    ></script>
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const meta = document.querySelector(
+        'meta[name="csrf-token"]'
+    );
+
+    if (!meta) {
+        return;
+    }
+
+    const csrfToken = meta.content;
+
+    document.querySelectorAll("form").forEach(function (form) {
+
+        if (
+            form.method.toLowerCase() !== "post"
+        ) {
+            return;
+        }
+
+        if (
+            form.querySelector(
+                'input[name="csrf_token"]'
+            )
+        ) {
+            return;
+        }
+
+        const input = document.createElement("input");
+
+        input.type = "hidden";
+        input.name = "csrf_token";
+        input.value = csrfToken;
+
+        form.prepend(input);
+    });
+
+  });
+ </script>
+
+
+</body>
+
+</html>

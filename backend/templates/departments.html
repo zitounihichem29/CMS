@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+
+{% block title %}
+Departments
+{% endblock %}
+
+
+{% block content %}
+
+<div class="departments-page">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <section class="departments-header">
+
+        <div class="departments-header-content">
+
+            <span class="departments-label">
+                ORSC ORGANIZATION
+            </span>
+
+            <h1>
+                Departments
+            </h1>
+
+            <p>
+                Explore the departments that organize
+                and support the Operations Research Society Club.
+            </p>
+
+        </div>
+
+
+        <div class="departments-count">
+
+            <span>
+                Total departments
+            </span>
+
+            <strong>
+                {{ departments|length }}
+            </strong>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         DEPARTMENTS GRID
+    ====================================================== -->
+
+    <section class="departments-grid">
+
+
+        {% for department in departments %}
+
+            <a
+                href="{{ url_for(
+                    'departments.department_detail',
+                    department_id=department['department_id']
+                ) }}"
+                class="department-card"
+            >
+
+
+                <!-- =========================================
+                     CARD TOP
+                ========================================== -->
+
+                <div class="department-card-top">
+
+                    <div class="department-icon">
+                        ▤
+                    </div>
+
+                    <span class="department-arrow">
+                        →
+                    </span>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     DEPARTMENT INFO
+                ========================================== -->
+
+                <div class="department-card-content">
+
+                    <span class="department-card-label">
+                        DEPARTMENT
+                    </span>
+
+                    <h2>
+                        {{ department["name"] }}
+                    </h2>
+
+                    <p>
+                        {{
+                            department["description"]
+                            or
+                            "No description available."
+                        }}
+                    </p>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     HEAD
+                ========================================== -->
+
+                <div class="department-card-head">
+
+                    <span class="department-card-info-label">
+                        Department Head
+                    </span>
+
+
+                    {% if department["head"] %}
+
+                        <div class="department-head-profile">
+
+
+                            <!-- AVATAR -->
+
+                            <div class="department-head-avatar">
+
+                                {% if department["head"]["profile_photo"] %}
+
+                                    <img
+                                        src="{{ url_for(
+                                            'profile.profile_photo',
+                                            filename=department['head']['profile_photo']
+                                        ) }}"
+                                        alt="Department Head"
+                                    >
+
+                                {% else %}
+
+                                    <span>
+                                        {{
+                                            department[
+                                                "head"
+                                            ][
+                                                "first_name"
+                                            ][0]
+                                        }}
+
+                                        {{
+                                            department[
+                                                "head"
+                                            ][
+                                                "last_name"
+                                            ][0]
+                                        }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- NAME -->
+
+                            <div class="department-head-info">
+
+                                <strong>
+                                    {{
+                                        department[
+                                            "head"
+                                        ][
+                                            "first_name"
+                                        ]
+                                    }}
+
+                                    {{
+                                        department[
+                                            "head"
+                                        ][
+                                            "last_name"
+                                        ]
+                                    }}
+                                </strong>
+
+                                <span>
+                                    HEAD
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                    {% else %}
+
+                        <div class="department-head-empty">
+
+                            <div class="department-head-avatar empty">
+                                ?
+                            </div>
+
+                            <div class="department-head-info">
+
+                                <strong>
+                                    Not assigned
+                                </strong>
+
+                                <span>
+                                    HEAD
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- =========================================
+                     SMALL STATS
+                ========================================== -->
+
+                <div class="department-card-stats">
+
+
+                    <!-- MEMBERS -->
+
+                    <div class="department-card-stat">
+
+                        <span class="department-card-stat-icon">
+                            ♙
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                {{ department["total_members"] }}
+                            </strong>
+
+                            <span>
+                                Member{% if department["total_members"] != 1 %}s{% endif %}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- SUB HEAD -->
+
+                    <div class="department-card-stat">
+
+                        <span class="department-card-stat-icon">
+                            ◇
+                        </span>
+
+                        <div>
+
+                            {% if department["sub_head"] %}
+
+                                <strong class="department-subhead-name">
+
+                                    {{
+                                        department[
+                                            "sub_head"
+                                        ][
+                                            "first_name"
+                                        ]
+                                    }}
+
+                                    {{
+                                        department[
+                                            "sub_head"
+                                        ][
+                                            "last_name"
+                                        ]
+                                    }}
+
+                                </strong>
+
+                            {% else %}
+
+                                <strong>
+                                    —
+                                </strong>
+
+                            {% endif %}
+
+                            <span>
+                                Sub-Head
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =========================================
+                     FOOTER
+                ========================================== -->
+
+                <div class="department-card-footer">
+
+                    <span>
+                        View department
+                    </span>
+
+                    <span>
+                        →
+                    </span>
+
+                </div>
+
+
+            </a>
+
+
+        {% else %}
+
+
+            <!-- =============================================
+                 EMPTY STATE
+            ============================================== -->
+
+            <div class="departments-empty">
+
+                <div class="departments-empty-icon">
+                    ▤
+                </div>
+
+                <h3>
+                    No departments yet
+                </h3>
+
+                <p>
+                    Departments will appear here once they
+                    are added to the system.
+                </p>
+
+            </div>
+
+
+        {% endfor %}
+
+
+    </section>
+
+
+</div>
+
+{% endblock %}

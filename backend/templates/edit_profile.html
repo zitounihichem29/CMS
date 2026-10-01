@@ -1,0 +1,688 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Profile
+{% endblock %}
+
+
+{% block content %}
+
+<div class="edit-profile-page">
+
+
+    <!-- =========================================
+         HEADER
+    ========================================== -->
+
+    <div class="edit-profile-header">
+
+        <div>
+
+            <!-- <span class="edit-profile-label">
+                PROFILE
+            </span> -->
+
+            <h1>
+                Edit Profile
+            </h1>
+
+            <p>
+                Update your personal information.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('profile.profile') }}"
+            class="edit-profile-back"
+        >
+            Back to Profile
+        </a>
+
+    </div>
+
+
+
+    <!-- =========================================
+         FORM
+    ========================================== -->
+
+    <form
+        method="POST"
+        action="{{ url_for('profile.edit_profile') }}"
+        enctype="multipart/form-data"
+        class="edit-profile-form"
+        id="editProfileForm"
+    >
+
+
+        <!-- =========================================
+             PROFILE PHOTO
+        ========================================== -->
+
+        <section class="edit-profile-section">
+
+            <div class="edit-profile-section-header">
+
+                <div>
+
+                    <h2>
+                        Profile Photo
+                    </h2>
+
+                    <p>
+                        Choose and crop the photo that will appear
+                        on your profile.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="edit-profile-photo-area">
+
+
+                <!-- CURRENT / NEW PHOTO PREVIEW -->
+
+                <div
+                    class="edit-profile-photo-preview"
+                    id="profilePhotoPreview"
+                >
+
+                    {% if profile["profile_photo"] %}
+
+                        <img
+                            id="profilePhotoPreviewImage"
+                            src="{{ url_for(
+                                'profile.profile_photo',
+                                filename=profile['profile_photo']
+                            ) }}"
+                            alt="Profile photo"
+                        >
+
+                        <span
+                            id="profilePhotoPreviewInitials"
+                            hidden
+                        >
+                            {{ profile["first_name"][0] }}
+                            {{ profile["last_name"][0] }}
+                        </span>
+
+                    {% else %}
+
+                        <img
+                            id="profilePhotoPreviewImage"
+                            src=""
+                            alt="Profile photo"
+                            hidden
+                        >
+
+                        <span id="profilePhotoPreviewInitials">
+                            {{ profile["first_name"][0] }}
+                            {{ profile["last_name"][0] }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- PHOTO ACTIONS -->
+
+                <div class="edit-profile-photo-actions">
+
+                    <label
+                        for="profile_photo"
+                        class="edit-profile-photo-button"
+                    >
+                        Choose Photo
+                    </label>
+
+
+                    <input
+                        id="profile_photo"
+                        name="profile_photo"
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                        hidden
+                    >
+
+
+                    <p>
+                        JPG, JPEG, PNG or WEBP.
+                    </p>
+
+
+                    <span
+                        class="edit-profile-photo-status"
+                        id="profilePhotoStatus"
+                    >
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             ACCOUNT INFORMATION
+             READ ONLY
+        ========================================== -->
+
+        <section class="edit-profile-section">
+
+            <div class="edit-profile-section-header">
+
+                <div>
+
+                    <h2>
+                        Account Information
+                    </h2>
+
+                    <p>
+                        These details are managed by the club administration.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="edit-profile-grid">
+
+
+                <div class="edit-profile-field">
+
+                    <label>
+                        First Name
+                    </label>
+
+                    <input
+                        type="text"
+                        value="{{ profile['first_name'] }}"
+                        disabled
+                    >
+
+                </div>
+
+
+                <div class="edit-profile-field">
+
+                    <label>
+                        Last Name
+                    </label>
+
+                    <input
+                        type="text"
+                        value="{{ profile['last_name'] }}"
+                        disabled
+                    >
+
+                </div>
+
+
+                <div class="edit-profile-field">
+
+                    <label>
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        value="{{ profile['username'] }}"
+                        disabled
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             PERSONAL INFORMATION
+        ========================================== -->
+
+        <section class="edit-profile-section">
+
+            <div class="edit-profile-section-header">
+
+                <div>
+
+                    <h2>
+                        Personal Information
+                    </h2>
+
+                    <p>
+                        Keep your personal details up to date.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="edit-profile-grid">
+
+
+                <div class="edit-profile-field">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value="{{ profile['email'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="edit-profile-field">
+
+                    <label for="phone">
+                        Phone
+                    </label>
+
+                    <input
+                        id="phone"
+                        name="phone"
+                        type="text"
+                        value="{{ profile['phone'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="edit-profile-field">
+
+                    <label for="date_of_birth">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        id="date_of_birth"
+                        name="date_of_birth"
+                        type="date"
+                        value="{{ profile['date_of_birth'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="edit-profile-field">
+
+                    <label for="university">
+                        University
+                    </label>
+
+                    <input
+                        id="university"
+                        name="university"
+                        type="text"
+                        value="{{ profile['university'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="edit-profile-field">
+
+                    <label for="faculty">
+                        Faculty
+                    </label>
+
+                    <input
+                        id="faculty"
+                        name="faculty"
+                        type="text"
+                        value="{{ profile['faculty'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="edit-profile-field">
+
+                    <label for="profession">
+                        Profession
+                    </label>
+
+                    <input
+                        id="profession"
+                        name="profession"
+                        type="text"
+                        value="{{ profile['profession'] or '' }}"
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             BIO
+        ========================================== -->
+
+        <section class="edit-profile-section">
+
+            <div class="edit-profile-section-header">
+
+                <div>
+
+                    <h2>
+                        About
+                    </h2>
+
+                    <p>
+                        Tell other members a little about yourself.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="edit-profile-field">
+
+                <label for="bio">
+                    Bio
+                </label>
+
+                <textarea
+                    id="bio"
+                    name="bio"
+                    rows="5"
+                >{{ profile['bio'] or '' }}</textarea>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             SOCIAL LINKS
+        ========================================== -->
+
+        <section class="edit-profile-section">
+
+            <div class="edit-profile-section-header">
+
+                <div>
+
+                    <h2>
+                        Social Links
+                    </h2>
+
+                    <p>
+                        Add the platforms where members can find you.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="edit-profile-grid">
+
+
+                <div class="edit-profile-field">
+
+                    <label for="linkedin">
+                        LinkedIn
+                    </label>
+
+                    <input
+                        id="linkedin"
+                        name="linkedin"
+                        type="text"
+                        value="{{ profile['linkedin'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="edit-profile-field">
+
+                    <label for="github">
+                        GitHub
+                    </label>
+
+                    <input
+                        id="github"
+                        name="github"
+                        type="text"
+                        value="{{ profile['github'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="edit-profile-field">
+
+                    <label for="discord">
+                        Discord
+                    </label>
+
+                    <input
+                        id="discord"
+                        name="discord"
+                        type="text"
+                        value="{{ profile['discord'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="edit-profile-field">
+
+                    <label for="facebook">
+                        Facebook
+                    </label>
+
+                    <input
+                        id="facebook"
+                        name="facebook"
+                        type="text"
+                        value="{{ profile['facebook'] or '' }}"
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             FORM ACTIONS
+        ========================================== -->
+
+        <div class="edit-profile-actions">
+
+            <a
+                href="{{ url_for('profile.profile') }}"
+                class="edit-profile-cancel"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="edit-profile-save"
+            >
+                Save Changes
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+
+<!-- =====================================================
+     PROFILE PHOTO CROPPER
+====================================================== -->
+
+<div
+    class="profile-crop-modal"
+    id="profileCropModal"
+    hidden
+>
+
+    <div
+        class="profile-crop-backdrop"
+        id="profileCropBackdrop"
+    >
+    </div>
+
+
+    <div
+        class="profile-crop-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="profileCropTitle"
+    >
+
+
+        <!-- HEADER -->
+
+        <div class="profile-crop-header">
+
+            <div>
+
+                <span>
+                    PROFILE PHOTO
+                </span>
+
+                <h2 id="profileCropTitle">
+                    Adjust your photo
+                </h2>
+
+                <p>
+                    Move and zoom the photo until you are happy
+                    with the visible area.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="profile-crop-close"
+                id="profileCropClose"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <!-- CROP AREA -->
+
+        <div class="profile-crop-body">
+
+            <div
+                class="profile-crop-viewport"
+                id="profileCropViewport"
+            >
+
+                <img
+                    id="profileCropImage"
+                    src=""
+                    alt="Photo to crop"
+                    draggable="false"
+                >
+
+                <div class="profile-crop-circle">
+                </div>
+
+            </div>
+
+
+
+            <!-- ZOOM -->
+
+            <div class="profile-crop-controls">
+
+                <span>
+                    −
+                </span>
+
+                <input
+                    id="profileCropZoom"
+                    type="range"
+                    min="1"
+                    max="3"
+                    step="0.01"
+                    value="1"
+                    aria-label="Photo zoom"
+                >
+
+                <span>
+                    +
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="profile-crop-actions">
+
+            <button
+                type="button"
+                class="profile-crop-cancel"
+                id="profileCropCancel"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                class="profile-crop-apply"
+                id="profileCropApply"
+            >
+                Use Photo
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CANVAS USED TO CREATE THE FINAL CROPPED IMAGE -->
+
+<canvas
+    id="profileCropCanvas"
+    width="500"
+    height="500"
+    hidden
+>
+</canvas>
+
+{% endblock %}

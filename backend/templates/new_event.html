@@ -1,0 +1,390 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+New Event
+{% endblock %}
+
+
+{% block content %}
+
+<div class="event-form-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="event-form-header">
+
+        <div class="event-form-header-content">
+
+            <span class="events-label">
+                ORSC EVENTS
+            </span>
+
+            <h1>
+                New Event
+            </h1>
+
+            <p>
+                Create and configure a new ORSC event.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('events.events') }}"
+            class="btn-secondary"
+        >
+            Back to Events
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         FORM CARD
+         ======================================== -->
+
+    <form
+        method="POST"
+        class="event-main-form"
+    >
+
+
+        <!-- ========================================
+             GENERAL INFORMATION
+             ======================================== -->
+
+        <section class="event-form-section">
+
+            <div class="event-form-section-header">
+
+                <span class="event-form-section-number">
+                    01
+                </span>
+
+                <div>
+
+                    <h2>
+                        General Information
+                    </h2>
+
+                    <p>
+                        Basic information about the event.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- TITLE -->
+
+            <div class="event-form-group">
+
+                <label for="title">
+                    Event Title
+                    <span class="required-mark">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="Example: Build It Your Way"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="event-form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="6"
+                    placeholder="Describe the event..."
+                ></textarea>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================
+             EVENT MANAGEMENT
+             ======================================== -->
+
+        <section class="event-form-section">
+
+            <div class="event-form-section-header">
+
+                <span class="event-form-section-number">
+                    02
+                </span>
+
+                <div>
+
+                    <h2>
+                        Event Management
+                    </h2>
+
+                    <p>
+                        Select the person responsible for the event.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- EVENT LEADER -->
+
+            <div class="event-form-group">
+
+                <label for="event_leader_membership_id">
+                    Event Leader
+                    <span class="required-mark">*</span>
+                </label>
+
+                <select
+                    id="event_leader_membership_id"
+                    name="event_leader_membership_id"
+                    required
+                >
+
+                    <option value="">
+                        Select an event leader
+                    </option>
+
+
+                    {% for leader in event_leaders %}
+
+                        <option value="{{ leader['membership_id'] }}">
+
+                            {{ leader["first_name"] }}
+                            {{ leader["last_name"] }}
+
+                            —
+                            {{ leader["department_name"] }}
+
+                            —
+                            {{ leader["role_name"] }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================
+             DATE & TIME
+             ======================================== -->
+
+        <section class="event-form-section">
+
+            <div class="event-form-section-header">
+
+                <span class="event-form-section-number">
+                    03
+                </span>
+
+                <div>
+
+                    <h2>
+                        Date & Time
+                    </h2>
+
+                    <p>
+                        Define when the event starts and ends.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="event-form-grid">
+
+
+                <!-- START DATE -->
+
+                <div class="event-form-group">
+
+                    <label for="event_date">
+                        Start Date
+                        <span class="required-mark">*</span>
+                    </label>
+
+                    <input
+                        type="date"
+                        id="event_date"
+                        name="event_date"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- END DATE -->
+
+                <div class="event-form-group">
+
+                    <label for="end_date">
+                        End Date
+                        <span class="required-mark">*</span>
+                    </label>
+
+                    <input
+                        type="date"
+                        id="end_date"
+                        name="end_date"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- START TIME -->
+
+                <div class="event-form-group">
+
+                    <label for="start_time">
+                        Start Time
+                    </label>
+
+                    <input
+                        type="time"
+                        id="start_time"
+                        name="start_time"
+                    >
+
+                </div>
+
+
+
+                <!-- END TIME -->
+
+                <div class="event-form-group">
+
+                    <label for="end_time">
+                        End Time
+                    </label>
+
+                    <input
+                        type="time"
+                        id="end_time"
+                        name="end_time"
+                    >
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================
+             LOCATION
+             ======================================== -->
+
+        <section class="event-form-section">
+
+            <div class="event-form-section-header">
+
+                <span class="event-form-section-number">
+                    04
+                </span>
+
+                <div>
+
+                    <h2>
+                        Location
+                    </h2>
+
+                    <p>
+                        Specify where the event will take place.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="event-form-group">
+
+                <label for="location">
+                    Event Location
+                </label>
+
+                <input
+                    type="text"
+                    id="location"
+                    name="location"
+                    placeholder="Example: USTHB - Auditorium"
+                >
+
+            </div>
+
+        </section>
+
+
+
+
+        <!-- ========================================
+             ACTIONS
+             ======================================== -->
+
+        <div class="event-form-actions">
+
+            <a
+                href="{{ url_for('events.events') }}"
+                class="btn-secondary"
+            >
+                Cancel
+            </a>
+
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Create Event
+            </button>
+
+        </div>
+
+
+    </form>
+
+
+</div>
+
+{% endblock %}

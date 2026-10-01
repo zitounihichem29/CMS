@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "records/_styles.html" %}
+
+<div class="records-page">
+
+    <div class="records-head">
+
+        <div>
+
+            <a
+                class="records-muted"
+                href="{{ url_for(
+                    'records.attendance_hub'
+                ) }}"
+            >
+                ← Attendance
+            </a>
+
+            <h1>
+                {{ item["title"] }}
+            </h1>
+
+            <p class="records-muted">
+                {{ kind|title }}
+                ·
+                {{
+                    item["item_date"]
+                    or "Date not set"
+                }}
+                ·
+                {{ term["name"] }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="records-error">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <section class="records-section">
+
+        <form method="POST">
+
+            <div class="records-table-wrap">
+
+                <table class="records-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Member
+                            </th>
+
+                            <th>
+                                Role / Department
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for member in members %}
+
+                            <tr>
+
+                                <td>
+                                    {{ member["first_name"] }}
+                                    {{ member["last_name"] }}
+                                </td>
+
+
+                                <td>
+
+                                    {{ member["role_name"] }}
+
+                                    {% if member["department_name"] %}
+
+                                        ·
+                                        {{ member["department_name"] }}
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    <select
+                                        class="records-attendance-select"
+                                        name="status_{{ member['membership_id'] }}"
+                                    >
+
+                                        <option value="">
+                                            Not recorded
+                                        </option>
+
+                                        {% for status in [
+                                            "present",
+                                            "absent",
+                                            "late",
+                                            "excused"
+                                        ] %}
+
+                                            <option
+                                                value="{{ status }}"
+                                                {% if attendance.get(member['membership_id']) == status %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {{ status|title }}
+                                            </option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="records-actions">
+
+                <button
+                    class="records-btn primary"
+                    type="submit"
+                >
+                    Save Attendance
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</div>
+
+{% endblock %}

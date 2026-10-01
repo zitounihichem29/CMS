@@ -1,0 +1,522 @@
+{% extends "base.html" %}
+
+{% block title %}
+Task Details
+{% endblock %}
+
+{% block content %}
+
+<div class="task-detail-page">
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="task-detail-header">
+
+        <div>
+
+            <span class="task-detail-label">
+                ORSC TASK MANAGEMENT
+            </span>
+
+            <h1>
+                {{ task["title"] }}
+            </h1>
+
+            <p>
+                Task details, assigned members and attachments.
+            </p>
+
+        </div>
+
+
+        <span class="task-status status-{{ task['status'] }}">
+
+            {% if task["status"] == "pending" %}
+
+                Pending
+
+            {% elif task["status"] == "in_progress" %}
+
+                In progress
+
+            {% elif task["status"] == "completed" %}
+
+                Completed
+
+            {% endif %}
+
+        </span>
+
+
+        {% if task["review_status"] == "pending_review" %}
+        
+        <span class="review-badge review-pending">
+            Pending review
+        </span>
+        
+        {% elif task["review_status"] == "approved" %}
+        
+        <span class="review-badge review-approved">
+            Approved
+        </span>
+        
+        
+        {% elif task["review_status"] == "rejected" %}
+        
+        <span class="review-badge review-rejected">
+            Rejected
+        </span>
+        
+        
+        {% elif task["review_status"] == "corrected" %}
+        
+        <span class="review-badge review-corrected">
+            Corrected & closed
+        </span>
+        
+        {% endif %}
+
+    </div>
+
+
+    <!-- ========================================
+         REVIEW ACTIONS
+         ======================================== -->
+
+    {% if task["review_status"] == "pending_review"
+          and current_role in ["HEAD", "SUB_HEAD"] %}
+
+        <div class="task-review-actions">
+
+            <div>
+
+                <span class="task-review-label">
+                    REVIEW REQUIRED
+                </span>
+
+                <p>
+                    Cette tâche a atteint sa date limite.
+                    Vérifiez le travail avant de prendre une décision.
+                </p>
+
+            </div>
+
+
+            <div class="task-review-buttons">
+
+                <form
+                    action="/tasks/{{ task['task_id'] }}/approve"
+                    method="POST"
+                >
+
+                    <button
+                        type="submit"
+                        class="task-approve-button"
+                    >
+                        Valider
+                    </button>
+
+                </form>
+
+
+                <form
+                    action="/tasks/{{ task['task_id'] }}/reject"
+                    method="POST"
+                >
+
+                    <button
+                        type="submit"
+                        class="task-reject-button"
+                    >
+                        Refuser
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ========================================
+         MAIN GRID
+         ======================================== -->
+
+    <div class="task-detail-grid">
+
+
+        <!-- ========================================
+             LEFT SIDE
+             ======================================== -->
+
+        <div class="task-main-column">
+
+
+            <!-- TASK INFORMATION -->
+
+            <div class="task-detail-card">
+
+                <div class="task-card-title">
+
+                    <span>
+                        TASK DETAILS
+                    </span>
+
+                    <h2>
+                        Information
+                    </h2>
+
+                </div>
+
+
+                {% if task["description"] %}
+
+                    <div class="task-description">
+
+                        <h3>
+                            Description
+                        </h3>
+
+                        <p>
+                            {{ task["description"] }}
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+
+                <div class="task-information-grid">
+
+
+                    <div class="task-information-item">
+
+                        <span class="information-label">
+                            Due date
+                        </span>
+
+                        <strong>
+
+                            {% if task["due_date"] %}
+
+                                {{ task["due_date"] }}
+
+                            {% else %}
+
+                                No due date
+
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="task-information-item">
+
+                        <span class="information-label">
+                            Created
+                        </span>
+
+                        <strong>
+                            {{ task["created_at"] }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="task-information-item">
+
+                        <span class="information-label">
+                            Created by
+                        </span>
+
+                        <strong>
+
+                            {{ task["creator_first_name"] }}
+                            {{ task["creator_last_name"] }}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ========================================
+                 ATTACHMENTS
+                 ======================================== -->
+
+            <div class="task-detail-card">
+
+                <div class="task-card-title">
+
+                    <span>
+                        FILES
+                    </span>
+
+                    <h2>
+                        Pièces jointes
+                    </h2>
+
+                </div>
+
+
+                <!-- UPLOAD -->
+
+                {% if can_upload_attachment
+                      and task["review_status"] == "not_reviewed" %}
+
+                    <form
+                        class="attachment-upload-form"
+                        action="/tasks/{{ task['task_id'] }}/attachments"
+                        method="POST"
+                        enctype="multipart/form-data"
+                    >
+
+                        <label class="attachment-file-input">
+
+                            <span>
+                                Choisir un fichier
+                            </span>
+
+                            <input
+                                type="file"
+                                name="attachment"
+                                id="attachmentInput"
+                                required
+                            >
+
+                            <p
+                                id="attachmentError"
+                                class="attachment-error"
+                            ></p>
+
+                        </label>
+
+
+                        <button
+                            class="attachment-upload-button"
+                            type="submit"
+                        >
+                            Ajouter
+                        </button>
+
+                    </form>
+
+                {% endif %}
+                
+                
+                {% if task["review_status"] == "rejected"
+                and current_role in ["HEAD", "SUB_HEAD"] %}
+                
+                <div class="task-correction-box">
+                    
+                    <span class="task-review-label">
+                        TASK REJECTED
+                    </span>
+                    
+                    <p>
+                        Ajoutez la version corrigée du travail.
+                    </p>
+                    
+                    <form class="attachment-upload-form" action="/tasks/{{ task['task_id'] }}/correction" method="POST" enctype="multipart/form-data">
+                        
+                        <label class="attachment-file-input">
+                            
+                            <span>
+                                Choisir la version corrigée
+                            </span>
+                            
+                            <input type="file" name="attachment" required>
+                        
+                        </label>
+                        
+                        <button type="submit" class="attachment-upload-button">
+                            Ajouter la correction
+                        </button>
+                    
+                    </form>
+                
+                </div>
+                
+                {% endif %}
+
+
+
+                <!-- ATTACHMENTS LIST -->
+
+                <div class="attachments-list">
+
+                    {% if attachments %}
+
+                        {% for attachment in attachments %}
+
+                            <div class="attachment-item">
+
+
+                                <div class="attachment-icon">
+
+                                    📎
+
+                                </div>
+
+
+                                <div class="attachment-content">
+
+                                    <a
+                                        class="attachment-link"
+                                        href="/attachments/{{ attachment['task_attachment_id'] }}/view"
+                                        target="_blank"
+                                        rel="noopener"
+                                    >
+
+                                        {{ attachment["original_filename"] }}
+
+                                    </a>
+
+
+                                    <span>
+
+                                        Ajouté par
+                                        {{ attachment["uploader_first_name"] }}
+                                        {{ attachment["uploader_last_name"] }}
+
+                                    </span>
+
+                                </div>
+
+
+                                <div class="attachment-date">
+
+                                    {{ attachment["uploaded_at"] }}
+
+                                </div>
+
+
+                                {% if current_role in ["HEAD", "SUB_HEAD"]
+                                      and task["review_status"] == "not_reviewed" %}
+
+                                    <form
+                                        action="/attachments/{{ attachment['task_attachment_id'] }}/delete"
+                                        method="POST"
+                                        onsubmit="return confirm('Supprimer cette pièce jointe ?');"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="attachment-delete-button"
+                                        >
+                                            Supprimer
+                                        </button>
+
+                                    </form>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endfor %}
+
+
+                    {% else %}
+
+                        <div class="empty-attachments">
+
+                            Aucune pièce jointe pour cette tâche.
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             RIGHT SIDE
+             ======================================== -->
+
+        <div class="task-side-column">
+
+            <div class="task-detail-card">
+
+                <div class="task-card-title">
+
+                    <span>
+                        TEAM
+                    </span>
+
+                    <h2>
+                        Assigned members
+                    </h2>
+
+                </div>
+
+
+                <div class="assigned-members">
+
+                    {% if assignees %}
+
+                        {% for member in assignees %}
+
+                            <div class="assigned-member">
+
+                                <div class="member-avatar">
+
+                                    {{ member["first_name"][0] }}
+                                    {{ member["last_name"][0] }}
+
+                                </div>
+
+
+                                <div>
+
+                                    <strong>
+
+                                        {{ member["first_name"] }}
+                                        {{ member["last_name"] }}
+
+                                    </strong>
+
+                                    <span>
+                                        Assigned member
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+
+                    {% else %}
+
+                        <p>
+                            No members assigned.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

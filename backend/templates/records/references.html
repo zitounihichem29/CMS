@@ -1,0 +1,466 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "records/_styles.html" %}
+
+<div class="records-page">
+
+    <div class="records-head">
+
+        <div>
+
+            <a
+                class="records-muted"
+                href="{{ url_for(
+                    'records.records_home'
+                ) }}"
+            >
+                ← Club Records
+            </a>
+
+            <h1>
+                Research References
+            </h1>
+
+            <p class="records-muted">
+                Reference library and links to
+                {{ term["name"] }} scientific articles.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {% if can_manage %}
+
+        <section class="records-section">
+
+            <h2>
+                Add Source
+            </h2>
+
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'records.create_reference'
+                ) }}"
+                class="records-form-grid"
+            >
+
+                <div class="records-field full">
+
+                    <label>
+                        Title
+                    </label>
+
+                    <input
+                        name="title"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="records-field">
+
+                    <label>
+                        Authors
+                    </label>
+
+                    <input name="authors">
+
+                </div>
+
+
+                <div class="records-field">
+
+                    <label>
+                        Source type
+                    </label>
+
+                    <input
+                        name="source_type"
+                        placeholder="Article, Book, Website..."
+                    >
+
+                </div>
+
+
+                <div class="records-field">
+
+                    <label>
+                        Publication year
+                    </label>
+
+                    <input
+                        type="number"
+                        name="publication_year"
+                    >
+
+                </div>
+
+
+                <div class="records-field">
+
+                    <label>
+                        DOI
+                    </label>
+
+                    <input name="doi">
+
+                </div>
+
+
+                <div class="records-field full">
+
+                    <label>
+                        URL
+                    </label>
+
+                    <input
+                        type="url"
+                        name="url"
+                    >
+
+                </div>
+
+
+                <div class="records-actions full">
+
+                    <button
+                        class="records-btn primary"
+                        type="submit"
+                    >
+                        Add Source
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <section class="records-section">
+
+            <h2>
+                Link Source to Active Article
+            </h2>
+
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'records.link_reference'
+                ) }}"
+                class="records-form-grid"
+            >
+
+                <div class="records-field">
+
+                    <label>
+                        Article
+                    </label>
+
+                    <select
+                        name="article_id"
+                        required
+                    >
+
+                        <option value="">
+                            Select article
+                        </option>
+
+                        {% for article in articles %}
+
+                            <option
+                                value="{{ article['scientific_article_id'] }}"
+                            >
+                                {{ article["title"] }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="records-field">
+
+                    <label>
+                        Source
+                    </label>
+
+                    <select
+                        name="source_id"
+                        required
+                    >
+
+                        <option value="">
+                            Select source
+                        </option>
+
+                        {% for source in sources %}
+
+                            <option
+                                value="{{ source['source_reference_id'] }}"
+                            >
+                                {{ source["title"] }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="records-actions full">
+
+                    <button
+                        class="records-btn primary"
+                        type="submit"
+                    >
+                        Link Reference
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    {% endif %}
+
+
+    <div class="records-two">
+
+        <section class="records-section">
+
+            <h2>
+                Reference Library
+            </h2>
+
+
+            {% for source in sources %}
+
+                <div class="records-source">
+
+                    <strong>
+                        {{ source["title"] }}
+                    </strong>
+
+
+                    <div class="records-kpi">
+
+                        {{
+                            source["authors"]
+                            or "Authors not set"
+                        }}
+
+                        {% if source["publication_year"] %}
+
+                            ·
+                            {{ source["publication_year"] }}
+
+                        {% endif %}
+
+                        ·
+                        {{ source["link_count"] }}
+                        article link(s)
+
+                    </div>
+
+
+                    {% if can_manage %}
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'records.update_reference',
+                                source_id=source['source_reference_id']
+                            ) }}"
+                            class="records-form-grid"
+                            style="margin-top:10px"
+                        >
+
+                            <div class="records-field full">
+
+                                <input
+                                    name="title"
+                                    value="{{ source['title'] }}"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="records-field">
+
+                                <input
+                                    name="authors"
+                                    value="{{ source['authors'] or '' }}"
+                                    placeholder="Authors"
+                                >
+
+                            </div>
+
+
+                            <div class="records-field">
+
+                                <input
+                                    name="source_type"
+                                    value="{{ source['source_type'] or '' }}"
+                                    placeholder="Type"
+                                >
+
+                            </div>
+
+
+                            <div class="records-field">
+
+                                <input
+                                    type="number"
+                                    name="publication_year"
+                                    value="{{ source['publication_year'] or '' }}"
+                                    placeholder="Year"
+                                >
+
+                            </div>
+
+
+                            <div class="records-field">
+
+                                <input
+                                    name="doi"
+                                    value="{{ source['doi'] or '' }}"
+                                    placeholder="DOI"
+                                >
+
+                            </div>
+
+
+                            <div class="records-field full">
+
+                                <input
+                                    type="url"
+                                    name="url"
+                                    value="{{ source['url'] or '' }}"
+                                    placeholder="URL"
+                                >
+
+                            </div>
+
+
+                            <div class="records-actions full">
+
+                                <button
+                                    class="records-btn"
+                                    type="submit"
+                                >
+                                    Update
+                                </button>
+
+                            </div>
+
+                        </form>
+
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'records.delete_reference',
+                                source_id=source['source_reference_id']
+                            ) }}"
+                            onsubmit="return confirm('Delete this unlinked source?');"
+                        >
+
+                            <button
+                                class="records-btn danger"
+                                type="submit"
+                            >
+                                Delete
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+
+            {% else %}
+
+                <div class="records-empty">
+                    No source references yet.
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+
+        <section class="records-section">
+
+            <h2>
+                Active Article Links
+            </h2>
+
+
+            {% for item in linked %}
+
+                <div class="records-source">
+
+                    <strong>
+                        {{ item["article_title"] }}
+                    </strong>
+
+                    <div>
+                        {{ item["source_title"] }}
+                    </div>
+
+
+                    {% if can_manage %}
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'records.unlink_reference',
+                                article_id=item['scientific_article_id'],
+                                source_id=item['source_reference_id']
+                            ) }}"
+                        >
+
+                            <button
+                                class="records-btn danger"
+                                type="submit"
+                            >
+                                Unlink
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+
+            {% else %}
+
+                <div class="records-empty">
+                    No references linked to active-mandate articles.
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+    </div>
+
+</div>
+
+{% endblock %}

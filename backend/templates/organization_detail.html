@@ -1,0 +1,484 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ organization["name"] }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="organization-detail-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="organization-detail-header">
+
+        <a
+            href="{{ url_for('organizations.organizations') }}"
+            class="organization-back-link"
+        >
+            ← Back to Organizations
+        </a>
+
+
+        {% if can_manage_organizations %}
+            
+            <div class="organization-detail-actions">
+
+                <a href="{{ url_for('organizations.edit_organization', organization_id=organization['organization_id']) }}" class="btn-secondary">
+                    Edit
+                </a>
+
+                <form method="POST" action="{{ url_for('organizations.delete_organization', organization_id=organization['organization_id']) }}"  onsubmit="return confirm('Delete this organization and all its relationship history?');">
+
+                    <button type="submit" class="organization-delete-button">
+                        Delete
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% endif %}    
+
+    </div>
+
+
+
+    <!-- ========================================
+         ORGANIZATION IDENTITY
+         ======================================== -->
+
+    <div class="organization-profile-card">
+
+
+        <div class="organization-detail-logo-container">
+
+            {% if organization["logo_path"] %}
+
+                <img
+                    src="{{ url_for(
+                        'organizations.organization_logo',
+                        organization_id=organization['organization_id']
+                    ) }}"
+                    alt="{{ organization['name'] }} logo"
+                    class="organization-detail-logo"
+                >
+
+            {% else %}
+
+                <div class="organization-detail-logo-placeholder">
+                    {{ organization["name"][0] | upper }}
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="organization-detail-identity">
+
+            <span class="organizations-label">
+                ORGANIZATION
+            </span>
+
+            <h1>
+                {{ organization["name"] }}
+            </h1>
+
+            <span class="organization-detail-type">
+
+                {% if organization["organization_type"] == "company" %}
+                    Company
+
+                {% elif organization["organization_type"] == "startup" %}
+                    Startup
+
+                {% elif organization["organization_type"] == "university" %}
+                    University
+
+                {% elif organization["organization_type"] == "school" %}
+                    School
+
+                {% elif organization["organization_type"] == "association" %}
+                    Association
+
+                {% elif organization["organization_type"] == "institution" %}
+                    Institution
+
+                {% elif organization["organization_type"] == "media" %}
+                    Media
+
+                {% elif organization["organization_type"] == "club" %}
+                    Club
+
+                {% else %}
+                    Other
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================================
+         INFORMATION
+         ======================================== -->
+
+    <div class="organization-detail-section">
+
+        <div class="organization-detail-section-header">
+
+            <div class="organization-detail-section-title">
+
+                <span class="organization-detail-section-number">
+                    02
+                </span>
+
+                <div>
+
+                    <h2>
+                        Relationship History
+                    </h2>
+
+                    <p>
+                        History of the organization's relationship with ORSC.
+                    </p>
+
+                </div>
+
+            </div>    
+
+            {% if can_manage_organizations %}
+
+            <a href="{{ url_for('organizations.new_organization_relation', organization_id=organization['organization_id']) }}" class="btn-primary">
+                + Add Relationship
+            </a>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="organization-info-grid">
+
+
+            <!-- ADDRESS -->
+
+            <div class="organization-info-item">
+
+                <span class="organization-info-label">
+                    Address
+                </span>
+
+                <span class="organization-info-value">
+
+                    {% if organization["address"] %}
+                        {{ organization["address"] }}
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+
+
+            <!-- EMAIL -->
+
+            <div class="organization-info-item">
+
+                <span class="organization-info-label">
+                    Email
+                </span>
+
+                <span class="organization-info-value">
+
+                    {% if organization["email"] %}
+
+                        <a href="mailto:{{ organization['email'] }}">
+                            {{ organization["email"] }}
+                        </a>
+
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+
+
+            <!-- PHONE -->
+
+            <div class="organization-info-item">
+
+                <span class="organization-info-label">
+                    Phone
+                </span>
+
+                <span class="organization-info-value">
+
+                    {% if organization["phone"] %}
+
+                        <a href="tel:{{ organization['phone'] }}">
+                            {{ organization["phone"] }}
+                        </a>
+
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+
+
+            <!-- WEBSITE -->
+
+            <div class="organization-info-item">
+
+                <span class="organization-info-label">
+                    Website
+                </span>
+
+                <span class="organization-info-value">
+
+                    {% if organization["website"] %}
+
+                        <a
+                            href="{{ organization['website'] }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Visit Website ↗
+                        </a>
+
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="organization-description">
+
+            <span class="organization-info-label">
+                Description
+            </span>
+
+            {% if organization["description"] %}
+
+                <p>
+                    {{ organization["description"] }}
+                </p>
+
+            {% else %}
+
+                <p class="organization-no-data">
+                    No description available.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================================
+         RELATIONSHIP HISTORY
+         ======================================== -->
+
+    <div class="organization-detail-section">
+
+        <div class="organization-detail-section-header">
+
+            <span class="organization-detail-section-number">
+                02
+            </span>
+
+            <div>
+
+                <h2>
+                    Relationship History
+                </h2>
+
+                <p>
+                    History of the organization's relationship with ORSC.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="organization-relations-list">
+
+            {% for relation in relations %}
+
+                <div class="organization-relation-card">
+
+
+                    <div class="organization-relation-top">
+
+                        <div>
+
+                            <span class="organization-relation-term">
+                                {{ relation["term_name"] }}
+                            </span>
+
+                            <h3>
+
+                                {% if relation["relation_type"] == "sponsor" %}
+                                    Sponsor
+
+                                {% elif relation["relation_type"] == "partner" %}
+                                    Partner
+
+                                {% elif relation["relation_type"] == "collaboration" %}
+                                    Collaboration
+
+                                {% else %}
+                                    Other
+
+                                {% endif %}
+
+                            </h3>
+
+                        </div>
+
+
+                        <span
+                            class="organization-relation-badge relation-{{ relation['relation_type'] }}"
+                        >
+
+                            {{ relation["relation_type"] | upper }}
+
+                        </span>
+
+                    </div>
+
+
+
+                    {% if can_manage_organizations %}
+
+                    <div class="organization-relation-actions">
+
+                        <a href="{{ url_for('organizations.edit_organization_relation', organization_id=organization['organization_id'], relation_id=relation['organization_relation_id']) }}" class="organization-relation-edit">
+                            Edit
+                        </a>
+
+                        <form method="POST" action="{{ url_for('organizations.delete_organization_relation', organization_id=organization['organization_id'], relation_id=relation['organization_relation_id']) }}" onsubmit="return confirm('Delete this relationship from the history?');">
+
+                            <button type="submit" class="organization-relation-delete">
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {% if relation["start_date"] or relation["end_date"] %}
+
+                        <div class="organization-relation-dates">
+
+                            {% if relation["start_date"] %}
+
+                                <span>
+                                    Start:
+                                    {{ relation["start_date"] }}
+                                </span>
+
+                            {% endif %}
+
+
+                            {% if relation["end_date"] %}
+
+                                <span>
+                                    End:
+                                    {{ relation["end_date"] }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    {% if relation["description"] %}
+
+                        <p class="organization-relation-description">
+                            {{ relation["description"] }}
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+            {% else %}
+
+                <div class="organization-relations-empty">
+
+                    <h3>
+                        No relationship history
+                    </h3>
+
+                    <p>
+                        No relationship has been registered for this organization yet.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================================
+         INTERNAL INFORMATION
+         ======================================== -->
+
+    <div class="organization-detail-meta">
+
+        Added by
+        <strong>
+            {{ organization["creator_first_name"] }}
+            {{ organization["creator_last_name"] }}
+        </strong>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

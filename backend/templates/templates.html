@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Templates
+{% endblock %}
+
+
+{% block content %}
+
+<div class="templates-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="templates-header">
+
+        <div class="templates-header-content">
+
+            <span class="templates-label">
+                ORSC RESOURCES
+            </span>
+
+            <h1>
+                Templates
+            </h1>
+
+            <p>
+                Access reusable documents and resources for ORSC activities.
+            </p>
+
+        </div>
+
+
+        {% if can_manage_templates %}
+
+            <a
+                href="{{ url_for('templates.new_template') }}"
+                class="btn-primary"
+            >
+                <span class="btn-icon">
+                    +
+                </span>
+
+                <span>
+                    Add New Template
+                </span>
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- ========================================
+         TEMPLATES LIST
+         ======================================== -->
+
+    <div class="templates-list">
+
+
+        {% for template in templates %}
+
+            <div
+                class="template-row template-type-{{ template['document_type'] }}"
+            >
+
+
+                <!-- ========================================
+                     TYPE ICON
+                     ======================================== -->
+
+                <div class="template-icon">
+
+                    {% if template["document_type"] == "pdf" %}
+                        PDF
+
+                    {% elif template["document_type"] == "word" %}
+                        W
+
+                    {% elif template["document_type"] == "excel" %}
+                        X
+
+                    {% elif template["document_type"] == "powerpoint" %}
+                        P
+
+                    {% elif template["document_type"] == "canva" %}
+                        C
+
+                    {% elif template["document_type"] == "figma" %}
+                        F
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- ========================================
+                     TEMPLATE NAME
+                     ======================================== -->
+
+                <div class="template-main">
+
+                    <h2>
+                        {{ template["name"] }}
+                    </h2>
+
+                    <span class="template-type-label">
+
+                        {% if template["document_type"] == "pdf" %}
+                            PDF
+
+                        {% elif template["document_type"] == "word" %}
+                            Word
+
+                        {% elif template["document_type"] == "excel" %}
+                            Excel
+
+                        {% elif template["document_type"] == "powerpoint" %}
+                            PowerPoint
+
+                        {% elif template["document_type"] == "canva" %}
+                            Canva
+
+                        {% elif template["document_type"] == "figma" %}
+                            Figma
+
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- ========================================
+                     ACTIONS
+                     ======================================== -->
+
+                <div class="template-actions">
+
+
+                    {% if template["storage_type"] == "file" %}
+
+                        <a
+                            href="{{ url_for(
+                                'templates.download_template',
+                                document_id=template['document_id']
+                            ) }}"
+                            class="template-action-primary"
+                        >
+                            <span>
+                                Download
+                            </span>
+
+                            <span class="template-action-arrow">
+                                ↓
+                            </span>
+                        </a>
+
+
+                    {% else %}
+
+                        <a
+                            href="{{ url_for(
+                                'templates.open_template',
+                                document_id=template['document_id']
+                            ) }}"
+                            class="template-action-primary"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <span>
+                                Open Template
+                            </span>
+
+                            <span class="template-action-arrow">
+                                ↗
+                            </span>
+                        </a>
+
+                    {% endif %}
+
+
+
+                    {% if can_manage_templates %}
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'templates.delete_template',
+                                document_id=template['document_id']
+                            ) }}"
+                            onsubmit="return confirm('Delete this template?');"
+                        >
+
+                            <button
+                                type="submit"
+                                class="template-delete-button"
+                            >
+                                Delete
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+
+                </div>
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- ========================================
+                 EMPTY STATE
+                 ======================================== -->
+
+            <div class="templates-empty">
+
+                <div class="templates-empty-icon">
+                    ▤
+                </div>
+
+                <h2>
+                    No templates yet
+                </h2>
+
+                <p>
+                    ORSC templates and reusable resources will appear here.
+                </p>
+
+            </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+</div>
+
+{% endblock %}

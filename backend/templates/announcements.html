@@ -1,0 +1,1002 @@
+{% extends "base.html" %}
+
+{% block title %}
+Announcements
+{% endblock %}
+
+{% block content %}
+
+<div class="announcements-page">
+
+    <!-- ========================================
+         PAGE HEADER
+         ======================================== -->
+
+    <div class="announcements-header">
+
+        <div>
+
+            <span class="announcements-label">
+                ORSC COMMUNITY
+            </span>
+
+            <h1>
+                Announcements
+            </h1>
+
+            <p>
+                Notes, reminders, information and messages
+                received by ORSC.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('announcements.new_announcement') }}"
+            class="btn btn-primary"
+        >
+            New Announcement
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+     ANNOUNCEMENT FILTERS
+     ======================================== -->
+
+    <form
+        method="GET"
+        action="{{ url_for('announcements.announcements') }}"
+        class="announcements-filters"
+        id="announcementsFiltersForm"
+    >
+
+
+        <!-- ========================================
+             SEARCH
+        ======================================== -->
+
+        <div class="announcement-filter-group">
+
+            <label for="q">
+                Search
+            </label>
+
+            <input
+                type="search"
+                id="q"
+                name="q"
+                placeholder="Search announcements..."
+                value="{{ search_query }}"
+            >
+
+        </div>
+
+
+
+        <!-- ========================================
+         VISIBILITY
+        ======================================== -->
+
+        <div class="announcement-filter-group">
+
+            <label>
+                Visibility
+            </label>
+
+
+            <div class="cms-filter-select">
+
+
+                <!-- HIDDEN NATIVE SELECT -->
+
+                <select
+                    id="visibility"
+                    name="visibility"
+                    class="cms-native-filter"
+                >
+
+                    <option
+                        value="all"
+                        {% if visibility_filter == "all" %}
+                            selected
+                        {% endif %}
+                    >
+                        All
+                    </option>
+
+
+                    <option
+                        value="public"
+                        {% if visibility_filter == "public" %}
+                            selected
+                        {% endif %}
+                    >
+                        Public
+                    </option>
+
+
+                    <option
+                        value="personalized"
+                        {% if visibility_filter == "personalized" %}
+                            selected
+                        {% endif %}
+                    >
+                        Personalized
+                    </option>
+
+                </select>
+
+
+
+                <!-- CUSTOM TRIGGER -->
+
+                <button
+                    type="button"
+                    class="cms-filter-trigger"
+                    aria-expanded="false"
+                >
+
+                    <span class="cms-filter-trigger-text">
+
+                        {% if visibility_filter == "public" %}
+
+                            Public
+
+                        {% elif visibility_filter == "personalized" %}
+
+                            Personalized
+
+                        {% else %}
+
+                            All
+
+                        {% endif %}
+
+                    </span>
+
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        class="cms-filter-chevron"
+                        aria-hidden="true"
+                    >
+
+                        <path
+                            d="M7 9.5L12 14.5L17 9.5"
+                        ></path>
+
+                    </svg>
+
+                </button>
+
+
+
+                <!-- CUSTOM MENU -->
+
+                <div
+                    class="cms-filter-menu"
+                    hidden
+                >
+
+                    <button
+                        type="button"
+                        class="
+                            cms-filter-option
+                            {% if visibility_filter == 'all' %}
+                                active
+                            {% endif %}
+                        "
+                        data-value="all"
+                    >
+                        All
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="
+                            cms-filter-option
+                            {% if visibility_filter == 'public' %}
+                                active
+                            {% endif %}
+                        "
+                        data-value="public"
+                    >
+                        Public
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="
+                            cms-filter-option
+                            {% if visibility_filter == 'personalized' %}
+                                active
+                            {% endif %}
+                        "
+                        data-value="personalized"
+                    >
+                        Personalized
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+         STATUS
+        ======================================== -->
+
+        <div class="announcement-filter-group">
+
+            <label>
+                Status
+            </label>
+
+
+            <div class="cms-filter-select">
+
+
+                <!-- HIDDEN NATIVE SELECT -->
+
+                <select
+                    id="status"
+                    name="status"
+                    class="cms-native-filter"
+                >
+
+                    <option
+                        value="all"
+                        {% if status_filter == "all" %}
+                            selected
+                        {% endif %}
+                    >
+                        All
+                    </option>
+
+
+                    <option
+                        value="active"
+                        {% if status_filter == "active" %}
+                            selected
+                        {% endif %}
+                    >
+                        Active
+                    </option>
+
+
+                    <option
+                        value="resolved"
+                        {% if status_filter == "resolved" %}
+                            selected
+                        {% endif %}
+                    >
+                        Resolved
+                    </option>
+
+                </select>
+
+
+
+                <!-- CUSTOM TRIGGER -->
+
+                <button
+                    type="button"
+                    class="cms-filter-trigger"
+                    aria-expanded="false"
+                >
+
+                    <span class="cms-filter-trigger-text">
+
+                        {% if status_filter == "active" %}
+
+                            Active
+
+                        {% elif status_filter == "resolved" %}
+
+                            Resolved
+
+                        {% else %}
+
+                            All
+
+                        {% endif %}
+
+                    </span>
+
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        class="cms-filter-chevron"
+                        aria-hidden="true"
+                    >
+
+                        <path
+                            d="M7 9.5L12 14.5L17 9.5"
+                        ></path>
+
+                    </svg>
+
+                </button>
+
+
+
+                <!-- CUSTOM MENU -->
+
+                <div
+                    class="cms-filter-menu"
+                    hidden
+                >
+
+                    <button
+                        type="button"
+                        class="
+                            cms-filter-option
+                            {% if status_filter == 'all' %}
+                                active
+                            {% endif %}
+                        "
+                        data-value="all"
+                    >
+                        All
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="
+                            cms-filter-option
+                            {% if status_filter == 'active' %}
+                                active
+                            {% endif %}
+                        "
+                        data-value="active"
+                    >
+                        Active
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="
+                            cms-filter-option
+                            {% if status_filter == 'resolved' %}
+                                active
+                            {% endif %}
+                        "
+                        data-value="resolved"
+                    >
+                        Resolved
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+         READ STATUS
+        ======================================== -->
+
+        <div class="announcement-filter-group">
+
+            <label>
+                Read status
+            </label>
+
+
+            <div class="cms-filter-select">
+
+
+                <!-- HIDDEN NATIVE SELECT -->
+
+                <select
+                    id="read"
+                    name="read"
+                    class="cms-native-filter"
+                >
+
+                    <option
+                        value="all"
+                        {% if read_filter == "all" %}
+                            selected
+                        {% endif %}
+                    >
+                        All
+                    </option>
+
+
+                    <option
+                        value="read"
+                        {% if read_filter == "read" %}
+                            selected
+                        {% endif %}
+                    >
+                        Read
+                    </option>
+
+
+                    <option
+                        value="unread"
+                        {% if read_filter == "unread" %}
+                            selected
+                        {% endif %}
+                    >
+                        Unread
+                    </option>
+
+                </select>
+
+
+
+                <!-- CUSTOM TRIGGER -->
+
+                <button
+                    type="button"
+                    class="cms-filter-trigger"
+                    aria-expanded="false"
+                >
+
+                    <span class="cms-filter-trigger-text">
+
+                        {% if read_filter == "read" %}
+
+                            Read
+
+                        {% elif read_filter == "unread" %}
+
+                            Unread
+
+                        {% else %}
+
+                            All
+
+                        {% endif %}
+
+                    </span>
+
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        class="cms-filter-chevron"
+                        aria-hidden="true"
+                    >
+
+                        <path
+                            d="M7 9.5L12 14.5L17 9.5"
+                        ></path>
+
+                    </svg>
+
+                </button>
+
+
+
+                <!-- CUSTOM MENU -->
+
+                <div
+                    class="cms-filter-menu"
+                    hidden
+                >
+
+                    <button
+                        type="button"
+                        class="
+                            cms-filter-option
+                            {% if read_filter == 'all' %}
+                                active
+                            {% endif %}
+                        "
+                        data-value="all"
+                    >
+                        All
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="
+                            cms-filter-option
+                            {% if read_filter == 'read' %}
+                                active
+                            {% endif %}
+                        "
+                        data-value="read"
+                    >
+                        Read
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="
+                            cms-filter-option
+                            {% if read_filter == 'unread' %}
+                                active
+                            {% endif %}
+                        "
+                        data-value="unread"
+                    >
+                        Unread
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+         RESET
+        ======================================== -->
+
+        <div class="announcement-filter-actions">
+
+            <a
+                href="{{ url_for(
+                    'announcements.announcements'
+                ) }}"
+            >
+                Reset
+            </a>
+
+        </div>
+
+    </form>
+
+
+
+    <!-- ========================================
+         CLUB ANNOUNCEMENTS
+         ======================================== -->
+
+    <section class="announcements-main-section">
+
+        <div class="announcements-section-heading">
+
+            <div>
+
+                <span>
+                    INTERNAL COMMUNICATION
+                </span>
+
+                <h2>
+                    Club Announcements
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="announcements-list">
+
+            {% for announcement in announcements %}
+
+                <a
+                    href="{{ url_for(
+                        'announcements.announcement_detail',
+                        announcement_id=
+                            announcement['announcement_id']
+                    ) }}"
+                    class="announcement-card-link"
+                >
+
+                    <article class="announcement-card">
+
+
+                        <!-- TOP -->
+
+                        <div class="announcement-card-top">
+
+                            <div>
+
+                                {% if announcement["visibility"] == "public" %}
+
+                                    <span
+                                        class="
+                                            announcement-visibility
+                                            announcement-public
+                                        "
+                                    >
+                                        Public
+                                    </span>
+
+                                {% else %}
+
+                                    <span
+                                        class="
+                                            announcement-visibility
+                                            announcement-personalized
+                                        "
+                                    >
+                                        Personalized
+                                    </span>
+
+                                {% endif %}
+
+
+                                {% if announcement["status"] == "resolved" %}
+
+                                    <span
+                                        class="
+                                            announcement-status
+                                            announcement-resolved
+                                        "
+                                    >
+                                        Resolved
+                                    </span>
+
+                                {% else %}
+
+                                    <span
+                                        class="
+                                            announcement-status
+                                            announcement-active
+                                        "
+                                    >
+                                        Active
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <span class="announcement-date">
+                                {{ announcement["created_at"] }}
+                            </span>
+
+                        </div>
+
+
+                        <!-- CONTENT -->
+
+                        <div class="announcement-card-content">
+
+                            <h2>
+                                {{ announcement["title"] }}
+                            </h2>
+
+                            <p>
+                                {{ announcement["message"] }}
+                            </p>
+
+                        </div>
+
+
+                        <!-- FOOTER -->
+
+                        <div class="announcement-card-footer">
+
+                            <span>
+                                Posted by
+
+                                <strong>
+                                    {{ announcement["creator_first_name"] }}
+                                    {{ announcement["creator_last_name"] }}
+                                </strong>
+                            </span>
+
+
+                            {% if announcement["visibility"] == "personalized" %}
+
+                                {% if announcement["is_read"] == 1 %}
+
+                                    <span class="announcement-read">
+                                        Read
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="announcement-unread">
+                                        Unread
+                                    </span>
+
+                                {% endif %}
+
+                            {% endif %}
+
+                        </div>
+
+                    </article>
+
+                </a>
+
+
+            {% else %}
+
+                <div class="announcements-empty">
+
+                    <div class="announcements-empty-icon">
+                        ◇
+                    </div>
+
+                    <h3>
+                        No announcements yet
+                    </h3>
+
+                    <p>
+                        Announcements shared by ORSC members
+                        will appear here.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================
+         GUEST MESSAGES
+         ======================================== -->
+
+    <section
+        class="guest-messages-section"
+        id="guest-messages"
+    >
+
+        <div class="guest-messages-header">
+
+            <div>
+
+                <span class="guest-messages-label">
+                    PUBLIC WEBSITE
+                </span>
+
+                <h2>
+                    Guest Messages
+                </h2>
+
+                <p>
+                    Messages submitted through the public
+                    ORSC Contact page.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="guest-messages-list">
+
+            {% for guest_message in guest_messages %}
+
+                <article
+                    class="
+                        guest-message-card
+
+                        {% if guest_message['is_read'] == 0 %}
+                            guest-message-unread-card
+                        {% endif %}
+                    "
+                >
+
+
+                    <!-- TOP -->
+
+                    <div class="guest-message-top">
+
+                        <div class="guest-message-identity">
+
+                            <div class="guest-message-avatar">
+                                G
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+                                    Guest
+                                </strong>
+
+                                <span>
+                                    Public Website
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="guest-message-top-right">
+
+                            {% if guest_message["is_read"] == 0 %}
+
+                                <span class="guest-message-unread">
+                                    New
+                                </span>
+
+                            {% else %}
+
+                                <span class="guest-message-read">
+                                    Read
+                                </span>
+
+                            {% endif %}
+
+
+                            <span class="guest-message-date">
+                                {{ guest_message["created_at"] }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- MESSAGE -->
+
+                    <div class="guest-message-content">
+
+                        <p>
+                            {{ guest_message["message"] }}
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- FOOTER -->
+
+                    <div class="guest-message-footer">
+
+
+                        <!-- EMAIL -->
+
+                        <div class="guest-message-email">
+
+                            <span>
+                                Contact email
+                            </span>
+
+                            {% if guest_message["sender_email"] %}
+
+                                <a
+                                    href="mailto:{{ guest_message['sender_email'] }}"
+                                >
+                                    {{ guest_message["sender_email"] }}
+                                </a>
+
+                            {% else %}
+
+                                <strong>
+                                    Not provided
+                                </strong>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- ACTIONS -->
+
+                        <div class="guest-message-actions">
+
+
+                            <!-- MARK AS READ -->
+
+                            {% if guest_message["is_read"] == 0 %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'announcements.mark_guest_message_read',
+                                        contact_message_id=
+                                            guest_message['contact_message_id']
+                                    ) }}"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="guest-message-read-button"
+                                    >
+                                        Mark as read
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+
+
+                            <!-- DELETE
+                                 PRESIDENT / VP / HR HEAD ONLY -->
+
+                            {% if can_delete_guest_message %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'announcements.delete_guest_message',
+                                        contact_message_id=
+                                            guest_message['contact_message_id']
+                                    ) }}"
+                                    onsubmit="
+                                        return confirm(
+                                            'Are you sure you want to delete this guest message?'
+                                        );
+                                    "
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="guest-message-delete-button"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+
+
+                            <!-- READ MESSAGE LABEL -->
+
+                            {% if guest_message["is_read"] == 1 %}
+
+                                <span class="guest-message-source">
+                                    Guest Message
+                                </span>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    </div>
+
+
+                </article>
+
+
+            {% else %}
+
+                <div class="guest-messages-empty">
+
+                    <div class="guest-messages-empty-icon">
+                        ✉
+                    </div>
+
+                    <h3>
+                        No guest messages yet
+                    </h3>
+
+                    <p>
+                        Messages submitted through the public
+                        Contact page will appear here.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+</div>
+
+{% endblock %}

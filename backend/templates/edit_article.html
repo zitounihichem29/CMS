@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Edit Article
+{% endblock %}
+
+
+{% block content %}
+
+<div class="edit-article-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="article-form-header">
+
+        <div>
+
+            <span class="articles-label">
+                ORSC RESEARCH
+            </span>
+
+            <h1>
+                Edit Article
+            </h1>
+
+            <p>
+                Update the article information.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for(
+                'articles.article_detail',
+                article_id=article['scientific_article_id']
+            ) }}"
+            class="btn-secondary"
+        >
+            ← Back to Article
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         FORM
+         ======================================== -->
+
+    <form
+        method="POST"
+        class="article-form"
+    >
+
+
+        <!-- TITLE -->
+
+        <div class="article-form-group">
+
+            <label for="title">
+                Article Title *
+            </label>
+
+            <input
+                type="text"
+                id="title"
+                name="title"
+                value="{{ article['title'] }}"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="article-form-group">
+
+            <label for="description">
+                Description *
+            </label>
+
+            <textarea
+                id="description"
+                name="description"
+                required
+            >{{ article["abstract"] or "" }}</textarea>
+
+        </div>
+
+
+
+        <!-- PUBLICATION DATE -->
+
+        <div class="article-form-group">
+
+            <label for="publication_date">
+                Publication Date
+            </label>
+
+            <input
+                type="date"
+                id="publication_date"
+                name="publication_date"
+                value="{{ article['publication_date'] or '' }}"
+            >
+
+            <small class="article-form-help">
+                Optional.
+            </small>
+
+        </div>
+
+
+
+        <!-- STATUS INFO -->
+
+        <div class="article-form-info">
+
+            {% if article["status"] == "completed" %}
+
+                <p>
+                    This article is already published and completed.
+                    The publication link and status are managed from the article workflow,
+                    not from this form.
+                </p>
+
+            {% else %}
+
+                <p>
+                    This form only updates the article information.
+                    The article will be published later after the final team is selected.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="article-form-actions">
+
+            <a
+                href="{{ url_for(
+                    'articles.article_detail',
+                    article_id=article['scientific_article_id']
+                ) }}"
+                class="btn-secondary"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Save Changes
+            </button>
+
+        </div>
+
+
+    </form>
+
+
+</div>
+
+{% endblock %}

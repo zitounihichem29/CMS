@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}
+New Task
+{% endblock %}
+
+{% block content %}
+
+
+<div class="tasks-page">
+
+
+    <!-- =========================
+         PAGE HEADER
+         ========================= -->
+
+    <div class="tasks-header">
+
+
+        <div class="tasks-header-content">
+
+
+            <span class="tasks-label">
+                ORSC TASK MANAGEMENT
+            </span>
+
+
+            <h1>
+                New Task
+            </h1>
+
+
+            <p>
+
+                {% if current_role in ["PRESIDENT", "VICE_PRESIDENT"] %}
+
+                    Create a task and assign it to club members.
+
+                {% else %}
+
+                    Create a new task for your department.
+
+                {% endif %}
+
+            </p>
+
+
+        </div>
+
+
+        <a
+            href="{{ url_for('tasks.tasks') }}"
+            class="new-task-button"
+        >
+            ← Back to Tasks
+        </a>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         FORM SECTION
+         ========================= -->
+
+    <div class="tasks-section">
+
+
+        <form
+            method="POST"
+            class="new-task-form"
+        >
+
+
+            <!-- =========================
+                 TITLE
+                 ========================= -->
+
+            <div>
+
+                <label for="title">
+                    Task title
+                </label>
+
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="Enter task title"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- =========================
+                 DESCRIPTION
+                 ========================= -->
+
+            <div>
+
+                <label for="description">
+                    Description
+                </label>
+
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="5"
+                    placeholder="Describe the task..."
+                ></textarea>
+
+            </div>
+
+
+
+            <!-- =========================
+                 DUE DATE
+                 ========================= -->
+
+            <div>
+
+                <label for="due_date">
+                    Due date
+                </label>
+
+
+                <input
+                    type="date"
+                    id="due_date"
+                    name="due_date"
+                >
+
+            </div>
+
+
+
+            <!-- =========================
+                 ASSIGNEES
+                 ========================= -->
+
+            <div class="task-assignees-selection">
+
+
+                <div class="task-assignees-selection-header">
+
+
+                    <label>
+                        Assign To
+                    </label>
+
+
+                    <p>
+
+                        {% if current_role in ["PRESIDENT", "VICE_PRESIDENT"] %}
+
+                            Select one or more club members.
+
+                        {% else %}
+
+                            Select one or more members from your department.
+
+                        {% endif %}
+
+                    </p>
+
+
+                </div>
+
+
+
+                {% if assignable_members %}
+
+
+                    <div class="task-assignees-options">
+
+
+                        {% for member in assignable_members %}
+
+
+                            <label class="task-assignee-option">
+
+
+                                <input
+                                    type="checkbox"
+                                    name="assignees"
+                                    value="{{ member['membership_id'] }}"
+                                >
+
+
+                                <span class="task-assignee-checkbox">
+                                </span>
+
+
+                                <span class="task-assignee-name">
+
+                                    {{ member["first_name"] }}
+                                    {{ member["last_name"] }}
+
+                                </span>
+
+
+                            </label>
+
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <div class="tasks-empty">
+
+                        <p>
+                            No members are available for task assignment.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+
+            <!-- =========================
+                 ACTIONS
+                 ========================= -->
+
+            <div class="new-task-actions">
+
+
+                <a
+                    href="{{ url_for('tasks.tasks') }}"
+                    class="task-cancel-button"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="new-task-submit"
+                    {% if not assignable_members %}
+                        disabled
+                    {% endif %}
+                >
+                    Create Task
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

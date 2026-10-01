@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="application-period-form-page">
+
+    <a href="{{ url_for('applications.application_periods') }}">
+        ← Back to Application Periods
+    </a>
+
+    <div class="application-period-form-card">
+
+        <div class="application-period-form-header">
+
+            <span>RECRUITMENT</span>
+
+            <h1>
+                Edit Application Period
+            </h1>
+
+            <p>
+                Update the recruitment period information.
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+            <div class="form-error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label for="name">
+                    Period Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value="{{ period['name'] }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="term_id">
+                    Academic Year
+                </label>
+
+                <select
+                    id="term_id"
+                    name="term_id"
+                    required
+                >
+
+                    {% for term in terms %}
+
+                        <option
+                            value="{{ term['term_id'] }}"
+                            {% if term["term_id"] == period["term_id"] %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ term["name"] }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="start_date">
+                    Start Date
+                </label>
+
+                <input
+                    type="date"
+                    id="start_date"
+                    name="start_date"
+                    value="{{ period['start_date'] }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="end_date">
+                    End Date
+                </label>
+
+                <input
+                    type="date"
+                    id="end_date"
+                    name="end_date"
+                    value="{{ period['end_date'] }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a href="{{ url_for('applications.application_periods') }}">
+                    Cancel
+                </a>
+
+                <button type="submit">
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

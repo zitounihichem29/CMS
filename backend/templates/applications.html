@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="applications-page">
+
+    <div class="applications-header">
+
+        <div>
+            <span class="applications-label">
+                RECRUITMENT
+            </span>
+
+            <h1>
+                Applications
+            </h1>
+
+            <p>
+                Review and manage club applications.
+            </p>
+        </div>
+
+        {% if
+            current_user
+            and current_user["department_id"] == 1
+            and current_user["role_name"] in [
+                "HEAD",
+                "SUB_HEAD"
+            ]
+        %}
+
+            <a href="{{ url_for('applications.application_periods') }}">
+                Manage Application Periods
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="applications-filters">
+
+        <a href="{{ url_for('applications.applications', status='all') }}" class="application-filter {% if status_filter == 'all' %}active{% endif %}">
+            All
+        </a>
+
+        <a href="{{ url_for('applications.applications', status='pending') }}" class="application-filter {% if status_filter == 'pending' %}active{% endif %}">
+            Pending
+        </a>
+
+        <a href="{{ url_for('applications.applications', status='meeting_required') }}" class="application-filter {% if status_filter == 'meeting_required' %}active{% endif %}">
+            Meeting Required
+        </a>
+
+        <a href="{{ url_for('applications.applications', status='accepted') }}" class="application-filter {% if status_filter == 'accepted' %}active{% endif %}">
+            Accepted
+        </a>
+
+        <a href="{{ url_for('applications.applications', status='rejected') }}" class="application-filter {% if status_filter == 'rejected' %}active{% endif %}">
+            Rejected
+        </a>
+
+    </div>
+
+
+    <div class="applications-list">
+
+        {% if applications %}
+
+            {% for application in applications %}
+
+                <a
+                    href="{{ url_for('applications.application_detail', application_id=application['application_id']) }}"
+                    class="application-card"
+                >
+
+                    <div class="application-card-main">
+
+                        <div class="application-avatar">
+                            {{ application["first_name"][0] }}{{ application["last_name"][0] }}
+                        </div>
+
+                        <div class="application-info">
+
+                            <h2>
+                                {{ application["first_name"] }}
+                                {{ application["last_name"] }}
+                            </h2>
+
+                            <p>
+                                {{ application["email"] or "No email" }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="application-meta">
+
+                        <span>
+                            {{ application["period_name"] }}
+                        </span>
+
+                        <span>
+                            {{ application["term_name"] }}
+                        </span>
+
+                        <span class="application-status application-status-{{ application['status'] }}">
+                            
+                            {% if application["status"] == "meeting_required" %}
+                                Meeting Required
+                            {% else %}
+                                {{ application["status"]|capitalize }}
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                </a>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="applications-empty">
+
+                <h2>
+                    No applications yet
+                </h2>
+
+                <p>
+                    Applications will appear here once candidates submit the recruitment form.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

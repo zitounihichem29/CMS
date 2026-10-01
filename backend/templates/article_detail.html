@@ -1,0 +1,829 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Article Details
+{% endblock %}
+
+
+{% block content %}
+
+<div class="article-detail-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="article-detail-header">
+
+        <div>
+
+            <span class="articles-label">
+                ORSC RESEARCH
+            </span>
+
+            <h1>
+                {{ article["title"] }}
+            </h1>
+
+
+            {% if can_view_internal_details %}
+
+                <span
+                    class="article-status-badge
+                           article-status-badge-{{ article['status'] }}"
+                >
+                    {{ article["status"]|capitalize }}
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+        <a
+            href="{{ url_for('articles.articles') }}"
+            class="btn-secondary"
+        >
+            ← Back to Articles
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         MAIN INFORMATION
+         ======================================== -->
+
+    <section class="article-detail-card">
+
+
+        <!-- ========================================
+             DESCRIPTION
+             ======================================== -->
+
+        <div class="article-detail-description">
+
+            <h2>
+                Description
+            </h2>
+
+            <p>
+                {{ article["abstract"] }}
+            </p>
+
+        </div>
+
+
+
+        <!-- ========================================
+             INTERNAL INFORMATION
+             ======================================== -->
+
+        {% if can_view_internal_details %}
+
+
+            <!-- IDEA OWNER -->
+
+            <div class="article-detail-row">
+
+                <strong>
+                    Idea Owner
+                </strong>
+
+                <span>
+                    {{ article["owner_first_name"] }}
+                    {{ article["owner_last_name"] }}
+                </span>
+
+            </div>
+
+
+
+            <!-- IDEA OWNER DEPARTMENT -->
+
+            <div class="article-detail-row">
+
+                <strong>
+                    Idea Owner Department
+                </strong>
+
+                <span>
+                    {{ article["owner_department_name"] }}
+                </span>
+
+            </div>
+
+
+
+            <!-- TERM -->
+
+            <div class="article-detail-row">
+
+                <strong>
+                    Term
+                </strong>
+
+                <span>
+                    {{ article["term_names"] or "Not assigned" }}
+                </span>
+
+            </div>
+
+
+
+            <!-- PUBLICATION DATE -->
+
+            <div class="article-detail-row">
+
+                <strong>
+                    Publication Date
+                </strong>
+
+                <span>
+                    {{ article["publication_date"] or "Not specified yet" }}
+                </span>
+
+            </div>
+
+
+
+            <!-- ========================================
+                 PUBLIC WEBSITE VISIBILITY
+                 ======================================== -->
+
+            <div class="article-detail-row">
+
+                <strong>
+                    Public Visibility
+                </strong>
+
+                <span>
+
+                    {% if article["is_public"] %}
+
+                        <span
+                            class="article-publication-badge public"
+                        >
+                            Published on Website
+                        </span>
+
+                    {% else %}
+
+                        <span
+                            class="article-publication-badge private"
+                        >
+                            CMS Only
+                        </span>
+
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+
+
+            <!-- ========================================
+                 PUBLISHED PDF INFORMATION
+                 ======================================== -->
+
+            {% if is_published %}
+
+                <div class="article-detail-row">
+
+                    <strong>
+                        Article File
+                    </strong>
+
+                    <span>
+                        {{ article["original_filename"] }}
+                    </span>
+
+                </div>
+
+
+                <div class="article-detail-row">
+
+                    <strong>
+                        Uploaded At
+                    </strong>
+
+                    <span>
+                        {{ article["uploaded_at"] or "Not available" }}
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+        {% endif %}
+
+
+
+        <!-- ========================================
+             MAIN ACTIONS
+             ======================================== -->
+
+        <div class="article-detail-actions">
+
+
+            <!-- ========================================
+                 READ FINAL PDF
+                 ======================================== -->
+
+            {% if is_published %}
+
+                <a
+                    href="{{ url_for(
+                        'articles.view_article_pdf',
+                        article_id=article['scientific_article_id']
+                    ) }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn-primary"
+                >
+                    Read Article
+                </a>
+
+            {% endif %}
+
+
+
+            <!-- ========================================
+                 EDIT
+                 ======================================== -->
+
+            {% if can_edit_article %}
+
+                <a
+                    href="{{ url_for(
+                        'articles.edit_article',
+                        article_id=article['scientific_article_id']
+                    ) }}"
+                    class="btn-secondary"
+                >
+                    Edit Article
+                </a>
+
+            {% endif %}
+
+
+
+            <!-- ========================================
+                 WEBSITE PUBLICATION
+                 HEAD RESEARCH ONLY
+                 ======================================== -->
+
+            {% if is_head_research %}
+
+
+                {% if is_published %}
+
+                    <form
+                        method="POST"
+                        action="/articles/{{ article['scientific_article_id'] }}/publication/toggle"
+                    >
+
+                        {% if article["is_public"] %}
+
+                            <button
+                                type="submit"
+                                class="btn-secondary"
+                            >
+                                Remove from Website
+                            </button>
+
+                        {% else %}
+
+                            <button
+                                type="submit"
+                                class="btn-primary"
+                            >
+                                Publish on Website
+                            </button>
+
+                        {% endif %}
+
+                    </form>
+
+
+                {% else %}
+
+                    <button
+                        type="button"
+                        class="btn-secondary"
+                        disabled
+                        title="Upload the final PDF before publishing this article on the website."
+                    >
+                        Publish on Website
+                    </button>
+
+                {% endif %}
+
+
+            {% endif %}
+
+
+
+            <!-- ========================================
+                 DELETE
+                 ======================================== -->
+
+            {% if can_delete_article %}
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'articles.delete_article',
+                        article_id=article['scientific_article_id']
+                    ) }}"
+                    onsubmit="return confirm(
+                        'Are you sure you want to delete this article?'
+                    );"
+                >
+
+                    <button
+                        type="submit"
+                        class="btn-danger"
+                    >
+                        Delete Article
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- ========================================
+             HEAD RESEARCH PUBLICATION HELP
+             ======================================== -->
+
+        {% if is_head_research and not is_published %}
+
+            <div class="article-publication-help">
+
+                <strong>
+                    Website publication unavailable
+                </strong>
+
+                <p>
+                    Upload the final article PDF first.
+                    Once the article is completed in the CMS,
+                    you will be able to publish it on the public website.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+    </section>
+
+
+
+    <!-- ========================================
+         PARTICIPATION
+         RESEARCH MEMBERS ONLY
+         ======================================== -->
+
+    {% if can_participate %}
+
+        <section class="article-participation-section">
+
+
+            <div class="article-section-header">
+
+                <h2>
+                    Participation
+                </h2>
+
+                <p>
+                    Research department members can volunteer
+                    to work on this article.
+                </p>
+
+            </div>
+
+
+
+            <!-- ========================================
+                 ALREADY IN FINAL TEAM
+                 ======================================== -->
+
+            {% if is_article_author %}
+
+                <div class="article-participation-state">
+
+                    <strong>
+                        You are part of the final article team.
+                    </strong>
+
+                </div>
+
+
+
+            <!-- ========================================
+                 ALREADY VOLUNTEERED
+                 ======================================== -->
+
+            {% elif has_volunteered %}
+
+                <div class="article-participation-state">
+
+                    <strong>
+                        Participation request submitted
+                    </strong>
+
+                    <p>
+                        The Idea Owner will select the final team
+                        from the volunteers.
+                    </p>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'articles.cancel_article_participation',
+                            article_id=article['scientific_article_id']
+                        ) }}"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn-secondary"
+                        >
+                            Cancel Participation
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+
+            <!-- ========================================
+                 CAN PARTICIPATE
+                 ======================================== -->
+
+            {% else %}
+
+                <div class="article-participation-state">
+
+                    <strong>
+                        Want to participate?
+                    </strong>
+
+                    <p>
+                        Volunteer to work on this article.
+                    </p>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'articles.participate_article',
+                            article_id=article['scientific_article_id']
+                        ) }}"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn-primary article-participate-button"
+                        >
+                            Participate
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+
+        </section>
+
+    {% endif %}
+
+
+
+    <!-- ========================================
+         VOLUNTEERS
+         IDEA OWNER ONLY
+         ======================================== -->
+
+    {% if can_manage_team %}
+
+        <section class="article-volunteers-section">
+
+
+            <div class="article-section-header">
+
+                <h2>
+                    Volunteers
+                </h2>
+
+                <p>
+                    Select the members who will form
+                    the final article team.
+                </p>
+
+            </div>
+
+
+
+            {% if volunteers %}
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'articles.select_article_authors',
+                        article_id=article['scientific_article_id']
+                    ) }}"
+                >
+
+
+                    <div class="article-volunteers-list">
+
+
+                        {% for volunteer in volunteers %}
+
+                            <label class="article-volunteer-item">
+
+
+                                <div class="article-volunteer-checkbox">
+
+                                    <input
+                                        type="checkbox"
+                                        name="author_membership_ids"
+                                        value="{{ volunteer['membership_id'] }}"
+
+                                        {% if volunteer["membership_id"]
+                                              in author_membership_ids %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                </div>
+
+
+
+                                <div class="article-volunteer-info">
+
+                                    <strong>
+                                        {{ volunteer["first_name"] }}
+                                        {{ volunteer["last_name"] }}
+                                    </strong>
+
+                                    <p>
+                                        {{ volunteer["department_name"] }}
+                                        —
+                                        {{ volunteer["role_name"] }}
+                                    </p>
+
+                                </div>
+
+
+                            </label>
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+
+                    <div class="article-author-selection-actions">
+
+                        <button
+                            type="submit"
+                            class="btn-primary article-save-team-button"
+                        >
+                            Save Final Team
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+
+            {% else %}
+
+                <div class="articles-empty">
+
+                    <h3>
+                        No volunteers yet
+                    </h3>
+
+                    <p>
+                        No Research member has volunteered
+                        for this article yet.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+        </section>
+
+    {% endif %}
+
+
+
+    <!-- ========================================
+         FINAL ARTICLE TEAM
+         ======================================== -->
+
+    {% if can_view_internal_details %}
+
+        <section class="article-authors-section">
+
+
+            <div class="article-section-header">
+
+                <h2>
+                    Article Team
+                </h2>
+
+                <p>
+                    Final members selected for this article.
+                </p>
+
+            </div>
+
+
+
+            {% if authors %}
+
+                <div class="article-authors-list">
+
+
+                    {% for author in authors %}
+
+                        <div class="article-author-member">
+
+                            <strong>
+                                {{ author["first_name"] }}
+                                {{ author["last_name"] }}
+                            </strong>
+
+                            <p>
+                                {{ author["department_name"] }}
+                                —
+                                {{ author["role_name"] }}
+                            </p>
+
+                        </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+
+            {% else %}
+
+                <div class="articles-empty">
+
+                    <h3>
+                        No final team yet
+                    </h3>
+
+                    <p>
+                        The Idea Owner has not selected
+                        the final team yet.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+        </section>
+
+    {% endif %}
+
+
+
+    <!-- ========================================
+         UPLOAD FINAL PDF
+         ======================================== -->
+
+    {% if can_upload_pdf %}
+
+        <section class="article-complete-section">
+
+
+            <div class="article-section-header">
+
+                <h2>
+                    Publish Article
+                </h2>
+
+                <p>
+                    The final team has been selected.
+                    Upload the final PDF to publish the article
+                    inside the CMS.
+                </p>
+
+            </div>
+
+
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'articles.publish_article',
+                    article_id=article['scientific_article_id']
+                ) }}"
+                enctype="multipart/form-data"
+                class="article-complete-form"
+            >
+
+
+                <div class="article-form-group">
+
+                    <label>
+                        Final Article PDF *
+                    </label>
+
+
+                    <div class="cms-file-picker">
+
+                        <input
+                            type="file"
+                            id="article_pdf"
+                            name="article_pdf"
+                            class="cms-file-input"
+                            accept=".pdf,application/pdf"
+                            required
+                        >
+
+
+                        <label
+                            for="article_pdf"
+                            class="cms-file-button"
+                        >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            class="cms-file-icon"
+                            aria-hidden="true"
+                        >
+                            <path d="M12 16V4"></path>
+                            <path d="M7 9L12 4L17 9"></path>
+                            <path d="M5 14V19H19V14"></path>
+                        </svg>
+
+                        <span>
+                            Choose PDF
+                        </span>
+
+                    </label>
+
+
+                    <div class="cms-file-name">
+                        No file selected
+                    </div>
+
+                </div>
+
+
+                <small class="article-form-help">
+                    Only PDF files are accepted.
+                </small>
+
+
+
+
+                <div class="article-complete-actions">
+
+                    <button
+                        type="submit"
+                        class="btn-primary article-publish-button"
+                    >
+                        Upload PDF & Complete Article
+                    </button>
+
+                </div>
+
+
+            </form>
+
+
+        </section>
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}

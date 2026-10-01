@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.venv/
+
+# Secrets and local configuration
+.env
+.env.*
+
+# Local databases and backups
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+database/history_2025_2026_pending.json
+database/history_2025_2026_report.txt
+
+# Temporary files
+*.log
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Empty nested Git repository metadata
+/orscsmc/
+backend/uploads/

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="join-after-acceptance-page">
+
+    {% if account_created %}
+
+        <div class="join-success">
+
+            <span>WELCOME TO ORSC</span>
+
+            <h1>
+                Account Created
+            </h1>
+
+            <p>
+                Your ORSC account has been created successfully.
+            </p>
+
+            <p>
+                Your username is
+                <strong>{{ generated_username }}</strong>.
+            </p>
+
+            <p>
+                You can now log in to the CMS using your username and password.
+            </p>
+
+        </div>
+
+    {% else %}
+
+        <div class="join-header">
+
+            <span>WELCOME TO ORSC</span>
+
+            <h1>
+                Complete Your Registration
+            </h1>
+
+            <p>
+                Congratulations
+                <strong>
+                    {{ application["first_name"] }}
+                    {{ application["last_name"] }}
+                </strong>.
+            </p>
+
+            <p>
+                Your application has been accepted for
+                <strong>{{ application["term_name"] }}</strong>.
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+            <div class="form-error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        <form method="POST" class="join-form">
+
+            <div class="form-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    value="{{ generated_username }}"
+                    readonly
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="department_id">
+                    Department
+                </label>
+
+                <select
+                    id="department_id"
+                    name="department_id"
+                    required
+                >
+
+                    <option value="">
+                        Select your department
+                    </option>
+
+                    {% for department in departments %}
+
+                        <option
+                            value="{{ department['department_id'] }}"
+                            {% if request.form.get('department_id') == department['department_id']|string %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ department["name"] }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button type="submit">
+                    Create My Account
+                </button>
+
+            </div>
+
+        </form>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

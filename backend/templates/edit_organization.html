@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit {{ organization["name"] }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="new-organization-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="organization-form-header">
+
+        <div>
+
+            <span class="organizations-label">
+                EXTERNAL RELATIONS
+            </span>
+
+            <h1>
+                Edit Organization
+            </h1>
+
+            <p>
+                Update the organization's general information.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for(
+                'organizations.organization_detail',
+                organization_id=organization['organization_id']
+            ) }}"
+            class="btn-secondary"
+        >
+            Back
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         FORM
+         ======================================== -->
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        class="organization-form"
+    >
+
+
+        <div class="organization-form-section">
+
+
+            <div class="organization-form-section-header">
+
+                <span class="organization-form-number">
+                    01
+                </span>
+
+                <div>
+
+                    <h2>
+                        Organization Information
+                    </h2>
+
+                    <p>
+                        Update the organization's identity and contact information.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CURRENT LOGO -->
+
+            <div class="organization-form-group organization-form-full">
+
+                <label>
+                    Current Logo
+                </label>
+
+
+                <div class="organization-edit-logo-preview">
+
+                    {% if organization["logo_path"] %}
+
+                        <img
+                            src="{{ url_for(
+                                'organizations.organization_logo',
+                                organization_id=organization['organization_id']
+                            ) }}"
+                            alt="{{ organization['name'] }} logo"
+                        >
+
+                    {% else %}
+
+                        <div class="organization-logo-placeholder">
+
+                            {{ organization["name"][0] | upper }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+
+            <!-- NEW LOGO -->
+
+            <div class="organization-form-group">
+
+                <label for="logo">
+                    Replace Logo
+                </label>
+
+                <input
+                    type="file"
+                    id="logo"
+                    name="logo"
+                    accept=".png,.jpg,.jpeg,.webp"
+                >
+
+                <small>
+                    Leave empty to keep the current logo.
+                </small>
+
+            </div>
+
+
+
+            <!-- NAME -->
+
+            <div class="organization-form-group">
+
+                <label for="name">
+                    Organization Name *
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value="{{ organization['name'] }}"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- TYPE -->
+
+            <div class="organization-form-group">
+
+                <label for="organization_type">
+                    Organization Type *
+                </label>
+
+                <select
+                    id="organization_type"
+                    name="organization_type"
+                    required
+                >
+
+                    <option
+                        value="company"
+                        {% if organization["organization_type"] == "company" %}
+                            selected
+                        {% endif %}
+                    >
+                        Company
+                    </option>
+
+                    <option
+                        value="startup"
+                        {% if organization["organization_type"] == "startup" %}
+                            selected
+                        {% endif %}
+                    >
+                        Startup
+                    </option>
+
+                    <option
+                        value="university"
+                        {% if organization["organization_type"] == "university" %}
+                            selected
+                        {% endif %}
+                    >
+                        University
+                    </option>
+
+                    <option
+                        value="school"
+                        {% if organization["organization_type"] == "school" %}
+                            selected
+                        {% endif %}
+                    >
+                        School
+                    </option>
+
+                    <option
+                        value="association"
+                        {% if organization["organization_type"] == "association" %}
+                            selected
+                        {% endif %}
+                    >
+                        Association
+                    </option>
+
+                    <option
+                        value="institution"
+                        {% if organization["organization_type"] == "institution" %}
+                            selected
+                        {% endif %}
+                    >
+                        Institution
+                    </option>
+
+                    <option
+                        value="media"
+                        {% if organization["organization_type"] == "media" %}
+                            selected
+                        {% endif %}
+                    >
+                        Media
+                    </option>
+
+                    <option
+                        value="club"
+                        {% if organization["organization_type"] == "club" %}
+                            selected
+                        {% endif %}
+                    >
+                        Club
+                    </option>
+
+                    <option
+                        value="other"
+                        {% if organization["organization_type"] == "other" %}
+                            selected
+                        {% endif %}
+                    >
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="organization-form-group organization-form-full">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="4"
+                >{{ organization["description"] or "" }}</textarea>
+
+            </div>
+
+
+
+            <!-- ADDRESS -->
+
+            <div class="organization-form-group organization-form-full">
+
+                <label for="address">
+                    Address
+                </label>
+
+                <input
+                    type="text"
+                    id="address"
+                    name="address"
+                    value="{{ organization['address'] or '' }}"
+                >
+
+            </div>
+
+
+
+            <!-- WEBSITE -->
+
+            <div class="organization-form-group">
+
+                <label for="website">
+                    Website
+                </label>
+
+                <input
+                    type="url"
+                    id="website"
+                    name="website"
+                    value="{{ organization['website'] or '' }}"
+                >
+
+            </div>
+
+
+
+            <!-- EMAIL -->
+
+            <div class="organization-form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value="{{ organization['email'] or '' }}"
+                >
+
+            </div>
+
+
+
+            <!-- PHONE -->
+
+            <div class="organization-form-group">
+
+                <label for="phone">
+                    Phone
+                </label>
+
+                <input
+                    type="text"
+                    id="phone"
+                    name="phone"
+                    value="{{ organization['phone'] or '' }}"
+                >
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             ACTIONS
+             ======================================== -->
+
+        <div class="organization-form-actions">
+
+            <a
+                href="{{ url_for(
+                    'organizations.organization_detail',
+                    organization_id=organization['organization_id']
+                ) }}"
+                class="btn-secondary"
+            >
+                Cancel
+            </a>
+
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Save Changes
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

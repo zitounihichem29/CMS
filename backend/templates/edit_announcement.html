@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Announcement
+{% endblock %}
+
+{% block content %}
+
+<div class="edit-announcement-page">
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="edit-announcement-header">
+
+        <div>
+
+            <span>
+                ANNOUNCEMENT
+            </span>
+
+            <h1>
+                Edit Announcement
+            </h1>
+
+            <p>
+                Update your announcement information.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================
+         FORM
+         ======================================== -->
+
+    <form
+        method="POST"
+        class="edit-announcement-form"
+    >
+
+        <!-- TITLE -->
+
+        <div class="form-group">
+
+            <label for="title">
+                Title
+            </label>
+
+            <input
+                type="text"
+                id="title"
+                name="title"
+                value="{{ announcement['title'] }}"
+                required
+            >
+
+        </div>
+
+
+        <!-- MESSAGE -->
+
+        <div class="form-group">
+
+            <label for="message">
+                Message
+            </label>
+
+            <textarea
+                id="message"
+                name="message"
+                rows="6"
+                required
+            >{{ announcement["message"] }}</textarea>
+
+        </div>
+
+
+        <!-- ========================================
+             VISIBILITY
+             ======================================== -->
+
+        <div class="form-group">
+
+            <label>
+                Visibility
+            </label>
+
+
+            {% if can_create_personalized %}
+
+                <div class="announcement-visibility-options">
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="visibility"
+                            value="public"
+
+                            {% if announcement["visibility"] == "public" %}
+                                checked
+                            {% endif %}
+                        >
+
+                        Public
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="visibility"
+                            value="personalized"
+
+                            {% if announcement["visibility"] == "personalized" %}
+                                checked
+                            {% endif %}
+                        >
+
+                        Personalized
+
+                    </label>
+
+                </div>
+
+            {% else %}
+
+                <input
+                    type="hidden"
+                    name="visibility"
+                    value="public"
+                >
+
+                <p>
+                    Public
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ========================================
+             RECIPIENT
+             ======================================== -->
+
+        {% if can_create_personalized %}
+
+            <div
+                class="form-group"
+                id="recipient-group"
+            >
+
+                <label for="recipient_membership_id">
+                    Recipient
+                </label>
+
+                <select
+                    id="recipient_membership_id"
+                    name="recipient_membership_id"
+                >
+
+                    <option value="">
+                        Select a member
+                    </option>
+
+
+                    {% for recipient in recipients %}
+
+                        <option
+                            value="{{ recipient['membership_id'] }}"
+
+                            {% if
+                                announcement["recipient_membership_id"]
+                                == recipient["membership_id"]
+                            %}
+                                selected
+                            {% endif %}
+                        >
+
+                            {{ recipient["first_name"] }}
+                            {{ recipient["last_name"] }}
+
+                            —
+                            {{ recipient["role_name"] }}
+
+                            —
+                            {{ recipient["department_name"] }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- STATUS INFORMATION -->
+
+        <div class="form-group">
+
+            <p>
+                Status:
+                <strong>
+                    {{ announcement["status"]|capitalize }}
+                </strong>
+            </p>
+
+        </div>
+
+
+        <!-- ========================================
+             ACTIONS
+             ======================================== -->
+
+        <div class="form-actions">
+
+            <a
+                href="{{ url_for(
+                    'announcements.announcement_detail',
+                    announcement_id=announcement['announcement_id']
+                ) }}"
+            >
+                Cancel
+            </a>
+
+            <button type="submit">
+                Save Changes
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- ========================================
+     RECIPIENT DISPLAY LOGIC
+     ======================================== -->
+
+{% if can_create_personalized %}
+
+<script>
+
+    const visibilityInputs =
+        document.querySelectorAll(
+            'input[name="visibility"]'
+        );
+
+    const recipientGroup =
+        document.getElementById(
+            "recipient-group"
+        );
+
+    const recipientSelect =
+        document.getElementById(
+            "recipient_membership_id"
+        );
+
+
+    function updateRecipientVisibility() {
+
+        const selectedVisibility =
+            document.querySelector(
+                'input[name="visibility"]:checked'
+            ).value;
+
+
+        if (
+            selectedVisibility === "personalized"
+        ) {
+
+            recipientGroup.style.display = "block";
+            recipientSelect.required = true;
+
+        } else {
+
+            recipientGroup.style.display = "none";
+            recipientSelect.required = false;
+
+        }
+
+    }
+
+
+    visibilityInputs.forEach(
+        function(input) {
+
+            input.addEventListener(
+                "change",
+                updateRecipientVisibility
+            );
+
+        }
+    );
+
+
+    updateRecipientVisibility();
+
+</script>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,740 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    Members
+{% endblock %}
+
+
+{% block content %}
+
+<div class="members-page">
+
+
+    <!-- ========================================
+         PAGE HEADER
+    ======================================== -->
+
+    <div class="members-header">
+
+        <div>
+
+            <span class="members-label">
+                ORSC COMMUNITY
+            </span>
+
+            <h1>
+                Members
+            </h1>
+
+            <p>
+                Manage and view club members.
+            </p>
+
+        </div>
+
+
+        {% if can_add_person %}
+
+            <a
+                href="{{ url_for('members.add_person') }}"
+                class="btn-primary"
+            >
+                Add Person
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- ========================================
+         MEMBERS TOOLBAR
+    ======================================== -->
+
+    <div class="members-toolbar">
+
+
+        <!-- SEARCH -->
+
+        <div class="members-search">
+
+            <span>
+                ⌕
+            </span>
+
+            <input
+                type="text"
+                placeholder="Search members..."
+                id="membersSearch"
+            >
+
+        </div>
+
+
+
+        <!-- ========================================
+             DEPARTMENT FILTER
+        ======================================== -->
+
+        {% if can_view_all_departments %}
+
+            <div class="cms-filter-select">
+
+
+                <!-- HIDDEN NATIVE SELECT -->
+
+                <select
+                    class="members-filter cms-native-filter"
+                    id="departmentFilter"
+                >
+
+                    <option value="all">
+                        All departments
+                    </option>
+
+
+                    {% for department in departments %}
+
+                        <option
+                            value="{{ department['department_id'] }}"
+                        >
+                            {{ department["name"] }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+
+                <!-- CUSTOM TRIGGER -->
+
+                <button
+                    type="button"
+                    class="cms-filter-trigger"
+                    aria-expanded="false"
+                >
+
+                    <span class="cms-filter-trigger-text">
+                        All departments
+                    </span>
+
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        class="cms-filter-chevron"
+                        aria-hidden="true"
+                    >
+
+                        <path
+                            d="M7 9.5L12 14.5L17 9.5"
+                        ></path>
+
+                    </svg>
+
+                </button>
+
+
+
+                <!-- CUSTOM MENU -->
+
+                <div
+                    class="cms-filter-menu"
+                    hidden
+                >
+
+                    <button
+                        type="button"
+                        class="cms-filter-option active"
+                        data-value="all"
+                    >
+                        All departments
+                    </button>
+
+
+                    {% for department in departments %}
+
+                        <button
+                            type="button"
+                            class="cms-filter-option"
+                            data-value="{{ department['department_id'] }}"
+                        >
+                            {{ department["name"] }}
+                        </button>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+
+        <!-- ========================================
+             ROLE FILTER
+        ======================================== -->
+
+        <div class="cms-filter-select">
+
+
+            <!-- HIDDEN NATIVE SELECT -->
+
+            <select
+                class="members-filter cms-native-filter"
+                id="roleFilter"
+            >
+
+                <option value="all">
+                    All roles
+                </option>
+
+
+                {% for role in roles %}
+
+                    <option
+                        value="{{ role['role_id'] }}"
+                    >
+                        {{ role["name"] }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+
+
+            <!-- CUSTOM TRIGGER -->
+
+            <button
+                type="button"
+                class="cms-filter-trigger"
+                aria-expanded="false"
+            >
+
+                <span class="cms-filter-trigger-text">
+                    All roles
+                </span>
+
+
+                <svg
+                    viewBox="0 0 24 24"
+                    class="cms-filter-chevron"
+                    aria-hidden="true"
+                >
+
+                    <path
+                        d="M7 9.5L12 14.5L17 9.5"
+                    ></path>
+
+                </svg>
+
+            </button>
+
+
+
+            <!-- CUSTOM MENU -->
+
+            <div
+                class="cms-filter-menu"
+                hidden
+            >
+
+                <button
+                    type="button"
+                    class="cms-filter-option active"
+                    data-value="all"
+                >
+                    All roles
+                </button>
+
+
+                {% for role in roles %}
+
+                    <button
+                        type="button"
+                        class="cms-filter-option"
+                        data-value="{{ role['role_id'] }}"
+                    >
+                        {{ role["name"] }}
+                    </button>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             STATUS FILTER
+        ======================================== -->
+
+        <div class="cms-filter-select">
+
+
+            <!-- HIDDEN NATIVE SELECT -->
+
+            <select
+                class="members-filter cms-native-filter"
+                id="statusFilter"
+            >
+
+                <option value="all">
+                    All statuses
+                </option>
+
+                <option value="active">
+                    Active
+                </option>
+
+                <option value="inactive">
+                    Inactive
+                </option>
+
+            </select>
+
+
+
+            <!-- CUSTOM TRIGGER -->
+
+            <button
+                type="button"
+                class="cms-filter-trigger"
+                aria-expanded="false"
+            >
+
+                <span class="cms-filter-trigger-text">
+                    All statuses
+                </span>
+
+
+                <svg
+                    viewBox="0 0 24 24"
+                    class="cms-filter-chevron"
+                    aria-hidden="true"
+                >
+
+                    <path
+                        d="M7 9.5L12 14.5L17 9.5"
+                    ></path>
+
+                </svg>
+
+            </button>
+
+
+
+            <!-- CUSTOM MENU -->
+
+            <div
+                class="cms-filter-menu"
+                hidden
+            >
+
+                <button
+                    type="button"
+                    class="cms-filter-option active"
+                    data-value="all"
+                >
+                    All statuses
+                </button>
+
+
+                <button
+                    type="button"
+                    class="cms-filter-option"
+                    data-value="active"
+                >
+                    Active
+                </button>
+
+
+                <button
+                    type="button"
+                    class="cms-filter-option"
+                    data-value="inactive"
+                >
+                    Inactive
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             TERM FILTER
+        ======================================== -->
+
+        <div class="cms-filter-select">
+
+
+            <!-- HIDDEN NATIVE SELECT -->
+
+            <select
+                class="members-filter cms-native-filter"
+                id="termFilter"
+            >
+
+                <option value="all">
+                    All mandates
+                </option>
+
+
+                {% for term in terms %}
+
+                    <option
+                        value="{{ term['term_id'] }}"
+                    >
+                        {{ term["name"] }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+
+
+            <!-- CUSTOM TRIGGER -->
+
+            <button
+                type="button"
+                class="cms-filter-trigger"
+                aria-expanded="false"
+            >
+
+                <span class="cms-filter-trigger-text">
+                    All mandates
+                </span>
+
+
+                <svg
+                    viewBox="0 0 24 24"
+                    class="cms-filter-chevron"
+                    aria-hidden="true"
+                >
+
+                    <path
+                        d="M7 9.5L12 14.5L17 9.5"
+                    ></path>
+
+                </svg>
+
+            </button>
+
+
+
+            <!-- CUSTOM MENU -->
+
+            <div
+                class="cms-filter-menu"
+                hidden
+            >
+
+                <button
+                    type="button"
+                    class="cms-filter-option active"
+                    data-value="all"
+                >
+                    All mandates
+                </button>
+
+
+                {% for term in terms %}
+
+                    <button
+                        type="button"
+                        class="cms-filter-option"
+                        data-value="{{ term['term_id'] }}"
+                    >
+                        {{ term["name"] }}
+                    </button>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================================
+         MEMBERS TABLE
+    ======================================== -->
+
+    <div class="members-panel">
+
+
+        <!-- TABLE HEADER -->
+
+        <div class="members-table-header">
+
+            <span>
+                Member
+            </span>
+
+            <span>
+                Department
+            </span>
+
+            <span>
+                Role
+            </span>
+
+            <span>
+                Mandate
+            </span>
+
+            <span>
+                Username
+            </span>
+
+            <span>
+                Status
+            </span>
+
+            <span>
+                Actions
+            </span>
+
+        </div>
+
+
+
+        <!-- ========================================
+             MEMBERS LIST
+        ======================================== -->
+
+        <div class="members-list">
+
+
+            {% for member in members %}
+
+                <div
+                    class="member-row"
+
+                    data-search="
+                        {{ member['first_name'] }}
+                        {{ member['last_name'] }}
+                        {{ member['username'] }}
+                    "
+
+                    data-department="{{ member['department_id'] }}"
+
+                    data-role="{{ member['role_id'] }}"
+
+                    data-status="
+                        {% if member['is_active'] == 1 %}
+                            active
+                        {% else %}
+                            inactive
+                        {% endif %}
+                    "
+
+                    data-term="{{ member['term_id'] }}"
+                >
+
+
+                    <!-- ========================================
+                         MEMBER
+                    ======================================== -->
+
+                    <div class="member-info">
+
+                        <div class="member-avatar">
+
+                            {{ member["first_name"][0] }}
+                            {{ member["last_name"][0] }}
+
+                        </div>
+
+
+                        <div class="member-name">
+
+                            <strong>
+
+                                {{ member["first_name"] }}
+                                {{ member["last_name"] }}
+
+                            </strong>
+
+                            <span>
+                                ID #{{ member["user_id"] }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ========================================
+                         DEPARTMENT
+                    ======================================== -->
+
+                    <div class="member-department">
+
+                        {{ member["department_name"] }}
+
+                    </div>
+
+
+
+                    <!-- ========================================
+                         ROLE
+                    ======================================== -->
+
+                    <div class="member-role">
+
+                        {{ member["role_name"] }}
+
+                    </div>
+
+
+
+                    <!-- ========================================
+                         TERM
+                    ======================================== -->
+
+                    <div class="member-term">
+
+                        {{ member["term_name"] }}
+
+                    </div>
+
+
+
+                    <!-- ========================================
+                         USERNAME
+                    ======================================== -->
+
+                    <div class="member-username">
+
+                        {{ member["username"] }}
+
+                    </div>
+
+
+
+                    <!-- ========================================
+                         STATUS
+                    ======================================== -->
+
+                    <div class="member-status-container">
+
+                        {% if member["is_active"] == 1 %}
+
+                            <span
+                                class="
+                                    member-status
+                                    member-active
+                                "
+                            >
+                                Active
+                            </span>
+
+                        {% else %}
+
+                            <span
+                                class="
+                                    member-status
+                                    member-inactive
+                                "
+                            >
+                                Inactive
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- ========================================
+                         ACTIONS
+                    ======================================== -->
+
+                    <div class="member-actions">
+
+                        {% if can_view_member_details %}
+
+                            <a
+                                href="{{ url_for(
+                                    'members.member_detail',
+                                    membership_id=member['membership_id']
+                                ) }}"
+                                class="member-action"
+                                title="View member"
+                            >
+                                View
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+            {% else %}
+
+
+                <!-- ========================================
+                     EMPTY STATE
+                ======================================== -->
+
+                <div class="members-empty">
+
+                    <div class="members-empty-icon">
+                        ♙
+                    </div>
+
+                    <h3>
+                        No members yet
+                    </h3>
+
+                    <p>
+                        Current ORSC members will appear here.
+                    </p>
+
+                </div>
+
+
+            {% endfor %}
+
+        </div>
+
+
+
+        <!-- ========================================
+             FILTER NO RESULTS
+        ======================================== -->
+
+        <div
+            class="members-no-results"
+            id="membersNoResults"
+        >
+
+            <h3>
+                No members found
+            </h3>
+
+            <p>
+                Try another name, department, role, status or mandate.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

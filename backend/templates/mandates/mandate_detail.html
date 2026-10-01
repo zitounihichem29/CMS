@@ -1,0 +1,2151 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+.mandate-flow {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 20px 0 28px;
+}
+
+.mandate-flow-item {
+    padding: 14px 16px;
+    border: 1px solid var(--border-color, #dbe4e8);
+    border-radius: 14px;
+    background: var(--card-bg, rgba(255,255,255,.7));
+}
+
+.mandate-flow-item span {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    opacity: .65;
+    margin-bottom: 4px;
+}
+
+.mandate-flow-item strong {
+    font-size: 14px;
+}
+
+.mandate-step-section {
+    margin-top: 28px;
+}
+
+.mandate-step-number {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    border: 1px solid currentColor;
+    margin-right: 10px;
+}
+
+.mandate-step-title-row {
+    display: flex;
+    align-items: center;
+}
+
+.mandate-executive-grid,
+.mandate-approval-grid,
+.mandate-account-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.mandate-executive-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mandate-mini-card {
+    border: 1px solid var(--border-color, #dbe4e8);
+    border-radius: 14px;
+    padding: 16px;
+    background: var(--card-bg, rgba(255,255,255,.62));
+}
+
+.mandate-mini-card strong {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.mandate-locked-badge,
+.mandate-ready-badge,
+.mandate-pending-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    margin-top: 8px;
+}
+
+.mandate-locked-badge {
+    background: rgba(63, 112, 125, .12);
+}
+
+.mandate-ready-badge {
+    background: rgba(27, 142, 85, .12);
+}
+
+.mandate-pending-badge {
+    background: rgba(194, 128, 23, .12);
+}
+
+.mandate-file-current {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px dashed var(--border-color, #dbe4e8);
+}
+
+.mandate-emergency-box {
+    margin-top: 14px;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(190, 74, 74, .28);
+    background: rgba(190, 74, 74, .07);
+}
+
+.mandate-emergency-box label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.mandate-emergency-box textarea,
+.mandate-danger-zone input {
+    width: 100%;
+}
+
+.mandate-approval-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.mandate-secondary-button,
+.mandate-danger-button {
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mandate-secondary-button {
+    background: rgba(54, 100, 112, .12);
+}
+
+.mandate-danger-zone {
+    margin-top: 30px;
+    border: 1px solid rgba(188, 58, 58, .35);
+    border-radius: 16px;
+    padding: 18px;
+    background: rgba(188, 58, 58, .06);
+}
+
+.mandate-danger-zone h3 {
+    margin-top: 0;
+}
+
+.mandate-danger-button {
+    background: #b93c3c;
+    color: #fff;
+    margin-top: 12px;
+}
+
+.mandate-audit-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.mandate-audit-item {
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color, #dbe4e8);
+}
+
+.mandate-audit-meta {
+    font-size: 12px;
+    opacity: .68;
+    margin-top: 5px;
+}
+
+.mandate-readonly-note {
+    margin-top: 10px;
+    font-size: 13px;
+    opacity: .72;
+}
+
+@media (max-width: 900px) {
+
+    .mandate-flow,
+    .mandate-executive-grid,
+    .mandate-approval-grid,
+    .mandate-account-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+
+
+<div class="mandate-detail-page">
+
+    <div class="mandate-detail-header">
+
+        <div>
+
+            <a
+                href="{{ url_for('mandates.mandates') }}"
+                class="mandate-detail-back"
+            >
+                ← Back to Mandates
+            </a>
+
+            <span class="mandate-detail-label">
+                GOVERNANCE
+            </span>
+
+            <div class="mandate-detail-title-row">
+
+                <h1>
+                    {{ term["name"] }}
+                </h1>
+
+                <span
+                    class="mandate-status-badge mandate-status-{{ term['status']|lower }}"
+                >
+                    {{ term["status"] }}
+                </span>
+
+            </div>
+
+            <p>
+                {{ term["start_date"] }}
+                —
+                {{ term["end_date"] }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {% if is_platform_admin %}
+
+        <div class="mandate-admin-notice">
+
+            <strong>
+                Platform Administrator Access
+            </strong>
+
+            <p>
+                Emergency governance actions are available to this
+                account. When an action is outside the user's current
+                ORSC role, an emergency reason is required and written
+                to the audit log.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    {% if term["status"] == "DRAFT" %}
+
+        <div class="mandate-state-box mandate-state-draft">
+
+            <div>
+
+                <span>
+                    DRAFT MANDATE
+                </span>
+
+                <h2>
+                    Preparation workflow in progress
+                </h2>
+
+                <p>
+                    This mandate is not active yet. The current ORSC
+                    mandate remains authoritative until final activation.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="mandate-flow">
+
+            <div class="mandate-flow-item">
+                <span>STEP 01</span>
+                <strong>Basic Information</strong>
+            </div>
+
+            <div class="mandate-flow-item">
+                <span>STEP 02</span>
+                <strong>Election Result</strong>
+            </div>
+
+            <div class="mandate-flow-item">
+                <span>STEP 03</span>
+                <strong>Board & Members</strong>
+            </div>
+
+            <div class="mandate-flow-item">
+                <span>STEP 04</span>
+                <strong>Review & Activation</strong>
+            </div>
+
+        </div>
+
+
+    {% elif term["status"] == "ACTIVE" %}
+
+        <div class="mandate-state-box mandate-state-active">
+
+            <div>
+
+                <span>
+                    CURRENT MANDATE
+                </span>
+
+                <h2>
+                    This mandate is currently active
+                </h2>
+
+                <p>
+                    Its memberships and governance roles are
+                    authoritative throughout the CMS.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    {% else %}
+
+        <div class="mandate-state-box mandate-state-archived">
+
+            <div>
+
+                <span>
+                    ARCHIVED MANDATE
+                </span>
+
+                <h2>
+                    Historical governance record
+                </h2>
+
+                <p>
+                    This mandate is preserved for history
+                    and is read-only.
+                </p>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <section class="mandate-editor-section mandate-step-section">
+
+        <div class="mandate-section-header">
+
+            <div>
+
+                <span class="mandate-section-label">
+                    {% if term["status"] == "DRAFT" %}
+                        STEP 01
+                    {% else %}
+                        MANDATE DATA
+                    {% endif %}
+                </span>
+
+                <div class="mandate-step-title-row">
+
+                    {% if term["status"] == "DRAFT" %}
+                        <span class="mandate-step-number">
+                            1
+                        </span>
+                    {% endif %}
+
+                    <h2>
+                        Basic Information
+                    </h2>
+
+                </div>
+
+                <p>
+                    Official mandate name and academic-period dates.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="mandate-editor-card">
+
+            {% if can_edit_basic %}
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'mandates.save_draft_basic_info',
+                        term_id=term['term_id']
+                    ) }}"
+                    class="mandate-editor-form"
+                >
+
+                    <div class="mandate-form-field">
+
+                        <label for="mandate_name">
+                            Mandate Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="mandate_name"
+                            name="name"
+                            value="{{ term['name'] }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mandate-form-field">
+
+                        <label for="mandate_start_date">
+                            Start Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="mandate_start_date"
+                            name="start_date"
+                            value="{{ term['start_date'] }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mandate-form-field">
+
+                        <label for="mandate_end_date">
+                            End Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="mandate_end_date"
+                            name="end_date"
+                            value="{{ term['end_date'] }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    {% if basic_emergency_reason %}
+
+                        <div class="mandate-emergency-box">
+
+                            <label for="basic_emergency_reason">
+                                Emergency reason
+                            </label>
+
+                            <textarea
+                                id="basic_emergency_reason"
+                                name="emergency_reason"
+                                rows="3"
+                                required
+                                placeholder="Explain why Platform Administrator intervention is necessary."
+                            ></textarea>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <button
+                        type="submit"
+                        class="mandate-save-member"
+                    >
+                        Save Basic Information
+                    </button>
+
+                </form>
+
+
+            {% else %}
+
+                <p>
+                    <strong>Name:</strong>
+                    {{ term["name"] }}
+                </p>
+
+                <p>
+                    <strong>Start date:</strong>
+                    {{ term["start_date"] }}
+                </p>
+
+                <p>
+                    <strong>End date:</strong>
+                    {{ term["end_date"] }}
+                </p>
+
+                <p class="mandate-readonly-note">
+                    This information is read-only for your current
+                    role or mandate status.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <section class="mandate-editor-section mandate-step-section">
+
+        <div class="mandate-section-header">
+
+            <div>
+
+                <span class="mandate-section-label">
+
+                    {% if term["status"] == "DRAFT" %}
+                        STEP 02
+                    {% else %}
+                        ELECTION
+                    {% endif %}
+
+                </span>
+
+
+                <div class="mandate-step-title-row">
+
+                    {% if term["status"] == "DRAFT" %}
+
+                        <span class="mandate-step-number">
+                            2
+                        </span>
+
+                    {% endif %}
+
+                    <h2>
+                        Election Result
+                    </h2>
+
+                </div>
+
+
+                <p>
+                    The official President, Vice President and Secretary
+                    General are controlled only by this election workflow.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if term["status"] == "DRAFT" and can_manage_election %}
+
+            <div class="mandate-editor-card">
+
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    action="{{ url_for(
+                        'mandates.save_election_result',
+                        term_id=term['term_id']
+                    ) }}"
+                    class="mandate-editor-form"
+                >
+
+                    <div class="mandate-form-field">
+
+                        <label for="election_date">
+                            Election Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="election_date"
+                            name="election_date"
+                            value="{{ election['election_date'] if election else '' }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mandate-form-field">
+
+                        <label for="president_person_id">
+                            Incoming President
+                        </label>
+
+                        <select
+                            id="president_person_id"
+                            name="president_person_id"
+                            required
+                        >
+
+                            <option value="">
+                                Select President
+                            </option>
+
+                            {% for person in people %}
+
+                                <option
+                                    value="{{ person['person_id'] }}"
+                                    {% if incoming_president and incoming_president['person_id'] == person['person_id'] %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ person["first_name"] }}
+                                    {{ person["last_name"] }}
+
+                                    {% if person["active_role_name"] %}
+
+                                        —
+                                        {{ person["active_role_name"] }}
+
+                                        {% if person["active_department_name"] %}
+
+                                            /
+                                            {{ person["active_department_name"] }}
+
+                                        {% endif %}
+
+                                    {% endif %}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="mandate-form-field">
+
+                        <label for="vice_president_person_id">
+                            Incoming Vice President
+                        </label>
+
+                        <select
+                            id="vice_president_person_id"
+                            name="vice_president_person_id"
+                            required
+                        >
+
+                            <option value="">
+                                Select Vice President
+                            </option>
+
+                            {% for person in people %}
+
+                                <option
+                                    value="{{ person['person_id'] }}"
+                                    {% if incoming_vice_president and incoming_vice_president['person_id'] == person['person_id'] %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ person["first_name"] }}
+                                    {{ person["last_name"] }}
+
+                                    {% if person["active_role_name"] %}
+
+                                        —
+                                        {{ person["active_role_name"] }}
+
+                                        {% if person["active_department_name"] %}
+
+                                            /
+                                            {{ person["active_department_name"] }}
+
+                                        {% endif %}
+
+                                    {% endif %}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="mandate-form-field">
+
+                        <label for="secretary_general_person_id">
+                            Incoming Secretary General
+                        </label>
+
+                        <select
+                            id="secretary_general_person_id"
+                            name="secretary_general_person_id"
+                            required
+                        >
+
+                            <option value="">
+                                Select Secretary General
+                            </option>
+
+                            {% for person in people %}
+
+                                <option
+                                    value="{{ person['person_id'] }}"
+                                    {% if incoming_secretary_general and incoming_secretary_general['person_id'] == person['person_id'] %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ person["first_name"] }}
+                                    {{ person["last_name"] }}
+
+                                    {% if person["active_role_name"] %}
+
+                                        —
+                                        {{ person["active_role_name"] }}
+
+                                        {% if person["active_department_name"] %}
+
+                                            /
+                                            {{ person["active_department_name"] }}
+
+                                        {% endif %}
+
+                                    {% endif %}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="mandate-form-field">
+
+                        <label for="report_file">
+                            Election Report / PV
+                        </label>
+
+                        <input
+                            type="file"
+                            id="report_file"
+                            name="report_file"
+                            accept=".pdf,.doc,.docx"
+                        >
+
+                        <small>
+                            Optional. Accepted formats:
+                            PDF, DOC, DOCX.
+                        </small>
+
+
+                        {% if election and election["report_path"] %}
+
+                            <div class="mandate-file-current">
+
+                                <a
+                                    href="{{ url_for(
+                                        'mandates.election_report',
+                                        term_id=term['term_id']
+                                    ) }}"
+                                    target="_blank"
+                                    rel="noopener"
+                                >
+                                    View current election report
+                                </a>
+
+                                <label>
+
+                                    <input
+                                        type="checkbox"
+                                        name="remove_report"
+                                        value="1"
+                                    >
+
+                                    Remove current report when saving
+
+                                </label>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="mandate-form-field">
+
+                        <label for="election_notes">
+                            Notes
+                        </label>
+
+                        <textarea
+                            id="election_notes"
+                            name="notes"
+                            rows="4"
+                            placeholder="Optional notes about the official election result."
+                        >{{ election["notes"] if election and election["notes"] else "" }}</textarea>
+
+                    </div>
+
+
+                    {% if election_emergency_reason %}
+
+                        <div class="mandate-emergency-box">
+
+                            <label for="election_emergency_reason">
+                                Emergency reason
+                            </label>
+
+                            <textarea
+                                id="election_emergency_reason"
+                                name="emergency_reason"
+                                rows="3"
+                                required
+                                placeholder="Explain why Platform Administrator intervention is necessary."
+                            ></textarea>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="mandate-role-rules">
+
+                        <strong>
+                            Election rules
+                        </strong>
+
+                        <p>
+                            The three executive positions must be
+                            assigned to three different people.
+                            Saving a changed election automatically
+                            invalidates previous approvals.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="mandate-save-member"
+                    >
+                        {% if election %}
+                            Update Election Result
+                        {% else %}
+                            Save Election Result
+                        {% endif %}
+                    </button>
+
+                </form>
+
+            </div>
+
+
+        {% else %}
+
+            <div class="mandate-editor-card">
+
+                {% if election %}
+
+                    <p>
+                        <strong>Election date:</strong>
+                        {{ election["election_date"] }}
+                    </p>
+
+
+                    <div class="mandate-executive-grid">
+
+                        <div class="mandate-mini-card">
+
+                            <strong>
+                                President
+                            </strong>
+
+                            {% if incoming_president %}
+
+                                {{ incoming_president["first_name"] }}
+                                {{ incoming_president["last_name"] }}
+
+                            {% else %}
+
+                                Not configured
+
+                            {% endif %}
+
+                            <span class="mandate-locked-badge">
+                                Election controlled
+                            </span>
+
+                        </div>
+
+
+                        <div class="mandate-mini-card">
+
+                            <strong>
+                                Vice President
+                            </strong>
+
+                            {% if incoming_vice_president %}
+
+                                {{ incoming_vice_president["first_name"] }}
+                                {{ incoming_vice_president["last_name"] }}
+
+                            {% else %}
+
+                                Not configured
+
+                            {% endif %}
+
+                            <span class="mandate-locked-badge">
+                                Election controlled
+                            </span>
+
+                        </div>
+
+
+                        <div class="mandate-mini-card">
+
+                            <strong>
+                                Secretary General
+                            </strong>
+
+                            {% if incoming_secretary_general %}
+
+                                {{ incoming_secretary_general["first_name"] }}
+                                {{ incoming_secretary_general["last_name"] }}
+
+                            {% else %}
+
+                                Not configured
+
+                            {% endif %}
+
+                            <span class="mandate-locked-badge">
+                                Election controlled
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if election["notes"] %}
+
+                        <p>
+                            <strong>Notes:</strong>
+                            {{ election["notes"] }}
+                        </p>
+
+                    {% endif %}
+
+
+                    {% if election["report_path"] %}
+
+                        <p>
+
+                            <a
+                                href="{{ url_for(
+                                    'mandates.election_report',
+                                    term_id=term['term_id']
+                                ) }}"
+                                target="_blank"
+                                rel="noopener"
+                            >
+                                View Election Report / PV
+                            </a>
+
+                        </p>
+
+                    {% endif %}
+
+
+                {% else %}
+
+                    <div class="mandate-empty-board">
+
+                        <h3>
+                            Election result not recorded
+                        </h3>
+
+                        <p>
+                            The outgoing presidency must record
+                            the official election result.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if term["status"] == "DRAFT" and not can_manage_election %}
+
+                    <p class="mandate-readonly-note">
+                        Election information is read-only
+                        for your current role.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <section class="mandate-board-section mandate-step-section">
+
+        <div class="mandate-section-header">
+
+            <div>
+
+                <span class="mandate-section-label">
+
+                    {% if term["status"] == "DRAFT" %}
+                        STEP 03
+                    {% else %}
+                        GOVERNANCE STRUCTURE
+                    {% endif %}
+
+                </span>
+
+
+                <div class="mandate-step-title-row">
+
+                    {% if term["status"] == "DRAFT" %}
+
+                        <span class="mandate-step-number">
+                            3
+                        </span>
+
+                    {% endif %}
+
+                    <h2>
+                        Board & Members
+                    </h2>
+
+                </div>
+
+
+                <p>
+
+                    {{ memberships|length }}
+
+                    {% if memberships|length == 1 %}
+                        membership
+                    {% else %}
+                        memberships
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if memberships %}
+
+            <div class="mandate-members-grid">
+
+                {% for membership in memberships %}
+
+                    <div class="mandate-member-card">
+
+                        <div class="mandate-member-main">
+
+                            <div class="mandate-member-avatar">
+
+                                {{ membership["first_name"][0] }}
+                                {{ membership["last_name"][0] }}
+
+                            </div>
+
+
+                            <div class="mandate-member-info">
+
+                                <h3>
+                                    {{ membership["first_name"] }}
+                                    {{ membership["last_name"] }}
+                                </h3>
+
+
+                                <div class="mandate-member-tags">
+
+                                    <span class="mandate-role-tag">
+                                        {{ membership["role_name"] }}
+                                    </span>
+
+
+                                    {% if membership["department_name"] %}
+
+                                        <span class="mandate-department-tag">
+                                            {{ membership["department_name"] }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                {% if membership["username"] %}
+
+                                    <p class="mandate-member-account">
+
+                                        @{{ membership["username"] }}
+
+                                        {% if membership["user_is_active"] %}
+
+                                            <span class="account-active">
+                                                Active account
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="account-inactive">
+                                                Inactive account
+                                            </span>
+
+                                        {% endif %}
+
+                                    </p>
+
+
+                                {% else %}
+
+                                    <p class="mandate-member-account">
+
+                                        <span class="account-missing">
+                                            No CMS account
+                                        </span>
+
+                                    </p>
+
+                                {% endif %}
+
+
+                                {% if membership["role_name"] in ["PRESIDENT", "VICE_PRESIDENT", "SECRETARY_GENERAL"] %}
+
+                                    <span class="mandate-locked-badge">
+                                        Locked — managed by Election Result
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        {% if can_edit_board and membership["role_name"] not in ["PRESIDENT", "VICE_PRESIDENT", "SECRETARY_GENERAL"] %}
+
+                            <form
+                                method="POST"
+                                action="{{ url_for(
+                                    'mandates.delete_draft_membership',
+                                    term_id=term['term_id'],
+                                    membership_id=membership['membership_id']
+                                ) }}"
+                                onsubmit="return confirm('Remove this person from the draft mandate?');"
+                            >
+
+                                {% if board_emergency_reason %}
+
+                                    <div class="mandate-emergency-box">
+
+                                        <label>
+                                            Emergency reason
+                                        </label>
+
+                                        <textarea
+                                            name="emergency_reason"
+                                            rows="2"
+                                            required
+                                        ></textarea>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                <button
+                                    type="submit"
+                                    class="mandate-remove-member"
+                                >
+                                    Remove
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="mandate-empty-board">
+
+                <h3>
+                    No members configured
+                </h3>
+
+                <p>
+                    This mandate does not contain any
+                    memberships yet.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    {% if can_edit_board %}
+
+        <section class="mandate-editor-section">
+
+            <div class="mandate-section-header">
+
+                <div>
+
+                    <span class="mandate-section-label">
+                        HR CONFIGURATION
+                    </span>
+
+                    <h2>
+                        Add or Update Board Member
+                    </h2>
+
+                    <p>
+                        HR may manage Heads, Sub-Heads and Members only.
+                        Elected executive positions are locked.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="mandate-editor-card">
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'mandates.save_draft_membership',
+                        term_id=term['term_id']
+                    ) }}"
+                    class="mandate-editor-form"
+                >
+
+                    <div class="mandate-form-field">
+
+                        <label for="person_id">
+                            Person
+                        </label>
+
+                        <select
+                            id="person_id"
+                            name="person_id"
+                            required
+                        >
+
+                            <option value="">
+                                Select a person
+                            </option>
+
+
+                            {% for person in people %}
+
+                                <option
+                                    value="{{ person['person_id'] }}"
+                                >
+
+                                    {{ person["first_name"] }}
+                                    {{ person["last_name"] }}
+
+                                    {% if person["active_role_name"] %}
+
+                                        —
+                                        {{ person["active_role_name"] }}
+
+                                        {% if person["active_department_name"] %}
+
+                                            /
+                                            {{ person["active_department_name"] }}
+
+                                        {% endif %}
+
+                                    {% endif %}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="mandate-form-field">
+
+                        <label for="role_id">
+                            Role
+                        </label>
+
+                        <select
+                            id="role_id"
+                            name="role_id"
+                            required
+                        >
+
+                            <option value="">
+                                Select a role
+                            </option>
+
+
+                            {% for role in board_roles %}
+
+                                <option
+                                    value="{{ role['role_id'] }}"
+                                >
+                                    {{ role["name"] }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+
+                        <small>
+                            PRESIDENT, VICE_PRESIDENT,
+                            SECRETARY_GENERAL and ALUMNI are
+                            intentionally unavailable here.
+                        </small>
+
+                    </div>
+
+
+                    <div class="mandate-form-field">
+
+                        <label for="department_id">
+                            Department
+                        </label>
+
+                        <select
+                            id="department_id"
+                            name="department_id"
+                            required
+                        >
+
+                            <option value="">
+                                Select a department
+                            </option>
+
+
+                            {% for department in departments %}
+
+                                <option
+                                    value="{{ department['department_id'] }}"
+                                >
+                                    {{ department["name"] }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    {% if board_emergency_reason %}
+
+                        <div class="mandate-emergency-box">
+
+                            <label for="board_emergency_reason">
+                                Emergency reason
+                            </label>
+
+                            <textarea
+                                id="board_emergency_reason"
+                                name="emergency_reason"
+                                rows="3"
+                                required
+                                placeholder="Explain why Platform Administrator intervention is necessary."
+                            ></textarea>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <button
+                        type="submit"
+                        class="mandate-save-member"
+                    >
+                        Save Assignment
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    {% endif %}
+
+
+    {% if term["status"] == "DRAFT" %}
+
+        <section class="mandate-validation-section mandate-step-section">
+
+            <div class="mandate-section-header">
+
+                <div>
+
+                    <span class="mandate-section-label">
+                        STEP 04
+                    </span>
+
+                    <div class="mandate-step-title-row">
+
+                        <span class="mandate-step-number">
+                            4
+                        </span>
+
+                        <h2>
+                            Review & Activation
+                        </h2>
+
+                    </div>
+
+                    <p>
+                        Required accounts, two approvals
+                        and final activation.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="mandate-account-grid">
+
+                {% for item in required_accounts %}
+
+                    <div class="mandate-mini-card">
+
+                        <strong>
+                            {{ item["label"] }}
+                        </strong>
+
+
+                        {% if item["holder"] %}
+
+                            {{ item["holder"]["first_name"] }}
+                            {{ item["holder"]["last_name"] }}
+
+
+                            {% if item["account_ready"] %}
+
+                                <span class="mandate-ready-badge">
+                                    CMS account ready
+                                </span>
+
+                            {% else %}
+
+                                <span class="mandate-pending-badge">
+                                    Active CMS account required
+                                </span>
+
+                            {% endif %}
+
+
+                        {% else %}
+
+                            Not configured
+
+                            <span class="mandate-pending-badge">
+                                Required
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            {% if preapproval_errors %}
+
+                <div class="mandate-validation-error">
+
+                    <div class="mandate-validation-icon">
+                        !
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Board review is not ready for approval.
+                        </strong>
+
+                        <ul>
+
+                            {% for validation_error in preapproval_errors %}
+
+                                <li>
+                                    {{ validation_error }}
+                                </li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+
+            {% else %}
+
+                <div class="mandate-validation-success">
+
+                    <div class="mandate-validation-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Board structure and required
+                            accounts are ready.
+                        </strong>
+
+                        <p>
+                            The outgoing President and Vice President
+                            may now approve the draft.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="mandate-approval-grid">
+
+                <div class="mandate-mini-card">
+
+                    <strong>
+                        Outgoing President Approval
+                    </strong>
+
+
+                    {% if approvals["PRESIDENT"] %}
+
+                        <span class="mandate-ready-badge">
+                            Approved
+                        </span>
+
+                        <p>
+                            {{ approvals["PRESIDENT"]["first_name"] }}
+                            {{ approvals["PRESIDENT"]["last_name"] }}
+                            —
+                            {{ approvals["PRESIDENT"]["approved_at"] }}
+                        </p>
+
+
+                    {% else %}
+
+                        <span class="mandate-pending-badge">
+                            Pending
+                        </span>
+
+                    {% endif %}
+
+
+                    {% if can_approve_president %}
+
+                        <div class="mandate-approval-actions">
+
+                            {% if approvals["PRESIDENT"] %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'mandates.revoke_mandate_approval',
+                                        term_id=term['term_id'],
+                                        approval_type='PRESIDENT'
+                                    ) }}"
+                                >
+
+                                    {% if president_approval_emergency_reason %}
+
+                                        <div class="mandate-emergency-box">
+
+                                            <label>
+                                                Emergency reason
+                                            </label>
+
+                                            <textarea
+                                                name="emergency_reason"
+                                                rows="2"
+                                                required
+                                            ></textarea>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <button
+                                        type="submit"
+                                        class="mandate-secondary-button"
+                                    >
+                                        Revoke Approval
+                                    </button>
+
+                                </form>
+
+
+                            {% else %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'mandates.approve_mandate',
+                                        term_id=term['term_id'],
+                                        approval_type='PRESIDENT'
+                                    ) }}"
+                                >
+
+                                    {% if president_approval_emergency_reason %}
+
+                                        <div class="mandate-emergency-box">
+
+                                            <label>
+                                                Emergency reason
+                                            </label>
+
+                                            <textarea
+                                                name="emergency_reason"
+                                                rows="2"
+                                                required
+                                            ></textarea>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <button
+                                        type="submit"
+                                        class="mandate-save-member"
+                                        {% if preapproval_errors %}
+                                            disabled
+                                        {% endif %}
+                                    >
+                                        Approve as President
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="mandate-mini-card">
+
+                    <strong>
+                        Outgoing Vice President Approval
+                    </strong>
+
+
+                    {% if approvals["VICE_PRESIDENT"] %}
+
+                        <span class="mandate-ready-badge">
+                            Approved
+                        </span>
+
+                        <p>
+                            {{ approvals["VICE_PRESIDENT"]["first_name"] }}
+                            {{ approvals["VICE_PRESIDENT"]["last_name"] }}
+                            —
+                            {{ approvals["VICE_PRESIDENT"]["approved_at"] }}
+                        </p>
+
+
+                    {% else %}
+
+                        <span class="mandate-pending-badge">
+                            Pending
+                        </span>
+
+                    {% endif %}
+
+
+                    {% if can_approve_vp %}
+
+                        <div class="mandate-approval-actions">
+
+                            {% if approvals["VICE_PRESIDENT"] %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'mandates.revoke_mandate_approval',
+                                        term_id=term['term_id'],
+                                        approval_type='VICE_PRESIDENT'
+                                    ) }}"
+                                >
+
+                                    {% if vp_approval_emergency_reason %}
+
+                                        <div class="mandate-emergency-box">
+
+                                            <label>
+                                                Emergency reason
+                                            </label>
+
+                                            <textarea
+                                                name="emergency_reason"
+                                                rows="2"
+                                                required
+                                            ></textarea>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <button
+                                        type="submit"
+                                        class="mandate-secondary-button"
+                                    >
+                                        Revoke Approval
+                                    </button>
+
+                                </form>
+
+
+                            {% else %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'mandates.approve_mandate',
+                                        term_id=term['term_id'],
+                                        approval_type='VICE_PRESIDENT'
+                                    ) }}"
+                                >
+
+                                    {% if vp_approval_emergency_reason %}
+
+                                        <div class="mandate-emergency-box">
+
+                                            <label>
+                                                Emergency reason
+                                            </label>
+
+                                            <textarea
+                                                name="emergency_reason"
+                                                rows="2"
+                                                required
+                                            ></textarea>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <button
+                                        type="submit"
+                                        class="mandate-save-member"
+                                        {% if preapproval_errors %}
+                                            disabled
+                                        {% endif %}
+                                    >
+                                        Approve as Vice President
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            {% if validation_errors %}
+
+                <div class="mandate-validation-error">
+
+                    <div class="mandate-validation-icon">
+                        !
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            This mandate is not ready for activation.
+                        </strong>
+
+                        <ul>
+
+                            {% for validation_error in validation_errors %}
+
+                                <li>
+                                    {{ validation_error }}
+                                </li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+
+            {% else %}
+
+                <div class="mandate-validation-success">
+
+                    <div class="mandate-validation-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            All activation requirements are complete.
+                        </strong>
+
+                        <p>
+                            The outgoing President may activate
+                            the next mandate.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            {% if can_activate %}
+
+                <section class="mandate-activation-section">
+
+                    <div class="mandate-activation-card">
+
+                        <div>
+
+                            <span class="mandate-section-label">
+                                FINAL ACTION
+                            </span>
+
+                            <h2>
+                                Activate {{ term["name"] }}
+                            </h2>
+
+                            <p>
+                                Activation archives the current mandate
+                                and immediately makes this mandate
+                                authoritative throughout the CMS.
+                            </p>
+
+                        </div>
+
+
+                        {% if validation_errors %}
+
+                            <button
+                                type="button"
+                                class="mandate-activate-disabled"
+                                disabled
+                            >
+                                Activation Blocked
+                            </button>
+
+
+                        {% else %}
+
+                            <form
+                                method="POST"
+                                action="{{ url_for(
+                                    'mandates.activate_mandate',
+                                    term_id=term['term_id']
+                                ) }}"
+                                onsubmit="return confirm('Activate this mandate? The current active mandate will be archived.');"
+                            >
+
+                                {% if activation_emergency_reason %}
+
+                                    <div class="mandate-emergency-box">
+
+                                        <label for="activation_emergency_reason">
+                                            Emergency activation reason
+                                        </label>
+
+                                        <textarea
+                                            id="activation_emergency_reason"
+                                            name="emergency_reason"
+                                            rows="3"
+                                            required
+                                        ></textarea>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                <button
+                                    type="submit"
+                                    class="mandate-activate-button"
+                                >
+                                    Activate Mandate
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    </div>
+
+                </section>
+
+            {% endif %}
+
+
+            {% if can_delete_draft %}
+
+                <div class="mandate-danger-zone">
+
+                    <h3>
+                        Delete Draft Mandate
+                    </h3>
+
+                    <p>
+                        This action is available only before activation.
+                        Type the exact mandate name
+                        <strong>{{ term["name"] }}</strong>
+                        to confirm.
+                    </p>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'mandates.delete_draft',
+                            term_id=term['term_id']
+                        ) }}"
+                        onsubmit="return confirm('Permanently delete this DRAFT mandate?');"
+                    >
+
+                        <input
+                            type="text"
+                            name="confirmation"
+                            placeholder="{{ term['name'] }}"
+                            required
+                            autocomplete="off"
+                        >
+
+
+                        {% if delete_emergency_reason %}
+
+                            <div class="mandate-emergency-box">
+
+                                <label for="delete_emergency_reason">
+                                    Emergency deletion reason
+                                </label>
+
+                                <textarea
+                                    id="delete_emergency_reason"
+                                    name="emergency_reason"
+                                    rows="3"
+                                    required
+                                ></textarea>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <button
+                            type="submit"
+                            class="mandate-danger-button"
+                        >
+                            Delete Draft Mandate
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    {% endif %}
+
+
+    <section class="mandate-editor-section mandate-step-section">
+
+        <div class="mandate-section-header">
+
+            <div>
+
+                <span class="mandate-section-label">
+                    AUDIT
+                </span>
+
+                <h2>
+                    Mandate Activity
+                </h2>
+
+                <p>
+                    Recent governance changes and emergency actions
+                    for this mandate.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if audit_log %}
+
+            <div class="mandate-audit-list">
+
+                {% for log in audit_log %}
+
+                    <div class="mandate-audit-item">
+
+                        <strong>
+                            {{ log["action"] }}
+                        </strong>
+
+
+                        {% if log["details"] %}
+
+                            <p>
+                                {{ log["details"] }}
+                            </p>
+
+                        {% endif %}
+
+
+                        {% if log["emergency_reason"] %}
+
+                            <p>
+
+                                <strong>
+                                    Emergency reason:
+                                </strong>
+
+                                {{ log["emergency_reason"] }}
+
+                            </p>
+
+                        {% endif %}
+
+
+                        <div class="mandate-audit-meta">
+
+                            {% if log["first_name"] %}
+
+                                {{ log["first_name"] }}
+                                {{ log["last_name"] }}
+
+                            {% elif log["username"] %}
+
+                                @{{ log["username"] }}
+
+                            {% else %}
+
+                                System / deleted account
+
+                            {% endif %}
+
+                            —
+                            {{ log["created_at"] }}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="mandate-empty-board">
+
+                <p>
+                    No mandate audit entries yet.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

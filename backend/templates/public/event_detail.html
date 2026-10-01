@@ -1,0 +1,272 @@
+{% extends "public/base_public.html" %}
+
+
+{% block title %}
+{{ event["title"] }} | ORSC
+{% endblock %}
+
+
+{% block content %}
+
+<div class="public-event-detail-page">
+
+
+    <!-- ========================================
+         HERO
+         ======================================== -->
+
+    <section class="public-event-detail-hero">
+
+        <a
+            href="{{ url_for('public.events') }}"
+            class="public-event-back-link"
+        >
+            ← Back to Events
+        </a>
+
+
+        <span class="public-section-label">
+            ORSC EVENT
+        </span>
+
+
+        <h1>
+            {{ event["title"] }}
+        </h1>
+
+
+        <div class="public-event-detail-date">
+
+            {{ event["event_date"] }}
+
+            {% if event["end_date"]
+                  and event["end_date"] != event["event_date"] %}
+
+                <span>
+                    → {{ event["end_date"] }}
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================
+         MAIN CONTENT
+         ======================================== -->
+
+    <section class="public-event-detail-content">
+
+
+        <!-- ========================================
+             DESCRIPTION
+             ======================================== -->
+
+        <div class="public-event-detail-main">
+
+            <div class="public-event-detail-block">
+
+                <span class="public-event-detail-label">
+                    ABOUT THE EVENT
+                </span>
+
+                <h2>
+                    Event Overview
+                </h2>
+
+
+                {% if event["description"] %}
+
+                    <p>
+                        {{ event["description"] }}
+                    </p>
+
+                {% else %}
+
+                    <p>
+                        No description is available for this event.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             EVENT INFORMATION
+             ======================================== -->
+
+        <aside class="public-event-detail-sidebar">
+
+            <div class="public-event-info-card">
+
+                <h2>
+                    Event Information
+                </h2>
+
+
+                <!-- DATE -->
+
+                <div class="public-event-info-row">
+
+                    <span>
+                        Date
+                    </span>
+
+                    <strong>
+
+                        {{ event["event_date"] }}
+
+                        {% if event["end_date"]
+                              and event["end_date"] != event["event_date"] %}
+
+                            <br>
+                            to {{ event["end_date"] }}
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+
+                <!-- LOCATION -->
+
+                <div class="public-event-info-row">
+
+                    <span>
+                        Location
+                    </span>
+
+                    <strong>
+
+                        {% if event["location"] %}
+
+                            {{ event["location"] }}
+
+                        {% else %}
+
+                            Not specified
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+
+                <!-- EVENT LEADER -->
+
+                <div class="public-event-info-row">
+
+                    <span>
+                        Event Leader
+                    </span>
+
+                    <strong>
+                        {{ event["leader_first_name"] }}
+                        {{ event["leader_last_name"] }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+    </section>
+
+
+
+    <!-- ========================================
+         ORGANIZATIONS PRESENT
+         ======================================== -->
+
+    <section class="public-event-organizations">
+
+        <div class="public-event-organizations-heading">
+
+            <span class="public-section-label">
+                COLLABORATION
+            </span>
+
+            <h2>
+                Organizations Present
+            </h2>
+
+            <p>
+                Organizations that participated in or were present
+                during this event.
+            </p>
+
+        </div>
+
+
+        {% if organizations %}
+
+            <div class="public-event-organizations-grid">
+
+                {% for organization in organizations %}
+
+                    <div class="public-event-organization-card">
+
+                        <div class="public-event-organization-icon">
+                            ◇
+                        </div>
+
+
+                        <div class="public-event-organization-content">
+
+                            <h3>
+                                {{ organization["name"] }}
+                            </h3>
+
+
+                            {% if organization["organization_type"] %}
+
+                                <span>
+                                    {{ organization["organization_type"] }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="public-events-empty">
+
+                <span>
+                    No organizations listed
+                </span>
+
+                <p>
+                    No participating organizations were recorded
+                    for this event.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+</div>
+
+{% endblock %}

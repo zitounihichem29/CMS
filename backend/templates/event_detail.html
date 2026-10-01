@@ -1,0 +1,1062 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Event Details
+{% endblock %}
+
+
+{% block content %}
+
+<div class="event-detail-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="event-detail-header">
+
+        <div>
+
+            <span class="events-label">
+                ORSC EVENTS
+            </span>
+
+            <h1>
+                {{ event["title"] }}
+            </h1>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('events.events') }}"
+            class="btn-secondary"
+        >
+            Back to Events
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         EVENT INFORMATION
+         ======================================== -->
+
+    <div class="event-detail-card">
+
+
+        <!-- ========================================
+             START DATE
+             ======================================== -->
+
+        <div class="event-detail-row">
+
+            <strong>
+                Start Date
+            </strong>
+
+            <span>
+                {{ event["event_date"] }}
+            </span>
+
+        </div>
+
+
+
+        <!-- ========================================
+             END DATE
+             ======================================== -->
+
+        <div class="event-detail-row">
+
+            <strong>
+                End Date
+            </strong>
+
+            <span>
+                {{ event["end_date"] }}
+            </span>
+
+        </div>
+
+
+
+        <!-- ========================================
+             TIME
+             ======================================== -->
+
+        <div class="event-detail-row">
+
+            <strong>
+                Time
+            </strong>
+
+            <span>
+
+                {% if event["start_time"] %}
+
+                    {{ event["start_time"] }}
+
+                    {% if event["end_time"] %}
+
+                        -
+                        {{ event["end_time"] }}
+
+                    {% endif %}
+
+                {% else %}
+
+                    Time not specified
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+
+
+        <!-- ========================================
+             LOCATION
+             ======================================== -->
+
+        <div class="event-detail-row">
+
+            <strong>
+                Location
+            </strong>
+
+            <span>
+
+                {% if event["location"] %}
+
+                    {{ event["location"] }}
+
+                {% else %}
+
+                    Location not specified
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+
+
+        <!-- ========================================
+             EVENT LEADER
+             ======================================== -->
+
+        <div class="event-detail-row">
+
+            <strong>
+                Event Leader
+            </strong>
+
+            <span>
+
+                {{ event["leader_first_name"] }}
+                {{ event["leader_last_name"] }}
+
+                —
+
+                {{ event["leader_department_name"] }}
+
+                —
+
+                {{ event["leader_role_name"] }}
+
+            </span>
+
+        </div>
+
+
+
+        <!-- ========================================
+             TERM
+             ======================================== -->
+
+        <div class="event-detail-row">
+
+            <strong>
+                Term
+            </strong>
+
+            <span>
+                {{ event["term_name"] }}
+            </span>
+
+        </div>
+
+
+
+        <!-- ========================================
+             DESCRIPTION
+             ======================================== -->
+
+        <div class="event-detail-description">
+
+            <h2>
+                Description
+            </h2>
+
+            {% if event["description"] %}
+
+                <p>
+                    {{ event["description"] }}
+                </p>
+
+            {% else %}
+
+                <p>
+                    No description available.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- ========================================
+             EDIT EVENT
+             EVENT LEADER ONLY
+             ======================================== -->
+
+        {% if can_edit_event %}
+
+            <div class="event-detail-actions">
+
+                <a
+                    href="{{ url_for(
+                        'events.edit_event',
+                        event_id=event['event_id']
+                    ) }}"
+                    class="btn-primary"
+                >
+                    Edit Event
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+
+        <!-- ========================================
+             DELETE EVENT
+             HEAD RH ONLY
+             ======================================== -->
+
+        {% if can_delete_event %}
+
+            <div class="event-delete-actions">
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'events.delete_event',
+                        event_id=event['event_id']
+                    ) }}"
+                    onsubmit="return confirm(
+                        'Are you sure you want to delete this event?'
+                    );"
+                >
+
+                    <button
+                        type="submit"
+                        class="btn-danger"
+                    >
+                        Delete Event
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% endif %}
+
+
+
+        <!-- ========================================
+             ATTENDANCE SHEET
+             RH ONLY
+             ======================================== -->
+
+        {% if can_manage_attendance %}
+
+            <div class="event-attendance-actions">
+
+                <a
+                    href="{{ url_for(
+                        'events.event_attendance_sheet',
+                        event_id=event['event_id']
+                    ) }}"
+                    class="btn-secondary"
+                >
+                    Attendance Sheet
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+
+        <!-- ========================================
+             EVENT ORGANIZATIONS
+             ======================================== -->
+
+        <div class="event-organizations-section">
+
+            <div class="event-organizations-header">
+
+                <div>
+
+                    <h2>
+                        Organizations
+                    </h2>
+
+                    <p>
+                        Organizations participating in this event.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ========================================
+                 CURRENT ORGANIZATIONS
+                 ======================================== -->
+
+            {% if event_organizations %}
+
+                <div class="event-organizations-list">
+
+                    {% for organization in event_organizations %}
+
+                        <div class="event-organization-card">
+
+                            <div class="event-organization-name">
+                                {{ organization["name"] }}
+                            </div>
+
+
+                            {% if organization["organization_type"] %}
+
+                                <div class="event-organization-type">
+                                    {{ organization["organization_type"] }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="event-organizations-empty">
+                    No organizations have been linked to this event yet.
+                </div>
+
+            {% endif %}
+
+
+
+            <!-- ========================================
+                 EVENT LEADER MANAGEMENT
+                 ======================================== -->
+
+            {% if can_manage_organizations %}
+
+                <div class="event-organizations-management">
+
+                    <h3>
+                        Manage Organizations
+                    </h3>
+
+                    <p>
+                        Select the organizations participating in this event.
+                    </p>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'events.update_event_organizations',
+                            event_id=event['event_id']
+                        ) }}"
+                    >
+
+                        {% if available_organizations %}
+
+                            <div class="event-organizations-selector">
+
+                                {% for organization in available_organizations %}
+
+                                    <label class="event-organization-option">
+
+                                        <input
+                                            type="checkbox"
+                                            name="organizations"
+                                            value="{{ organization['organization_id'] }}"
+
+                                            {% if organization["organization_id"] in selected_organization_ids %}
+                                                checked
+                                            {% endif %}
+                                        >
+
+                                        <span class="event-organization-checkbox">
+                                            ✓
+                                        </span>
+
+
+                                        <span class="event-organization-info">
+
+                                            <strong>
+                                                {{ organization["name"] }}
+                                            </strong>
+
+
+                                            {% if organization["organization_type"] %}
+
+                                                <small>
+                                                    {{ organization["organization_type"] }}
+                                                </small>
+
+                                            {% endif %}
+
+                                        </span>
+
+                                    </label>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="event-organizations-actions">
+
+                                <button
+                                    type="submit"
+                                    class="btn-primary"
+                                >
+                                    Save Organizations
+                                </button>
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="event-organizations-empty">
+                                No organizations are available.
+                            </div>
+
+                        {% endif %}
+
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- ========================================
+             EVENT MEDIA
+             ======================================== -->
+
+        <div class="event-media-section">
+
+            <h2>
+                Media
+            </h2>
+
+
+
+            <!-- ========================================
+                 UPLOAD MEDIA
+                 HEAD / SUB_HEAD DCM ONLY
+                 ======================================== -->
+
+            {% if can_manage_media %}
+
+                <div class="event-media-upload">
+
+                    <h3>
+                        Add Photo or Video
+                    </h3>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'events.upload_event_media',
+                            event_id=event['event_id']
+                        ) }}"
+                        enctype="multipart/form-data"
+                    >
+
+
+                        <div class="event-form-group">
+
+                            <label>
+                                Photo / Video *
+                            </label>
+
+
+                            <div class="cms-file-picker">
+
+                                <input
+                                    type="file"
+                                    id="media_file"
+                                    name="media_file"
+                                    class="cms-file-input"
+                                    accept="image/*,video/*"
+                                    required
+                                >
+
+
+                                <label for="media_file" class="cms-file-button">
+
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        class="cms-file-icon"
+                                        aria-hidden="true"
+                                    >
+                                        <path d="M12 16V4"></path>
+                                        <path d="M7 9L12 4L17 9"></path>
+                                        <path d="M5 14V19H19V14"></path>
+                                    </svg>
+
+                                    <span>
+                                        Choose File
+                                    </span>
+
+                                </label>
+
+
+                                <div class="cms-file-name">
+                                    No file selected
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="event-form-group">
+
+                            <label for="caption">
+                                Caption
+                            </label>
+
+                            <input
+                                type="text"
+                                id="caption"
+                                name="caption"
+                                placeholder="Optional caption"
+                            >
+
+                        </div>
+
+
+
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                        >
+                            Upload Media
+                        </button>
+
+
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+
+
+            <!-- ========================================
+                 MEDIA GALLERY
+                 ======================================== -->
+
+            <div class="event-media-gallery">
+
+
+                {% for media in event_media %}
+
+
+
+                    <!-- ========================================
+                         IMAGE
+                         ======================================== -->
+
+                    {% if media["media_type"] == "image" %}
+
+                        <div class="event-media-item">
+
+
+                            <img
+                                src="{{ url_for(
+                                    'events.view_event_media',
+                                    event_media_id=media['event_media_id']
+                                ) }}"
+                                alt="{{ media['caption'] or 'Event photo' }}"
+                            >
+
+
+
+                            <!-- ========================================
+                                 CAPTION
+                                 ======================================== -->
+
+                            {% if media["caption"] %}
+
+                                <p>
+                                    {{ media["caption"] }}
+                                </p>
+
+                            {% endif %}
+
+
+
+                            <!-- ========================================
+                                 PUBLICATION STATUS
+                                 ======================================== -->
+
+                            <div class="event-media-publication-status">
+
+
+                                {% if media["is_public"] %}
+
+                                    <span class="event-media-public-badge">
+                                        Published on Website
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="event-media-private-badge">
+                                        CMS Only
+                                    </span>
+
+                                {% endif %}
+
+
+                            </div>
+
+
+
+                            <!-- ========================================
+                                 PUBLICATION ACTION
+                                 HEAD DCM ONLY
+                                 ======================================== -->
+
+                            {% if can_publish_media %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'events.toggle_event_media_publication',
+                                        event_media_id=media['event_media_id']
+                                    ) }}"
+                                >
+
+
+                                    {% if media["is_public"] %}
+
+                                        <button
+                                            type="submit"
+                                            class="event-media-publication-button remove"
+                                        >
+                                            Remove from Website
+                                        </button>
+
+                                    {% else %}
+
+                                        <button
+                                            type="submit"
+                                            class="event-media-publication-button publish"
+                                        >
+                                            Publish on Website
+                                        </button>
+
+                                    {% endif %}
+
+
+                                </form>
+
+                            {% endif %}
+
+
+
+                            <!-- ========================================
+                                 DELETE IMAGE
+                                 HEAD / SUB_HEAD DCM
+                                 ======================================== -->
+
+                            {% if can_manage_media %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'events.delete_event_media',
+                                        event_media_id=media['event_media_id']
+                                    ) }}"
+                                    onsubmit="return confirm(
+                                        'Are you sure you want to delete this media?'
+                                    );"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="btn-danger"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+
+                    <!-- ========================================
+                         VIDEO
+                         ======================================== -->
+
+                    {% elif media["media_type"] == "video" %}
+
+
+                        <div class="event-media-item">
+
+
+                            <video controls>
+
+                                <source
+                                    src="{{ url_for(
+                                        'events.view_event_media',
+                                        event_media_id=media['event_media_id']
+                                    ) }}"
+                                >
+
+                                Your browser does not support video playback.
+
+                            </video>
+
+
+
+                            <!-- ========================================
+                                 CAPTION
+                                 ======================================== -->
+
+                            {% if media["caption"] %}
+
+                                <p>
+                                    {{ media["caption"] }}
+                                </p>
+
+                            {% endif %}
+
+
+
+                            <!-- ========================================
+                                 VIDEO ALWAYS CMS ONLY
+                                 ======================================== -->
+
+                            <div class="event-media-publication-status">
+
+                                <span class="event-media-private-badge">
+                                    CMS Only
+                                </span>
+
+                            </div>
+
+
+
+                            <!-- ========================================
+                                 DELETE VIDEO
+                                 HEAD / SUB_HEAD DCM
+                                 ======================================== -->
+
+                            {% if can_manage_media %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'events.delete_event_media',
+                                        event_media_id=media['event_media_id']
+                                    ) }}"
+                                    onsubmit="return confirm(
+                                        'Are you sure you want to delete this media?'
+                                    );"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="btn-danger"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                    {% endif %}
+
+
+
+                {% else %}
+
+
+                    <!-- ========================================
+                         NO MEDIA
+                         ======================================== -->
+
+                    <div class="event-media-empty">
+
+                        <p>
+                            No photos or videos have been added yet.
+                        </p>
+
+                    </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             EVENT DOCUMENTS
+             ======================================== -->
+
+        <div class="event-documents-section">
+
+            <h2>
+                Event Documents
+            </h2>
+
+
+
+            <!-- ========================================
+                 ADD DOCUMENT
+                 EVENT LEADER + RH
+                 ======================================== -->
+
+            {% if can_upload_documents %}
+
+                <div class="event-document-upload">
+
+                    <h3>
+                        Add Document
+                    </h3>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'events.upload_event_document',
+                            event_id=event['event_id']
+                        ) }}"
+                        enctype="multipart/form-data"
+                    >
+
+
+                        <div class="event-form-group">
+
+                            <label for="document_name">
+                                Document Name *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="document_name"
+                                name="document_name"
+                                placeholder="Example: Room Request"
+                                required
+                            >
+
+                        </div>
+
+
+
+                        <div class="event-form-group">
+
+                            <label>
+                                File *
+                            </label>
+
+
+                            <div class="cms-file-picker">
+
+                                <input type="file" id="document_file" name="document_file" class="cms-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt" required>
+
+
+                                <label for="document_file" class="cms-file-button">
+
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        class="cms-file-icon"
+                                        aria-hidden="true"
+                                    >
+
+                                        <path d="M12 16V4"></path>
+                                        <path d="M7 9L12 4L17 9"></path>
+
+                                        <path d="M5 14V19H19V14"></path>
+                                    </svg>
+
+                                    <span>
+                                        Choose File
+                                    </span>
+
+                                </label>
+
+
+                                <div class="cms-file-name">
+                                    No file selected
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                        >
+                            Add Document
+                        </button>
+
+
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+
+
+            <!-- ========================================
+                 DOCUMENTS LIST
+                 ======================================== -->
+
+            <div class="event-documents-list">
+
+
+                {% for document in event_documents %}
+
+                    <div class="event-document-item">
+
+                        <div class="event-document-info">
+
+
+                            <a
+                                href="{{ url_for(
+                                    'events.download_event_document',
+                                    event_document_id=document['event_document_id']
+                                ) }}"
+                                class="event-document-download"
+                            >
+                                {{ document["document_name"] }}
+                            </a>
+
+
+                            <p>
+
+                                Added by
+
+                                {{ document["creator_first_name"] }}
+                                {{ document["creator_last_name"] }}
+
+                            </p>
+
+
+                            <p>
+                                {{ document["created_at"] }}
+                            </p>
+
+
+
+                            {% if can_delete_documents %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'events.delete_event_document',
+                                        event_document_id=document['event_document_id']
+                                    ) }}"
+                                    onsubmit="return confirm(
+                                        'Are you sure you want to delete this document?'
+                                    );"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="btn-danger"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    </div>
+
+
+                {% else %}
+
+                    <div class="event-documents-empty">
+
+                        <p>
+                            No documents have been added yet.
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+{% endblock %}

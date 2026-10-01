@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Edit Project
+{% endblock %}
+
+
+{% block content %}
+
+<div class="edit-project-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="project-form-header">
+
+        <div>
+
+            <span class="projects-label">
+                ORSC PROJECTS
+            </span>
+
+            <h1>
+                Edit Project
+            </h1>
+
+            <p>
+                Update project information and status.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for(
+                'projects.project_detail',
+                project_id=project['project_id']
+            ) }}"
+            class="btn-secondary"
+        >
+            Back to Project
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         FORM
+         ======================================== -->
+
+    <form
+        method="POST"
+        class="project-form"
+    >
+
+
+        <!-- PROJECT NAME -->
+
+        <div class="project-form-group">
+
+            <label for="name">
+                Project Name *
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value="{{ project['name'] }}"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="project-form-group">
+
+            <label for="description">
+                Description
+            </label>
+
+            <textarea
+                id="description"
+                name="description"
+                rows="6"
+            >{{ project["description"] or "" }}</textarea>
+
+        </div>
+
+
+
+        <div class="project-form-group">
+
+            <label for="project_link">
+                Project Link
+            </label>
+
+            <input
+                type="url"
+                id="project_link"
+                name="project_link"
+                value="{{ project['project_link'] or '' }}"
+                placeholder="https://example.com"
+            >
+
+            <small>
+                Optional. Add a GitHub repository, demo, website or project link.
+            </small>
+
+        </div>
+
+
+
+        <!-- STATUS -->
+
+        <div class="project-form-group">
+
+            <label for="status">
+                Status *
+            </label>
+
+            <select
+                id="status"
+                name="status"
+                required
+            >
+
+                <option
+                    value="active"
+                    {% if project["status"] == "active" %}
+                        selected
+                    {% endif %}
+                >
+                    Active
+                </option>
+
+                <option
+                    value="completed"
+                    {% if project["status"] == "completed" %}
+                        selected
+                    {% endif %}
+                >
+                    Completed
+                </option>
+
+                <option
+                    value="paused"
+                    {% if project["status"] == "paused" %}
+                        selected
+                    {% endif %}
+                >
+                    Paused
+                </option>
+
+                <option
+                    value="cancelled"
+                    {% if project["status"] == "cancelled" %}
+                        selected
+                    {% endif %}
+                >
+                    Cancelled
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="project-form-actions">
+
+            <a
+                href="{{ url_for(
+                    'projects.project_detail',
+                    project_id=project['project_id']
+                ) }}"
+                class="btn-secondary"
+            >
+                Cancel
+            </a>
+
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Save Changes
+            </button>
+
+        </div>
+
+
+    </form>
+
+
+</div>
+
+{% endblock %}

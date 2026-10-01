@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Projects
+{% endblock %}
+
+
+{% block content %}
+
+<div class="projects-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="projects-header">
+
+        <div class="projects-header-content">
+
+            <span class="projects-label">
+                ORSC PROJECTS
+            </span>
+
+            <h1>
+                Projects
+            </h1>
+
+            <p>
+                Explore current and completed ORSC projects.
+            </p>
+
+        </div>
+
+
+        {% if can_create_project %}
+
+            <a
+                href="{{ url_for('projects.new_project') }}"
+                class="btn-primary"
+            >
+                <span class="btn-icon">
+                    +
+                </span>
+
+                <span>
+                    New Project
+                </span>
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- ========================================
+         PROJECTS GRID
+         ======================================== -->
+
+    <div class="projects-grid">
+
+
+        {% for project in projects %}
+
+
+            {% if not is_alumni %}
+
+                <!-- ========================================
+                     CURRENT MEMBERS
+                     ======================================== -->
+
+                <a
+                    href="{{ url_for(
+                        'projects.project_detail',
+                        project_id=project['project_id']
+                    ) }}"
+                    class="project-card-link"
+                >
+
+                    <article
+                        class="project-card
+                               project-status-{{ project['status'] }}"
+                    >
+
+
+                        <!-- STATUS -->
+
+                        <div class="project-card-top">
+
+                            <span
+                                class="project-status-badge
+                                       project-status-badge-{{ project['status'] }}"
+                            >
+                                {{ project["status"]|capitalize }}
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- PROJECT CONTENT -->
+
+                        <div class="project-card-content">
+
+
+                            <h2 class="project-card-title">
+                                {{ project["name"] }}
+                            </h2>
+
+
+                            <div class="project-card-owner">
+
+                                <span class="project-info-label">
+                                    Idea Owner
+                                </span>
+
+                                <strong>
+                                    {{ project["owner_first_name"] }}
+                                    {{ project["owner_last_name"] }}
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- FOOTER -->
+
+                        <div class="project-card-footer">
+
+                            <span>
+                                View project
+                            </span>
+
+                            <span class="project-card-arrow">
+                                →
+                            </span>
+
+                        </div>
+
+
+                    </article>
+
+                </a>
+
+
+
+            {% else %}
+
+
+                <!-- ========================================
+                     ALUMNI
+                     COMPLETED PROJECTS ONLY
+                     NO DETAIL ACCESS
+                     ======================================== -->
+
+                <article
+                    class="project-card
+                           project-card-readonly
+                           project-status-completed"
+                >
+
+
+                    <!-- STATUS -->
+
+                    <div class="project-card-top">
+
+                        <span
+                            class="project-status-badge
+                                   project-status-badge-completed"
+                        >
+                            Completed
+                        </span>
+
+                        <span class="project-readonly-badge">
+                            View only
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- PROJECT CONTENT -->
+
+                    <div class="project-card-content">
+
+
+                        <h2 class="project-card-title">
+                            {{ project["name"] }}
+                        </h2>
+
+
+                        <div class="project-card-owner">
+
+                            <span class="project-info-label">
+                                Idea Owner
+                            </span>
+
+                            <strong>
+                                {{ project["owner_first_name"] }}
+                                {{ project["owner_last_name"] }}
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+            {% endif %}
+
+
+        {% else %}
+
+
+            <!-- ========================================
+                 EMPTY STATE
+                 ======================================== -->
+
+            <div class="projects-empty">
+
+                <div class="projects-empty-icon">
+                    ◇
+                </div>
+
+                <h2>
+                    No projects yet
+                </h2>
+
+                <p>
+                    ORSC projects will appear here once they are created.
+                </p>
+
+            </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+</div>
+
+{% endblock %}

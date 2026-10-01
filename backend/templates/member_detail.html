@@ -1,0 +1,682 @@
+{% extends "base.html" %}
+
+{% block title %}
+Member Details
+{% endblock %}
+
+{% block content %}
+
+<div class="member-detail-page">
+
+
+    <!-- ========================================
+         BACK
+         ======================================== -->
+
+    <div class="member-detail-back">
+
+        <a href="{{ url_for('members.members') }}">
+            ← Back to members
+        </a>
+
+    </div>
+
+
+    <!-- ========================================
+         PROFILE HEADER
+         ======================================== -->
+
+    <div class="member-detail-header">
+
+
+        <!-- PROFILE PHOTO -->
+
+        {% if member["profile_photo"] %}
+
+            <div class="member-detail-photo">
+
+                <img
+                    src="{{ url_for('profile.profile_photo',filename=member['profile_photo']) }}"
+                    alt="{{ member['first_name'] }} {{ member['last_name'] }}"
+                >
+
+            </div>
+
+        {% else %}
+
+            <div class="member-detail-avatar">
+
+                {{ member["first_name"][0] }}
+                {{ member["last_name"][0] }}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- NAME -->
+
+        <div class="member-detail-main">
+
+            <span class="member-detail-label">
+                ORSC MEMBER
+            </span>
+
+            <h1>
+                {{ member["first_name"] }}
+                {{ member["last_name"] }}
+            </h1>
+
+            <p>
+                {{ member["role_name"] }}
+                ·
+                {{ member["department_name"] }}
+                ·
+                {{ member["term_name"] }}
+            </p>
+
+        </div>
+
+
+        <!-- ========================================
+        STATUS / MANAGEMENT
+        ======================================== -->
+        
+        <div class="member-detail-controls">
+
+        {% if member["is_active"] == 1 %}
+
+            <span class="member-status member-active">
+                Active
+            </span>
+
+        {% else %}
+
+            <span class="member-status member-inactive">
+            Inactive
+            </span>
+
+        {% endif %}
+
+
+        {% if can_manage_member %}
+
+            <div class="member-management-actions">
+
+                <a
+                    href="{{ url_for(
+                        'members.edit_member',
+                        membership_id=member['membership_id']
+                        ) }}"
+                        class="member-management-btn"
+                >
+                    Edit member
+                </a>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'members.toggle_member_active',
+                        membership_id=member['membership_id']
+                    ) }}"
+                >
+
+                    {% if member["is_active"] == 1 %}
+
+                        <button
+                            type="submit"
+                            class="member-management-btn member-management-danger"
+                            onclick="return confirm('Deactivate this account?');"
+                        >
+                            Deactivate account
+                        </button>
+
+                    {% else %}
+
+                        <button
+                            type="submit"
+                            class="member-management-btn member-management-success"
+                            onclick="return confirm('Activate this account?');"
+                        >
+                            Activate account
+                        </button>
+
+                    {% endif %}
+
+                </form>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- CLOSE PROFILE HEADER -->
+
+    </div>
+
+
+
+    
+
+
+    <!-- ========================================
+    CLUB INFORMATION
+    ======================================== -->
+
+    <div class="member-detail-section">
+        <h2>
+            Club information
+        </h2>
+            
+        <div class="member-detail-grid">
+                
+            <div class="member-detail-item">
+                <span>
+                    Username
+                </span>
+                
+                <strong>
+                    {{ member["username"] }}
+                </strong>
+                
+            </div>
+                
+                
+            <div class="member-detail-item">
+                    
+                <span>
+                    Department
+                </span>
+                    
+                <strong>
+                    {{ member["department_name"] }}
+                </strong>
+                
+            </div>
+                
+                
+            <div class="member-detail-item">
+                    
+                <span>
+                    Role
+                </span>
+                    
+                <strong>
+                    {{ member["role_name"] }}
+                </strong>
+
+            </div>
+
+
+            <div class="member-detail-item">
+
+                <span>
+                    Mandate
+                </span>
+
+                <strong>
+                    {{ member["term_name"] }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+        PERSONAL INFORMATION
+        ======================================== -->
+        
+        
+        <div class="member-detail-section">
+
+            <h2>
+                Personal information
+            </h2>
+
+            <div class="member-detail-grid">
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        First name
+                    </span>
+
+                    <strong>
+                        {{ member["first_name"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="member-detail-item">
+
+                    <span>
+                        Last name
+                    </span>
+
+                    <strong>
+                        {{ member["last_name"] }}
+                    </strong>
+
+                </div>
+
+
+                {% if member["date_of_birth"] %}
+
+                <div class="member-detail-item">
+
+                    <span>
+                        Date of birth
+                    </span>
+
+                    <strong>
+                        {{ member["date_of_birth"] }}
+                    </strong>
+
+                </div>
+
+            {% endif %}
+
+
+            {% if member["profession"] %}
+
+                <div class="member-detail-item">
+
+                    <span>
+                        Profession
+                    </span>
+
+                    <strong>
+                        {{ member["profession"] }}
+                    </strong>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================
+         CONTACT
+         ======================================== -->
+
+    {% if member["email"] or member["phone"] %}
+
+        <div class="member-detail-section">
+
+            <h2>
+                Contact
+            </h2>
+
+            <div class="member-detail-grid">
+
+
+                {% if member["email"] %}
+
+                    <div class="member-detail-item">
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong>
+                            {{ member["email"] }}
+                        </strong>
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if member["phone"] %}
+
+                    <div class="member-detail-item">
+
+                        <span>
+                            Phone
+                        </span>
+
+                        <strong>
+                            {{ member["phone"] }}
+                        </strong>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ========================================
+         ACADEMIC INFORMATION
+         ======================================== -->
+
+    {% if member["university"] or member["faculty"] %}
+
+        <div class="member-detail-section">
+
+            <h2>
+                Academic information
+            </h2>
+
+            <div class="member-detail-grid">
+
+
+                {% if member["university"] %}
+
+                    <div class="member-detail-item">
+
+                        <span>
+                            University
+                        </span>
+
+                        <strong>
+                            {{ member["university"] }}
+                        </strong>
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if member["faculty"] %}
+
+                    <div class="member-detail-item">
+
+                        <span>
+                            Faculty
+                        </span>
+
+                        <strong>
+                            {{ member["faculty"] }}
+                        </strong>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ========================================
+         BIO
+         ======================================== -->
+
+    {% if member["bio"] %}
+
+        <div class="member-detail-section">
+
+            <h2>
+                Bio
+            </h2>
+
+            <p class="member-detail-text">
+                {{ member["bio"] }}
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ========================================
+         APPLICATION / MOTIVATION
+         ======================================== -->
+
+    {% if application and application["motivation"] %}
+
+        <div class="member-detail-section">
+
+            <h2>
+                Motivation
+            </h2>
+
+            <p class="member-detail-text">
+                {{ application["motivation"] }}
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ========================================
+         SKILLS
+         ======================================== -->
+
+    {% if skills %}
+
+        <div class="member-detail-section">
+
+            <h2>
+                Skills
+            </h2>
+
+            <div class="member-skills">
+
+                {% for skill in skills %}
+
+                    <span class="member-skill">
+                        {{ skill["skill"] }}
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ========================================
+         SOCIAL LINKS
+         ======================================== -->
+
+    {% if
+        member["linkedin"]
+        or member["facebook"]
+        or member["discord"]
+        or member["github"]
+    %}
+
+        <div class="member-detail-section">
+
+            <h2>
+                Social & professional links
+            </h2>
+
+            <div class="member-detail-grid">
+
+
+                {% if member["linkedin"] %}
+
+                    <div class="member-detail-item">
+
+                        <span>
+                            LinkedIn
+                        </span>
+
+                        <a
+                            href="{{ member['linkedin'] }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Open LinkedIn
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if member["github"] %}
+
+                    <div class="member-detail-item">
+
+                        <span>
+                            GitHub
+                        </span>
+
+                        <a
+                            href="{{ member['github'] }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Open GitHub
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if member["facebook"] %}
+
+                    <div class="member-detail-item">
+
+                        <span>
+                            Facebook
+                        </span>
+
+                        <a
+                            href="{{ member['facebook'] }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Open Facebook
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if member["discord"] %}
+
+                    <div class="member-detail-item">
+
+                        <span>
+                            Discord
+                        </span>
+
+                        <strong>
+                            {{ member["discord"] }}
+                        </strong>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ========================================
+         CV
+         ======================================== -->
+
+    {% if member["cv"] %}
+
+        <div class="member-detail-section">
+
+            <h2>
+                Documents
+            </h2>
+
+            <div class="member-detail-item">
+
+                <span>
+                    Curriculum Vitae
+                </span>
+
+                <a
+                    href="{{ member['cv'] }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    View CV
+                </a>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ========================================
+         CLUB HISTORY
+         ======================================== -->
+
+    <div class="member-detail-section">
+
+        <h2>
+            Club history
+        </h2>
+
+
+        {% for history in membership_history %}
+
+            <div class="member-history-row">
+
+                <div>
+
+                    <strong>
+                        {{ history["term_name"] }}
+                    </strong>
+
+                    <span>
+                        {{ history["start_date"] }}
+                        →
+                        {{ history["end_date"] }}
+                    </span>
+
+                </div>
+
+
+                <div>
+                    {{ history["department_name"] }}
+                </div>
+
+
+                <div>
+                    {{ history["role_name"] }}
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <p>
+                No membership history available.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+
+</div>
+
+{% endblock %}

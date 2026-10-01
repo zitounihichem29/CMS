@@ -1,0 +1,759 @@
+{% extends "base.html" %}
+
+{% block title %}
+Training Details
+{% endblock %}
+
+{% block content %}
+
+<div class="training-detail-page">
+
+    <div class="training-detail-header">
+
+        <div>
+
+            <span class="trainings-label">
+                ORSC LEARNING
+            </span>
+
+            <h1>
+                {{ training["title"] }}
+            </h1>
+
+        </div>
+
+        <a
+            href="{{ url_for('trainings.trainings') }}"
+            class="btn-secondary"
+        >
+            Back to Trainings
+        </a>
+
+    </div>
+
+
+    <div class="training-detail-card">
+
+
+        <!-- ========================================
+             DATE
+             ======================================== -->
+
+        <div class="training-detail-row">
+
+            <strong>
+                Date
+            </strong>
+
+            <span>
+
+                {% if training["training_date"] %}
+
+                    {{ training["training_date"] }}
+
+                {% else %}
+
+                    Date TBD
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+
+        <!-- ========================================
+             TIME
+             ======================================== -->
+
+        <div class="training-detail-row">
+
+            <strong>
+                Time
+            </strong>
+
+            <span>
+
+                {% if training["start_time"] %}
+
+                    {{ training["start_time"] }}
+
+                    {% if training["end_time"] %}
+
+                        -
+                        {{ training["end_time"] }}
+
+                    {% endif %}
+
+                {% else %}
+
+                    Time TBD
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+
+        <!-- ========================================
+             LOCATION
+             ======================================== -->
+
+        <div class="training-detail-row">
+
+            <strong>
+                Location
+            </strong>
+
+            <span>
+
+                {% if training["location"] %}
+
+                    {{ training["location"] }}
+
+                {% else %}
+
+                    Location TBD
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+
+        <!-- ========================================
+             COACH
+             ======================================== -->
+
+        <div class="training-detail-row">
+
+            <strong>
+                Coach
+            </strong>
+
+            <span>
+
+                {{ training["coach_first_name"] }}
+                {{ training["coach_last_name"] }}
+
+                {% if training["coach_profession"] %}
+
+                    — {{ training["coach_profession"] }}
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+
+        <!-- ========================================
+             TERM
+             ======================================== -->
+
+        <div class="training-detail-row">
+
+            <strong>
+                Term
+            </strong>
+
+            <span>
+
+                {% if training["term_names"] %}
+
+                    {{ training["term_names"] }}
+
+                {% else %}
+
+                    Not specified
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+
+        <!-- ========================================
+             DESCRIPTION
+             ======================================== -->
+
+        <div class="training-detail-description">
+
+            <h2>
+                Description
+            </h2>
+
+            {% if training["description"] %}
+
+                <p>
+                    {{ training["description"] }}
+                </p>
+
+            {% else %}
+
+                <p>
+                    No description available.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ========================================
+             TRAINING MANAGEMENT
+             HEAD / SUB_HEAD DPA ONLY
+             ======================================== -->
+
+        {% if can_manage_trainings %}
+
+            <div class="training-detail-actions">
+
+                <a
+                    href="{{ url_for(
+                        'trainings.edit_training',
+                        training_id=training['training_id']
+                    ) }}"
+                    class="btn-primary"
+                >
+                    Edit Training
+                </a>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'trainings.delete_training',
+                        training_id=training['training_id']
+                    ) }}"
+                    onsubmit="return confirm(
+                        'Are you sure you want to delete this training?'
+                    );"
+                >
+
+                    <button
+                        type="submit"
+                        class="btn-danger"
+                    >
+                        Delete Training
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ========================================
+             ATTENDANCE
+             HR ONLY
+             ======================================== -->
+
+        {% if can_manage_attendance %}
+
+            <div class="training-attendance-actions">
+
+                <a
+                    href="{{ url_for(
+                        'trainings.attendance_sheet',
+                        training_id=training['training_id']
+                    ) }}"
+                    class="btn-secondary"
+                >
+                    Attendance Sheet
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ========================================
+             MEDIA
+             ======================================== -->
+
+        <div class="training-media-section">
+
+            <div class="training-media-header">
+
+                <div>
+
+                    <span class="trainings-label">
+                        MEDIA
+                    </span>
+
+                    <h2>
+                        Training Media
+                    </h2>
+
+                    <p>
+                        Photos and videos related to this training.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================
+                 UPLOAD MEDIA
+                 HEAD / SUB_HEAD DCM ONLY
+                 ======================================== -->
+
+            {% if can_manage_media %}
+
+                <div class="training-media-upload">
+
+                    <div class="training-media-upload-header">
+
+                        <div>
+
+                            <h3>
+                                Add Photo or Video
+                            </h3>
+
+                            <p>
+                                Upload media from this training
+                                to the internal CMS gallery.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'trainings.upload_training_media',
+                            training_id=training['training_id']
+                        ) }}"
+                        enctype="multipart/form-data"
+                        class="training-media-upload-form"
+                    >
+
+                        <div class="training-media-form-group">
+
+                            <label for="media_file">
+                                Photo / Video *
+                            </label>
+
+                            <div class="training-file-picker">
+
+                                <input 
+                                    type="file"
+                                    id="media_file"
+                                    name="media_file"
+                                    accept="image/*,video/*"
+                                    required
+                                >
+
+                                <label for="media_file" class="training-file-button">
+                                    Choose File
+                                </label>
+
+                                <span class="training-file-name" id="trainingFileName">
+                                    No file chosen
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="training-media-form-group">
+
+                            <label for="caption">
+                                Caption
+                            </label>
+
+                            <input
+                                type="text"
+                                id="caption"
+                                name="caption"
+                                placeholder="Optional caption"
+                            >
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                        >
+                            Upload Media
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- ========================================
+                 MEDIA GALLERY
+                 ======================================== -->
+
+            <div class="training-media-gallery">
+
+                {% for media in training_media %}
+
+                    <div class="training-media-card">
+
+
+                        <!-- ========================================
+                             PREVIEW
+                             ======================================== -->
+
+                        
+
+                            <button type="button" class="training-media-preview training-media-open">
+
+                            {% if media["media_type"] == "image" %}
+
+                                <img src="{{ url_for('trainings.view_training_media',training_media_id=media['training_media_id']) }}" alt="{{ media['caption'] or 'Training photo' }}">
+
+                                {% elif media["media_type"] == "video" %}
+
+                                    <video muted preload="metadata">
+
+                                        <source src="{{ url_for('trainings.view_training_media',training_media_id=media['training_media_id']) }}">
+
+                                    </video>
+
+                                    <span class="training-media-video-icon">
+                                        ▶
+                                    </span>
+
+                                {% endif %}
+                                
+                                
+                                <div class="training-media-hidden-data" hidden>
+
+                                    <span class="training-media-modal-type">
+                                        {{ media["media_type"] }}
+                                    </span>
+
+                                    <span class="training-media-modal-url">
+                                        {{ url_for(
+                                            'trainings.view_training_media',
+                                            training_media_id=media['training_media_id']
+                                        ) }}
+                                    </span>
+
+                                    <span class="training-media-modal-download">
+                                        {{ url_for(
+                                            'trainings.download_training_media',
+                                            training_media_id=media['training_media_id']
+                                        ) }}
+                                    </span>
+
+                                    <span class="training-media-modal-caption">
+                                        {{ media["caption"] or "" }}
+                                    </span>
+
+                                </div>
+
+                            </button>
+
+
+                        <!-- ========================================
+                             MEDIA INFORMATION
+                             ======================================== -->
+
+                        <div class="training-media-content">
+
+                            <div class="training-media-top">
+
+                                <span class="training-media-type">
+
+                                    {% if media["media_type"] == "image" %}
+
+                                        Photo
+
+                                    {% else %}
+
+                                        Video
+
+                                    {% endif %}
+
+                                </span>
+
+
+                                {% if media["media_type"] == "image" %}
+
+                                    {% if media["is_public"] %}
+
+                                        <span class="training-media-visibility public">
+                                            Published on Website
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="training-media-visibility private">
+                                            CMS Only
+                                        </span>
+
+                                    {% endif %}
+
+                                {% else %}
+
+                                    <span class="training-media-visibility private">
+                                        CMS Only
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            {% if media["caption"] %}
+
+                                <p class="training-media-caption">
+                                    {{ media["caption"] }}
+                                </p>
+
+                            {% else %}
+
+                                <p class="training-media-caption empty">
+                                    No caption.
+                                </p>
+
+                            {% endif %}
+
+
+                            <div class="training-media-meta">
+
+                                <span>
+
+                                    Uploaded by
+
+                                    <strong>
+                                        {{ media["uploader_first_name"] }}
+                                        {{ media["uploader_last_name"] }}
+                                    </strong>
+
+                                </span>
+
+
+                                {% if media["uploaded_at"] %}
+
+                                    <span>
+                                        {{ media["uploaded_at"] }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            {% if media["media_type"] == "video" %}
+
+                                <p class="training-media-public-note">
+                                    Videos remain available only
+                                    inside the CMS.
+                                </p>
+
+                            {% endif %}
+
+
+                            <!-- ========================================
+                                 MEDIA ACTIONS
+                                 ======================================== -->
+
+                            {% if can_manage_media or can_publish_media %}
+
+                                <div class="training-media-actions">
+
+
+                                    <!-- ========================================
+                                         PUBLICATION
+                                         HEAD DCM ONLY
+                                         IMAGES ONLY
+                                         ======================================== -->
+
+                                    {% if
+                                        can_publish_media
+                                        and media["media_type"] == "image"
+                                    %}
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for(
+                                                'trainings.toggle_training_media_publication',
+                                                training_media_id=media['training_media_id']
+                                            ) }}"
+                                        >
+
+                                            {% if media["is_public"] %}
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn-secondary training-media-unpublish"
+                                                >
+                                                    Remove from Website
+                                                </button>
+
+                                            {% else %}
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn-primary"
+                                                >
+                                                    Publish on Website
+                                                </button>
+
+                                            {% endif %}
+
+                                        </form>
+
+                                    {% endif %}
+
+
+                                    <!-- ========================================
+                                         DELETE
+                                         HEAD / SUB_HEAD DCM
+                                         ======================================== -->
+
+                                    {% if can_manage_media %}
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for(
+                                                'trainings.delete_training_media',
+                                                training_media_id=media['training_media_id']
+                                            ) }}"
+                                            onsubmit="return confirm(
+                                                'Are you sure you want to delete this media?'
+                                            );"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="btn-danger"
+                                            >
+                                                Delete Media
+                                            </button>
+
+                                        </form>
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                {% else %}
+
+                    <div class="training-media-empty">
+
+                        <strong>
+                            No media yet
+                        </strong>
+
+                        <p>
+                            Photos and videos added for this
+                            training will appear here.
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ========================================
+     TRAINING MEDIA VIEWER
+     ======================================== -->
+
+    <div
+        class="training-media-modal"
+        id="trainingMediaModal"
+        aria-hidden="true"
+    >
+
+        <div
+            class="training-media-modal-overlay"
+            id="trainingMediaModalOverlay"
+        ></div>
+
+
+        <div class="training-media-modal-card">
+
+            <div class="training-media-modal-header">
+
+                <span>
+                    MEDIA PREVIEW
+                </span>
+
+                <button
+                    type="button"
+                    class="training-media-modal-close"
+                    id="trainingMediaModalClose"
+                    aria-label="Close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div
+                class="training-media-modal-viewer"
+                id="trainingMediaModalViewer"
+            >
+            </div>
+
+
+            <div class="training-media-modal-footer">
+
+                <p
+                    class="training-media-modal-caption-text"
+                    id="trainingMediaModalCaption"
+                >
+                </p>
+
+
+                <a
+                    href="#"
+                    class="training-media-download-button"
+                    id="trainingMediaModalDownload"
+                >
+                    <span
+                        class="training-media-download-icon"
+                        aria-hidden="true"
+                    >
+                        ↓
+                    </span>
+
+                    Download
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</div>
+
+{% endblock %}

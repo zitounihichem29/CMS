@@ -1,0 +1,581 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Project Details
+{% endblock %}
+
+
+{% block content %}
+
+<div class="project-detail-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="project-detail-header">
+
+        <div>
+
+            <span class="projects-label">
+                ORSC PROJECTS
+            </span>
+
+            <h1>
+                {{ project["name"] }}
+            </h1>
+
+            <span
+                class="project-status-badge
+                       project-status-badge-{{ project['status'] }}"
+            >
+                {{ project["status"]|capitalize }}
+            </span>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('projects.projects') }}"
+            class="btn-secondary"
+        >
+            Back to Projects
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         PROJECT INFORMATION
+         ======================================== -->
+
+    <div class="project-detail-card">
+
+
+        <!-- IDEA OWNER -->
+
+        <div class="project-detail-row">
+
+            <strong>
+                Idea Owner
+            </strong>
+
+            <span>
+                {{ project["owner_first_name"] }}
+                {{ project["owner_last_name"] }}
+
+                —
+                {{ project["owner_department_name"] }}
+
+                —
+                {{ project["owner_role_name"] }}
+            </span>
+
+        </div>
+
+
+
+        <!-- TERM -->
+
+        <div class="project-detail-row">
+
+            <strong>
+                Term
+            </strong>
+
+            <span>
+                {{ project["term_names"] or "Not assigned" }}
+            </span>
+
+        </div>
+
+
+
+        <!-- CREATED AT -->
+
+        <div class="project-detail-row">
+
+            <strong>
+                Created At
+            </strong>
+
+            <span>
+                {{ project["created_at"] }}
+            </span>
+
+        </div>
+
+
+
+        <!-- PROJECT LINK -->
+
+        <div class="project-detail-row">
+
+            <strong>
+                Project Link
+            </strong>
+
+            <span>
+
+                {% if project["project_link"] %}
+
+                    <a
+                        href="{{ project['project_link'] }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Open Project
+                    </a>
+
+                {% else %}
+
+                    Not provided
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+
+
+        <!-- ========================================
+             PUBLIC VISIBILITY
+             ======================================== -->
+
+        <div class="project-detail-row">
+
+            <strong>
+                Public Visibility
+            </strong>
+
+            <span>
+
+                {% if project["is_public"] %}
+
+                    <span
+                        class="project-publication-badge public"
+                    >
+                        Published on Website
+                    </span>
+
+                {% else %}
+
+                    <span
+                        class="project-publication-badge private"
+                    >
+                        CMS Only
+                    </span>
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="project-detail-description">
+
+            <h2>
+                Description
+            </h2>
+
+            {% if project["description"] %}
+
+                <p>
+                    {{ project["description"] }}
+                </p>
+
+            {% else %}
+
+                <p>
+                    No description available.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- ========================================
+             PROJECT ACTIONS
+             ======================================== -->
+
+        <div class="project-detail-actions">
+
+
+            <!-- EDIT -->
+
+            {% if can_edit_project %}
+
+                <a
+                    href="{{ url_for(
+                        'projects.edit_project',
+                        project_id=project['project_id']
+                    ) }}"
+                    class="btn-primary"
+                >
+                    Edit Project
+                </a>
+
+            {% endif %}
+
+
+
+            <!-- ========================================
+                 PUBLICATION
+                 HEAD DPA ONLY
+                 ======================================== -->
+
+            {% if is_head_dpa %}
+
+                <form
+                    method="POST"
+                    action="/projects/{{ project['project_id'] }}/publication/toggle"
+                >
+
+                    {% if project["is_public"] %}
+
+                        <button
+                            type="submit"
+                            class="btn-secondary"
+                        >
+                            Remove from Website
+                        </button>
+
+                    {% else %}
+
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                        >
+                            Publish on Website
+                        </button>
+
+                    {% endif %}
+
+                </form>
+
+            {% endif %}
+
+
+
+            <!-- DELETE -->
+
+            {% if can_delete_project %}
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'projects.delete_project',
+                        project_id=project['project_id']
+                    ) }}"
+                    onsubmit="return confirm(
+                        'Are you sure you want to delete this project?'
+                    );"
+                >
+
+                    <button
+                        type="button"
+                        class="btn-danger"
+                        disabled
+                    >
+                        Delete Project
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================================
+         PARTICIPATION
+         DPA MEMBERS ONLY
+         ======================================== -->
+
+    {% if can_participate %}
+
+        <section class="project-participation-section">
+
+            <div class="project-section-header">
+
+                <h2>
+                    Participation
+                </h2>
+
+                <p>
+                    Choose whether you want to participate
+                    in this project.
+                </p>
+
+            </div>
+
+
+
+            {% if is_project_member %}
+
+                <div class="project-participation-state">
+
+                    <strong>
+                        You are part of the final project team.
+                    </strong>
+
+                </div>
+
+
+
+            {% elif has_volunteered %}
+
+                <div class="project-participation-state">
+
+                    <strong>
+                        You volunteered for this project.
+                    </strong>
+
+                    <p>
+                        Your participation is waiting
+                        for team selection.
+                    </p>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'projects.cancel_project_participation',
+                            project_id=project['project_id']
+                        ) }}"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn-secondary"
+                        >
+                            Cancel Participation
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+
+            {% else %}
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'projects.participate_project',
+                        project_id=project['project_id']
+                    ) }}"
+                >
+
+                    <button
+                        type="submit"
+                        class="btn-primary"
+                    >
+                        Participate
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+        </section>
+
+    {% endif %}
+
+
+
+    <!-- ========================================
+         FINAL TEAM
+         ======================================== -->
+
+    <section class="project-team-section">
+
+        <div class="project-section-header">
+
+            <h2>
+                Project Team
+            </h2>
+
+            <p>
+                Members officially selected for this project.
+            </p>
+
+        </div>
+
+
+        <div class="project-team-list">
+
+            {% for member in project_members %}
+
+                <div class="project-team-member">
+
+                    <div>
+
+                        <strong>
+                            {{ member["first_name"] }}
+                            {{ member["last_name"] }}
+                        </strong>
+
+                        <p>
+                            {{ member["department_name"] }}
+                            —
+                            {{ member["role_name"] }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            {% else %}
+
+                <div class="projects-empty">
+
+                    <h3>
+                        No team selected yet
+                    </h3>
+
+                    <p>
+                        The final project team
+                        has not been selected.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================
+         VOLUNTEERS
+         HEAD / SUB_HEAD DPA + IDEA OWNER
+         ======================================== -->
+
+    {% if can_manage_team %}
+
+        <section class="project-volunteers-section">
+
+            <div class="project-section-header">
+
+                <h2>
+                    Volunteers
+                </h2>
+
+                <p>
+                    DPA members who chose to participate.
+                </p>
+
+            </div>
+
+
+            {% if volunteers %}
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'projects.select_project_team',
+                        project_id=project['project_id']
+                    ) }}"
+                    class="project-team-selection-form"
+                >
+
+                    <div class="project-volunteers-list">
+
+                        {% for volunteer in volunteers %}
+
+                            <label class="project-volunteer-item">
+
+                                <div class="project-volunteer-checkbox">
+
+                                    <input
+                                        type="checkbox"
+                                        name="selected_members"
+                                        value="{{ volunteer['membership_id'] }}"
+
+                                        {% if volunteer["membership_id"]
+                                              in final_member_ids %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                </div>
+
+
+                                <div class="project-volunteer-info">
+
+                                    <strong>
+                                        {{ volunteer["first_name"] }}
+                                        {{ volunteer["last_name"] }}
+                                    </strong>
+
+                                    <p>
+                                        {{ volunteer["role_name"] }}
+                                    </p>
+
+                                </div>
+
+                            </label>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="project-team-selection-actions">
+
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                        >
+                            Save Final Team
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+            {% else %}
+
+                <div class="projects-empty">
+
+                    <h3>
+                        No volunteers yet
+                    </h3>
+
+                    <p>
+                        DPA members and the Idea Owner
+                        who volunteer will appear here.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}

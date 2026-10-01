@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>ORSC — Club Management System</title>
+
+  <meta
+    name="description"
+    content="ORSC Club Management System"
+  >
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="app-shell">
+
+    <!-- =====================================================
+         SIDEBAR — DESKTOP
+    ====================================================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+      <div class="brand">
+
+        <img
+          src="logo.png"
+          alt="ORSC Logo"
+        >
+
+        <div class="brand-name">
+          ORSC
+        </div>
+
+        <div class="brand-subtitle">
+          OPERATIONS<br>
+          RESEARCH SOCIETY CLUB
+        </div>
+
+      </div>
+
+
+      <!-- Navigation -->
+
+      <nav class="side-nav">
+
+        <button
+          class="nav-item active"
+          data-page="home"
+        >
+          <span class="icon">⌂</span>
+          <span>Accueil</span>
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="dashboard"
+        >
+          <span class="icon">▦</span>
+          <span>Tableau de bord</span>
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="departments"
+        >
+          <span class="icon">⌘</span>
+          <span>Départements</span>
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="events"
+        >
+          <span class="icon">▣</span>
+          <span>Événements</span>
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="members"
+        >
+          <span class="icon">♙</span>
+          <span>Espace membre</span>
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="documents"
+        >
+          <span class="icon">▤</span>
+          <span>Documents</span>
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="announcements"
+        >
+          <span class="icon">♢</span>
+          <span>Annonces</span>
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="settings"
+        >
+          <span class="icon">⚙</span>
+          <span>Paramètres</span>
+        </button>
+
+      </nav>
+
+
+      <!-- User -->
+
+      <div class="sidebar-user">
+
+        <div class="avatar avatar-photo">
+          SB
+        </div>
+
+        <div class="sidebar-user-info">
+
+          <strong>
+            Sarah BELHADJ
+          </strong>
+
+          <small>
+            Head of DPA
+          </small>
+
+        </div>
+
+        <button
+          class="mini-action"
+          id="sidebarTheme"
+          title="Changer le thème"
+        >
+          ☾
+        </button>
+
+      </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN APPLICATION
+    ====================================================== -->
+
+    <main class="main">
+
+
+      <!-- =================================================
+           TOP BAR
+      ================================================== -->
+
+      <header class="topbar">
+
+        <!-- Mobile menu -->
+
+        <button
+          class="mobile-menu"
+          id="mobileMenu"
+        >
+          ☰
+        </button>
+
+
+        <!-- Mobile logo -->
+
+        <div class="mobile-brand">
+
+          <img
+            src="logo.png"
+            alt="ORSC"
+          >
+
+          <strong>
+            ORSC
+          </strong>
+
+        </div>
+
+
+        <!-- Search -->
+
+        <div class="search">
+
+          <span>
+            ⌕
+          </span>
+
+          <input
+            id="globalSearch"
+            type="search"
+            placeholder="Rechercher..."
+          >
+
+        </div>
+
+
+        <!-- Top actions -->
+
+        <div class="top-actions">
+
+          <button
+            class="circle-btn"
+            id="themeToggle"
+            title="Light / Dark"
+          >
+            ☼
+          </button>
+
+
+          <button
+            class="circle-btn notification-btn"
+            title="Notifications"
+          >
+            ♧
+            <i></i>
+          </button>
+
+
+          <button
+            class="profile-mini"
+            data-page="profile"
+          >
+
+            <span class="avatar avatar-photo">
+              SB
+            </span>
+
+            <span class="profile-mini-name">
+              Sarah
+            </span>
+
+          </button>
+
+        </div>
+
+      </header>
+
+
+
+      <!-- =====================================================
+           HOME
+      ====================================================== -->
+
+      <section
+        class="page active"
+        id="page-home"
+      >
+
+        <!-- Hero -->
+
+        <div class="hero">
+
+          <div class="hero-copy">
+
+            <span class="eyebrow">
+              OPERATIONS RESEARCH SOCIETY CLUB
+            </span>
+
+
+            <h1>
+              Optimiser aujourd'hui,
+              <br>
+              <em>Impacter demain.</em>
+            </h1>
+
+
+            <p>
+              Un espace moderne pour apprendre,
+              collaborer, créer des projets et faire vivre
+              la Recherche Opérationnelle.
+            </p>
+
+
+            <div class="hero-actions">
+
+              <button
+                class="btn btn-primary"
+                data-page="events"
+              >
+                Découvrir le club
+              </button>
+
+
+              <button
+                class="btn btn-ghost"
+                id="videoBtn"
+              >
+
+                <span class="play">
+                  ▶
+                </span>
+
+                Voir la vidéo
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- Hero visual -->
+
+          <div class="hero-visual">
+
+            <div class="orbital orbital-1"></div>
+
+            <div class="orbital orbital-2"></div>
+
+
+            <div class="hero-logo-wrap">
+
+              <img
+                src="logo.png"
+                alt="ORSC"
+              >
+
+            </div>
+
+
+            <span class="floating-node n1"></span>
+
+            <span class="floating-node n2"></span>
+
+            <span class="floating-node n3"></span>
+
+          </div>
+
+
+          <div class="hero-wave"></div>
+
+        </div>
+
+
+
+        <!-- Statistics -->
+
+        <div class="stats-strip">
+
+          <div>
+
+            <span class="stat-icon">
+              ♙
+            </span>
+
+            <strong>
+              +200
+            </strong>
+
+            <small>
+              Membres
+            </small>
+
+          </div>
+
+
+          <div>
+
+            <span class="stat-icon">
+              ▣
+            </span>
+
+            <strong>
+              10+
+            </strong>
+
+            <small>
+              Événements / an
+            </small>
+
+          </div>
+
+
+          <div>
+
+            <span class="stat-icon">
+              ⌘
+            </span>
+
+            <strong>
+              5
+            </strong>
+
+            <small>
+              Départements
+            </small>
+
+          </div>
+
+
+          <div>
+
+            <span class="stat-icon">
+              ⚑
+            </span>
+
+            <strong>
+              1
+            </strong>
+
+            <small>
+              Vision commune
+            </small>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- Home cards -->
+
+        <div class="home-grid">
+
+
+          <!-- Next event -->
+
+          <div class="section-card next-event">
+
+            <div class="section-heading">
+
+              <span>
+                Prochain événement
+              </span>
+
+              <button data-page="events">
+                Voir
+              </button>
+
+            </div>
+
+
+            <div class="event-feature">
+
+              <div>
+
+                <span class="tag">
+                  À VENIR
+                </span>
+
+
+                <h3>
+                  OR Day 2026
+                </h3>
+
+
+                <p>
+                  Une journée dédiée à la Recherche
+                  Opérationnelle.
+                </p>
+
+
+                <div class="countdown">
+
+                  <b>
+                    15
+                  </b>
+
+                  <small>
+                    Jours
+                  </small>
+
+
+                  <b>
+                    08
+                  </b>
+
+                  <small>
+                    Heures
+                  </small>
+
+
+                  <b>
+                    36
+                  </b>
+
+                  <small>
+                    Minutes
+                  </small>
+
+                </div>
+
+
+                <button
+                  class="btn btn-primary small"
+                  data-page="events"
+                >
+                  Voir l'événement
+                </button>
+
+              </div>
+
+
+              <div class="feature-shape">
+
+                <span>
+                  OR
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- Announcements -->
+
+          <div class="section-card announcements">
+
+            <div class="section-heading">
+
+              <span>
+                Annonces
+              </span>
+
+              <button data-page="announcements">
+                Tout voir
+              </button>
+
+            </div>
+
+
+            <div class="announcement-list">
+
+
+              <div>
+
+                <span class="ann-icon">
+                  ♧
+                </span>
+
+                <p>
+
+                  <strong>
+                    Inscriptions ouvertes
+                  </strong>
+
+                  <small>
+                    Rejoignez le club cette saison.
+                  </small>
+
+                </p>
+
+                <time>
+                  2h
+                </time>
+
+              </div>
+
+
+              <div>
+
+                <span class="ann-icon">
+                  ▣
+                </span>
+
+                <p>
+
+                  <strong>
+                    Workshop Python
+                  </strong>
+
+                  <small>
+                    Samedi à 14h.
+                  </small>
+
+                </p>
+
+                <time>
+                  5h
+                </time>
+
+              </div>
+
+
+              <div>
+
+                <span class="ann-icon">
+                  ⌁
+                </span>
+
+                <p>
+
+                  <strong>
+                    Réunion générale
+                  </strong>
+
+                  <small>
+                    Salle A204, à 13h.
+                  </small>
+
+                </p>
+
+                <time>
+                  1j
+                </time>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================================
+           DASHBOARD
+      ====================================================== -->
+
+      <section
+        class="page"
+        id="page-dashboard"
+      >
+
+        <div class="page-title">
+
+          <div>
+
+            <span class="eyebrow">
+              ESPACE MEMBRE
+            </span>
+
+            <h2>
+              Bonjour, Sarah !
+              <span>👋</span>
+            </h2>
+
+            <p>
+              Voici ce qui se passe aujourd'hui.
+            </p>
+
+          </div>
+
+
+          <button
+            class="btn btn-primary"
+            data-page="tasks"
+          >
+            Mes tâches
+          </button>
+
+        </div>
+
+
+
+        <!-- Metrics -->
+
+        <div class="dashboard-stats">
+
+
+          <div class="metric">
+
+            <span>
+              Événements à venir
+            </span>
+
+            <strong>
+              3
+            </strong>
+
+            <i>
+              ▣
+            </i>
+
+          </div>
+
+
+          <div class="metric">
+
+            <span>
+              Tâches en cours
+            </span>
+
+            <strong>
+              5
+            </strong>
+
+            <i>
+              ✓
+            </i>
+
+          </div>
+
+
+          <div class="metric">
+
+            <span>
+              Formations suivies
+            </span>
+
+            <strong>
+              2
+            </strong>
+
+            <i>
+              ⌁
+            </i>
+
+          </div>
+
+
+          <div class="metric">
+
+            <span>
+              Points
+            </span>
+
+            <strong>
+              120
+            </strong>
+
+            <i>
+              ✦
+            </i>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- Dashboard grid -->
+
+        <div class="dashboard-grid">
+
+
+          <!-- Tasks -->
+
+          <div class="section-card tasks-card">
+
+            <div class="section-heading">
+
+              <span>
+                Mes tâches
+              </span>
+
+              <button data-page="tasks">
+                Voir tout
+              </button>
+
+            </div>
+
+
+            <div id="dashboardTasks"></div>
+
+          </div>
+
+
+
+          <!-- Calendar -->
+
+          <div class="section-card calendar-card">
+
+            <div class="section-heading">
+
+              <span>
+                Calendrier
+              </span>
+
+              <div class="calendar-arrows">
+
+                <button>
+                  ‹
+                </button>
+
+                <span>
+                  Juin 2026
+                </span>
+
+                <button>
+                  ›
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <div
+              class="calendar"
+              id="calendar"
+            ></div>
+
+          </div>
+
+
+
+          <!-- Quick access -->
+
+          <div class="section-card quick-card">
+
+            <div class="section-heading">
+
+              <span>
+                Accès rapides
+              </span>
+
+            </div>
+
+
+            <div class="quick-grid">
+
+
+              <button data-page="tasks">
+
+                <b>
+                  ✓
+                </b>
+
+                <span>
+                  Tâches
+                </span>
+
+              </button>
+
+
+              <button data-page="events">
+
+                <b>
+                  ▣
+                </b>
+
+                <span>
+                  Événements
+                </span>
+
+              </button>
+
+
+              <button data-page="documents">
+
+                <b>
+                  ▤
+                </b>
+
+                <span>
+                  Documents
+                </span>
+
+              </button>
+
+
+              <button data-page="members">
+
+                <b>
+                  ♙
+                </b>
+
+                <span>
+                  Membres
+                </span>
+
+              </button>
+
+
+            </div>
+
+
+            <div class="activity">
+
+              <div class="activity-title">
+                Activité récente
+              </div>
+
+
+              <p>
+                <b>Sarah</b>
+                a ajouté un document
+                <span>2h</span>
+              </p>
+
+
+              <p>
+                <b>Anis</b>
+                a créé un événement
+                <span>5h</span>
+              </p>
+
+
+              <p>
+                <b>Hichem</b>
+                a terminé une tâche
+                <span>1j</span>
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================================
+           DEPARTMENTS
+      ====================================================== -->
+
+      <section
+        class="page"
+        id="page-departments"
+      >
+
+        <div class="page-title centered">
+
+          <span class="eyebrow">
+            NOTRE ORGANISATION
+          </span>
+
+          <h2>
+            Nos départements
+          </h2>
+
+          <p>
+            Une équipe, plusieurs talents,
+            une seule mission.
+          </p>
+
+        </div>
+
+
+
+        <div class="department-grid">
+
+
+          <article class="department-card">
+
+            <div class="dept-icon">
+              ♙
+            </div>
+
+            <span class="dept-number">
+              01
+            </span>
+
+            <h3>
+              Ressources
+              <br>
+              Humaines
+            </h3>
+
+            <p>
+              Suivi des membres, intégration
+              et vie interne.
+            </p>
+
+            <button data-page="members">
+              Découvrir →
+            </button>
+
+          </article>
+
+
+
+          <article class="department-card">
+
+            <div class="dept-icon">
+              ⌁
+            </div>
+
+            <span class="dept-number">
+              02
+            </span>
+
+            <h3>
+              Relations
+              <br>
+              Extérieures
+            </h3>
+
+            <p>
+              Partenariats, sponsors et
+              communication externe.
+            </p>
+
+            <button>
+              Découvrir →
+            </button>
+
+          </article>
+
+
+
+          <article class="department-card">
+
+            <div class="dept-icon">
+              ▣
+            </div>
+
+            <span class="dept-number">
+              03
+            </span>
+
+            <h3>
+              Communication
+              <br>
+              & Média
+            </h3>
+
+            <p>
+              Identité visuelle, réseaux et
+              couverture des activités.
+            </p>
+
+            <button>
+              Découvrir →
+            </button>
+
+          </article>
+
+
+
+          <article class="department-card">
+
+            <div class="dept-icon">
+              ✦
+            </div>
+
+            <span class="dept-number">
+              04
+            </span>
+
+            <h3>
+              Projets
+              <br>
+              & Activités
+            </h3>
+
+            <p>
+              Conception, organisation et
+              réalisation des projets.
+            </p>
+
+            <button>
+              Découvrir →
+            </button>
+
+          </article>
+
+
+
+          <article class="department-card">
+
+            <div class="dept-icon">
+              ⌘
+            </div>
+
+            <span class="dept-number">
+              05
+            </span>
+
+            <h3>
+              Innovation
+              <br>
+              & Data
+            </h3>
+
+            <p>
+              Solutions numériques et
+              expérimentation.
+            </p>
+
+            <button>
+              Découvrir →
+            </button>
+
+          </article>
+
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================================
+           EVENTS
+      ====================================================== -->
+
+      <section
+        class="page"
+        id="page-events"
+      >
+
+        <div class="page-title">
+
+          <div>
+
+            <span class="eyebrow">
+              VIE DU CLUB
+            </span>
+
+            <h2>
+              Nos événements
+            </h2>
+
+            <p>
+              Revivez les moments qui font
+              grandir la communauté.
+            </p>
+
+          </div>
+
+
+          <div class="filter-pills">
+
+            <button class="active">
+              À venir
+            </button>
+
+            <button>
+              Passés
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="event-grid"
+          id="eventGrid"
+        ></div>
+
+      </section>
+
+
+
+      <!-- =====================================================
+           MEMBER AREA
+      ====================================================== -->
+
+      <section
+        class="page"
+        id="page-members"
+      >
+
+        <div class="page-title">
+
+          <div>
+
+            <span class="eyebrow">
+              ESPACE PERSONNEL
+            </span>
+
+            <h2>
+              Espace membre
+            </h2>
+
+            <p>
+              Retrouvez vos activités,
+              documents et progression.
+            </p>
+
+          </div>
+
+
+          <button
+            class="btn btn-primary"
+            data-page="profile"
+          >
+            Mon profil
+          </button>
+
+        </div>
+
+
+
+        <div class="member-overview">
+
+
+          <!-- Member card -->
+
+          <div class="member-card">
+
+            <div class="member-top">
+
+              <div class="avatar avatar-large avatar-photo">
+                SB
+              </div>
+
+              <div>
+
+                <h3>
+                  Sarah BELHADJ
+                </h3>
+
+                <span>
+                  Membre depuis septembre 2024
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="progress-row">
+
+              <span>
+                Progression · Niveau 3
+              </span>
+
+              <b>
+                325 / 600 pts
+              </b>
+
+            </div>
+
+
+            <div class="progress">
+
+              <i style="width:54%"></i>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- Shortcuts -->
+
+          <div class="member-shortcuts">
+
+
+            <button data-page="tasks">
+
+              ✓
+
+              <span>
+                Mes tâches
+              </span>
+
+            </button>
+
+
+            <button data-page="documents">
+
+              ▤
+
+              <span>
+                Documents
+              </span>
+
+            </button>
+
+
+            <button>
+
+              ▣
+
+              <span>
+                Calendrier
+              </span>
+
+            </button>
+
+
+            <button>
+
+              ♢
+
+              <span>
+                Annonces
+              </span>
+
+            </button>
+
+
+          </div>
+
+        </div>
+
+
+
+        <!-- Recent activity -->
+
+        <div class="section-card recent-card">
+
+          <div class="section-heading">
+
+            <span>
+              Activité récente
+            </span>
+
+            <button>
+              Tout voir
+            </button>
+
+          </div>
+
+
+          <div class="recent-row">
+
+            <span>
+              ✓
+            </span>
+
+            <b>
+              Réunion avec l'équipe
+            </b>
+
+            <small>
+              15 juin 2026
+            </small>
+
+          </div>
+
+
+          <div class="recent-row">
+
+            <span>
+              ▤
+            </span>
+
+            <b>
+              Document ajouté — Guide ORSC.pdf
+            </b>
+
+            <small>
+              10 juin 2026
+            </small>
+
+          </div>
+
+
+          <div class="recent-row">
+
+            <span>
+              ✓
+            </span>
+
+            <b>
+              Tâche terminée — Sponsors
+            </b>
+
+            <small>
+              8 juin 2026
+            </small>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================================
+           PROFILE
+      ====================================================== -->
+
+      <section
+        class="page"
+        id="page-profile"
+      >
+
+        <div class="page-title">
+
+          <div>
+
+            <span class="eyebrow">
+              MON COMPTE
+            </span>
+
+            <h2>
+              Mon profil
+            </h2>
+
+          </div>
+
+
+          <button
+            class="btn btn-ghost"
+            id="editProfile"
+          >
+            Modifier
+          </button>
+
+        </div>
+
+
+
+        <div class="profile-layout">
+
+
+          <!-- Identity -->
+
+          <div class="profile-identity section-card">
+
+            <div class="profile-avatar avatar-photo">
+              SB
+            </div>
+
+            <h2>
+              Sarah BELHADJ
+            </h2>
+
+            <span class="role-badge">
+              Membre · DPA
+            </span>
+
+
+            <div class="social-row">
+
+              <button>
+                in
+              </button>
+
+              <button>
+                GH
+              </button>
+
+              <button>
+                DC
+              </button>
+
+              <button>
+                IG
+              </button>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- Details -->
+
+          <div class="profile-details section-card">
+
+            <h3>
+              Informations personnelles
+            </h3>
+
+
+            <div class="detail-grid">
+
+
+              <label>
+
+                Nom complet
+
+                <input
+                  value="Sarah BELHADJ"
+                  disabled
+                >
+
+              </label>
+
+
+              <label>
+
+                Email
+
+                <input
+                  value="sarah.belhadj@orsc.com"
+                  disabled
+                >
+
+              </label>
+
+
+              <label>
+
+                Téléphone
+
+                <input
+                  value="+213 6 12 34 56 78"
+                  disabled
+                >
+
+              </label>
+
+
+              <label>
+
+                Université
+
+                <input
+                  value="USTHB — RO"
+                  disabled
+                >
+
+              </label>
+
+
+              <label>
+
+                Département
+
+                <input
+                  value="Projets & Activités"
+                  disabled
+                >
+
+              </label>
+
+
+              <label>
+
+                Statut
+
+                <input
+                  value="Membre actif"
+                  disabled
+                >
+
+              </label>
+
+
+            </div>
+
+
+            <label class="bio-field">
+
+              À propos de moi
+
+              <textarea disabled>Passionnée par la modélisation, l'optimisation et la création de projets utiles.</textarea>
+
+            </label>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================================
+           TASKS
+      ====================================================== -->
+
+      <section
+        class="page"
+        id="page-tasks"
+      >
+
+        <div class="page-title">
+
+          <div>
+
+            <span class="eyebrow">
+              ORGANISATION
+            </span>
+
+            <h2>
+              Mes tâches
+            </h2>
+
+            <p>
+              Gardez une vue claire sur vos responsabilités.
+            </p>
+
+          </div>
+
+
+          <button
+            class="btn btn-primary"
+            id="addTask"
+          >
+            + Nouvelle tâche
+          </button>
+
+        </div>
+
+
+
+        <div class="task-filters">
+
+          <button
+            class="active"
+            data-filter="all"
+          >
+            Toutes
+          </button>
+
+          <button data-filter="progress">
+            En cours
+          </button>
+
+          <button data-filter="done">
+            Terminées
+          </button>
+
+        </div>
+
+
+        <div
+          class="full-task-list"
+          id="fullTaskList"
+        ></div>
+
+      </section>
+
+
+
+      <!-- =====================================================
+           DOCUMENTS
+      ====================================================== -->
+
+      <section
+        class="page"
+        id="page-documents"
+      >
+
+        <div class="page-title">
+
+          <div>
+
+            <span class="eyebrow">
+              RESSOURCES
+            </span>
+
+            <h2>
+              Documents
+            </h2>
+
+            <p>
+              Les fichiers utiles au fonctionnement du club.
+            </p>
+
+          </div>
+
+
+          <button class="btn btn-primary">
+            + Ajouter
+          </button>
+
+        </div>
+
+
+
+        <div class="document-grid">
+
+
+          <div class="document-card">
+
+            <span>
+              PDF
+            </span>
+
+            <div>
+
+              <h3>
+                Guide ORSC
+              </h3>
+
+              <p>
+                Règles et fonctionnement du club
+              </p>
+
+            </div>
+
+            <button>
+              ↓
+            </button>
+
+          </div>
+
+
+
+          <div class="document-card">
+
+            <span>
+              DOC
+            </span>
+
+            <div>
+
+              <h3>
+                Compte rendu réunion
+              </h3>
+
+              <p>
+                Réunion générale — Juin 2026
+              </p>
+
+            </div>
+
+            <button>
+              ↓
+            </button>
+
+          </div>
+
+
+
+          <div class="document-card">
+
+            <span>
+              XLS
+            </span>
+
+            <div>
+
+              <h3>
+                Planning annuel
+              </h3>
+
+              <p>
+                Calendrier des activités
+              </p>
+
+            </div>
+
+            <button>
+              ↓
+            </button>
+
+          </div>
+
+
+
+          <div class="document-card">
+
+            <span>
+              PDF
+            </span>
+
+            <div>
+
+              <h3>
+                Charte graphique
+              </h3>
+
+              <p>
+                Identité visuelle ORSC
+              </p>
+
+            </div>
+
+            <button>
+              ↓
+            </button>
+
+          </div>
+
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================================
+           ANNOUNCEMENTS
+      ====================================================== -->
+
+      <section
+        class="page"
+        id="page-announcements"
+      >
+
+        <div class="page-title">
+
+          <div>
+
+            <span class="eyebrow">
+              INFORMATIONS
+            </span>
+
+            <h2>
+              Annonces
+            </h2>
+
+            <p>
+              Les dernières nouvelles du club.
+            </p>
+
+          </div>
+
+        </div>
+
+
+
+        <div class="announcement-feed">
+
+
+          <article>
+
+            <span class="feed-dot"></span>
+
+            <div>
+
+              <span>
+                Il y a 2 heures
+              </span>
+
+              <h3>
+                Inscriptions ouvertes
+              </h3>
+
+              <p>
+                Les inscriptions pour la prochaine période
+                sont maintenant disponibles.
+              </p>
+
+            </div>
+
+          </article>
+
+
+
+          <article>
+
+            <span class="feed-dot"></span>
+
+            <div>
+
+              <span>
+                Il y a 5 heures
+              </span>
+
+              <h3>
+                Workshop Python
+              </h3>
+
+              <p>
+                Le prochain atelier aura lieu samedi à 14h.
+              </p>
+
+            </div>
+
+          </article>
+
+
+
+          <article>
+
+            <span class="feed-dot"></span>
+
+            <div>
+
+              <span>
+                Hier
+              </span>
+
+              <h3>
+                Réunion générale
+              </h3>
+
+              <p>
+                Rendez-vous en salle A204 à 13h.
+              </p>
+
+            </div>
+
+          </article>
+
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================================
+           SETTINGS
+      ====================================================== -->
+
+      <section
+        class="page"
+        id="page-settings"
+      >
+
+        <div class="page-title">
+
+          <div>
+
+            <span class="eyebrow">
+              SYSTÈME
+            </span>
+
+            <h2>
+              Paramètres
+            </h2>
+
+            <p>
+              Personnalisez votre expérience.
+            </p>
+
+          </div>
+
+        </div>
+
+
+
+        <div class="settings-card section-card">
+
+
+          <div class="setting-row">
+
+            <div>
+
+              <b>
+                Apparence
+              </b>
+
+              <span>
+                Choisissez entre le mode clair et sombre.
+              </span>
+
+            </div>
+
+
+            <button
+              class="toggle-switch on"
+              id="settingTheme"
+            >
+              <i></i>
+            </button>
+
+          </div>
+
+
+
+          <div class="setting-row">
+
+            <div>
+
+              <b>
+                Notifications
+              </b>
+
+              <span>
+                Recevoir les notifications importantes.
+              </span>
+
+            </div>
+
+
+            <button class="toggle-switch on">
+
+              <i></i>
+
+            </button>
+
+          </div>
+
+
+
+          <div class="setting-row">
+
+            <div>
+
+              <b>
+                Notifications email
+              </b>
+
+              <span>
+                Recevoir les actualités du club par email.
+              </span>
+
+            </div>
+
+
+            <button class="toggle-switch">
+
+              <i></i>
+
+            </button>
+
+          </div>
+
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================================
+           LOGIN MODAL
+      ====================================================== -->
+
+      <div
+        class="login-modal"
+        id="loginModal"
+      >
+
+        <div class="login-panel">
+
+
+          <button
+            class="modal-close"
+            id="closeLogin"
+          >
+            ×
+          </button>
+
+
+          <img
+            src="logo.png"
+            alt="ORSC"
+          >
+
+
+          <h2>
+            Bienvenue !
+          </h2>
+
+
+          <p>
+            Connectez-vous à votre compte
+          </p>
+
+
+
+          <label>
+
+            Email
+
+            <input
+              type="email"
+              placeholder="votre@email.com"
+            >
+
+          </label>
+
+
+
+          <label>
+
+            Mot de passe
+
+            <input
+              type="password"
+              placeholder="••••••••"
+            >
+
+          </label>
+
+
+          <a href="#">
+            Mot de passe oublié ?
+          </a>
+
+
+          <button
+            class="btn btn-primary full"
+            id="loginBtn"
+          >
+            Se connecter
+          </button>
+
+
+          <small>
+
+            Pas encore membre ?
+
+            <b>
+              Rejoindre le club
+            </b>
+
+          </small>
+
+
+        </div>
+
+      </div>
+
+
+
+      <!-- =====================================================
+           MOBILE BOTTOM NAVIGATION
+      ====================================================== -->
+
+      <nav class="bottom-nav">
+
+
+        <button
+          class="active"
+          data-page="home"
+        >
+
+          <span>
+            ⌂
+          </span>
+
+          Accueil
+
+        </button>
+
+
+
+        <button data-page="departments">
+
+          <span>
+            ⌘
+          </span>
+
+          Dépts
+
+        </button>
+
+
+
+        <button
+          class="bottom-plus"
+          id="bottomPlus"
+        >
+          +
+        </button>
+
+
+
+        <button data-page="members">
+
+          <span>
+            ♙
+          </span>
+
+          Espace
+
+        </button>
+
+
+
+        <button data-page="profile">
+
+          <span>
+            ◯
+          </span>
+
+          Profil
+
+        </button>
+
+
+      </nav>
+
+
+    </main>
+
+  </div>
+
+
+
+  <!-- Toast notification -->
+
+  <div
+    class="toast"
+    id="toast"
+  >
+    Action effectuée
+  </div>
+
+
+
+  <!-- JavaScript -->
+
+  <script src="script.js"></script>
+
+</body>
+</html>

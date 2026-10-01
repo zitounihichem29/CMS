@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}
+Organizations
+{% endblock %}
+
+
+{% block content %}
+
+<div class="organizations-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="organizations-header">
+
+        <div class="organizations-header-content">
+
+            <span class="organizations-label">
+                ORSC NETWORK
+            </span>
+
+            <h1>
+                Organizations
+            </h1>
+
+            <p>
+                Discover the organizations connected to ORSC.
+            </p>
+
+        </div>
+
+
+        {% if can_manage_organizations %}
+
+            <a
+                href="{{ url_for('organizations.new_organization') }}"
+                class="btn-primary"
+            >
+
+                <span class="btn-icon">
+                    +
+                </span>
+
+                <span>
+                    Add Organization
+                </span>
+
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- ========================================
+         ORGANIZATIONS GRID
+         ======================================== -->
+
+    <div class="organizations-grid">
+
+
+        {% for organization in organizations %}
+
+
+            {% if can_view_details %}
+
+                <a
+                    href="{{ url_for(
+                        'organizations.organization_detail',
+                        organization_id=organization['organization_id']
+                    ) }}"
+                    class="organization-card organization-card-clickable"
+                >
+
+                    <div class="organization-logo-container">
+
+                        {% if organization["logo_path"] %}
+
+                            <img
+                                src="{{ url_for(
+                                    'organizations.organization_logo',
+                                    organization_id=organization['organization_id']
+                                ) }}"
+                                alt="{{ organization['name'] }} logo"
+                                class="organization-logo"
+                            >
+
+                        {% else %}
+
+                            <div class="organization-logo-placeholder">
+
+                                {{ organization["name"][0] | upper }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="organization-card-content">
+
+                        <h2>
+                            {{ organization["name"] }}
+                        </h2>
+
+                        <span class="organization-type">
+
+                            {% if organization["organization_type"] == "company" %}
+                                Company
+
+                            {% elif organization["organization_type"] == "startup" %}
+                                Startup
+
+                            {% elif organization["organization_type"] == "university" %}
+                                University
+
+                            {% elif organization["organization_type"] == "school" %}
+                                School
+
+                            {% elif organization["organization_type"] == "association" %}
+                                Association
+
+                            {% elif organization["organization_type"] == "institution" %}
+                                Institution
+
+                            {% elif organization["organization_type"] == "media" %}
+                                Media
+
+                            {% elif organization["organization_type"] == "club" %}
+                                Club
+
+                            {% else %}
+                                Other
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <span class="organization-card-arrow">
+                        →
+                    </span>
+
+                </a>
+
+
+            {% else %}
+
+
+                <div class="organization-card">
+
+                    <div class="organization-logo-container">
+
+                        {% if organization["logo_path"] %}
+
+                            <img
+                                src="{{ url_for(
+                                    'organizations.organization_logo',
+                                    organization_id=organization['organization_id']
+                                ) }}"
+                                alt="{{ organization['name'] }} logo"
+                                class="organization-logo"
+                            >
+
+                        {% else %}
+
+                            <div class="organization-logo-placeholder">
+
+                                {{ organization["name"][0] | upper }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="organization-card-content">
+
+                        <h2>
+                            {{ organization["name"] }}
+                        </h2>
+
+                        <span class="organization-type">
+
+                            {% if organization["organization_type"] == "company" %}
+                                Company
+
+                            {% elif organization["organization_type"] == "startup" %}
+                                Startup
+
+                            {% elif organization["organization_type"] == "university" %}
+                                University
+
+                            {% elif organization["organization_type"] == "school" %}
+                                School
+
+                            {% elif organization["organization_type"] == "association" %}
+                                Association
+
+                            {% elif organization["organization_type"] == "institution" %}
+                                Institution
+
+                            {% elif organization["organization_type"] == "media" %}
+                                Media
+
+                            {% elif organization["organization_type"] == "club" %}
+                                Club
+
+                            {% else %}
+                                Other
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            {% endif %}
+
+
+        {% else %}
+
+
+            <!-- ========================================
+                 EMPTY STATE
+                 ======================================== -->
+
+            <div class="organizations-empty">
+
+                <div class="organizations-empty-icon">
+                    ◇
+                </div>
+
+                <h2>
+                    No organizations yet
+                </h2>
+
+                <p>
+                    Organizations, partners and collaborators connected to ORSC
+                    will appear here.
+                </p>
+
+            </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+</div>
+
+{% endblock %}

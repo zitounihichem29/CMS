@@ -1,0 +1,450 @@
+{% extends "public/base_public.html" %}
+
+
+{% block title %}
+Contact | ORSC
+{% endblock %}
+
+
+{% block content %}
+
+<div class="public-contact-page">
+
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <section class="public-contact-hero">
+
+        <div class="public-contact-hero-content">
+
+            <span class="public-section-label">
+                GET IN TOUCH
+            </span>
+
+            <h1>
+                Contact ORSC
+            </h1>
+
+            <p>
+                Have a question, an idea or simply want to connect
+                with us? Reach ORSC through our official platforms
+                or leave us a message directly.
+            </p>
+
+        </div>
+
+
+        <div class="public-contact-hero-visual">
+
+            <div class="contact-hero-circle">
+
+                <span>
+                    OR
+                </span>
+
+                <strong>
+                    CONNECT
+                </strong>
+
+            </div>
+
+            <div class="contact-hero-orbit contact-hero-orbit-one">
+            </div>
+
+            <div class="contact-hero-orbit contact-hero-orbit-two">
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MAIN CONTACT AREA
+         ===================================================== -->
+
+    <section class="public-contact-section">
+
+
+        <!-- =================================================
+             CONTACT INFORMATION
+             ================================================= -->
+
+        <div class="public-contact-info">
+
+
+            <div class="public-contact-heading">
+
+                <span class="public-section-label">
+                    OUR CHANNELS
+                </span>
+
+                <h2>
+                    Connect with us
+                </h2>
+
+                <p>
+                    Follow ORSC and stay connected with our
+                    activities, events, projects and community.
+                </p>
+
+            </div>
+
+
+
+            <div class="public-contact-links">
+
+
+                <!-- EMAIL -->
+
+                <a
+                    href="mailto:crorsclub@gmail.com"
+                    class="public-contact-card"
+                >
+
+                    <div class="public-contact-card-icon">
+                        @
+                    </div>
+
+                    <div class="public-contact-card-content">
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong>
+                            crorsclub@gmail.com
+                        </strong>
+
+                    </div>
+
+                    <div class="public-contact-card-arrow">
+                        ↗
+                    </div>
+
+                </a>
+
+
+
+                <!-- FACEBOOK -->
+
+                <a
+                    href="https://www.facebook.com/orsocietyclub"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="public-contact-card"
+                >
+
+                    <div class="public-contact-card-icon">
+                        f
+                    </div>
+
+                    <div class="public-contact-card-content">
+
+                        <span>
+                            Facebook
+                        </span>
+
+                        <strong>
+                            OR Society Club
+                        </strong>
+
+                    </div>
+
+                    <div class="public-contact-card-arrow">
+                        ↗
+                    </div>
+
+                </a>
+
+
+
+                <!-- INSTAGRAM -->
+
+                <a
+                    href="https://www.instagram.com/orsocietyclub/?hl=en"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="public-contact-card"
+                >
+
+                    <div class="public-contact-card-icon">
+                        ◎
+                    </div>
+
+                    <div class="public-contact-card-content">
+
+                        <span>
+                            Instagram
+                        </span>
+
+                        <strong>
+                            @orsocietyclub
+                        </strong>
+
+                    </div>
+
+                    <div class="public-contact-card-arrow">
+                        ↗
+                    </div>
+
+                </a>
+
+
+
+                <!-- LINKEDIN -->
+
+                <a
+                    href="https://www.linkedin.com/company/orsocietyclub/posts/?feedView=all"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="public-contact-card"
+                >
+
+                    <div class="public-contact-card-icon">
+                        in
+                    </div>
+
+                    <div class="public-contact-card-content">
+
+                        <span>
+                            LinkedIn
+                        </span>
+
+                        <strong>
+                            OR Society Club
+                        </strong>
+
+                    </div>
+
+                    <div class="public-contact-card-arrow">
+                        ↗
+                    </div>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             MESSAGE FORM
+             ================================================= -->
+
+        <div class="public-contact-message-area">
+
+
+            <div class="public-contact-message-card">
+
+
+                <div class="public-contact-message-heading">
+
+                    <span class="public-section-label">
+                        LEAVE A MESSAGE
+                    </span>
+
+                    <h2>
+                        Send us a message
+                    </h2>
+
+                    <p>
+                        Your message will be sent directly to
+                        the ORSC team.
+                    </p>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     SUCCESS
+                     ========================================= -->
+
+                {% if sent %}
+
+                    <div class="public-contact-success">
+
+                        <div class="public-contact-success-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Message sent successfully
+                            </strong>
+
+                            <p>
+                                Thank you for contacting ORSC.
+                                Your message has been received.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+
+                <!-- =========================================
+                     ERROR
+                     ========================================= -->
+
+                {% if error %}
+
+                    <div class="public-contact-error">
+
+                        <span>
+                            !
+                        </span>
+
+                        <p>
+                            {{ error }}
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+
+
+                <!-- =========================================
+                     FORM
+                     ========================================= -->
+
+                <form
+                    method="POST"
+                    action="{{ url_for('public.contact') }}"
+                    class="public-contact-form"
+                >
+
+
+                    <!-- EMAIL -->
+
+                    <div class="public-contact-form-group">
+
+                        <label for="sender_email">
+
+                            Email
+
+                            <span>
+                                Optional
+                            </span>
+
+                        </label>
+
+                        <input
+                            type="email"
+                            id="sender_email"
+                            name="sender_email"
+                            placeholder="your@email.com"
+                            maxlength="255"
+                            autocomplete="email"
+                        >
+
+                        <small>
+                            Add your email only if you would
+                            like us to be able to contact you.
+                        </small>
+
+                    </div>
+
+
+
+                    <!-- MESSAGE -->
+
+                    <div class="public-contact-form-group">
+
+                        <label for="message">
+
+                            Your message
+
+                            <strong>
+                                *
+                            </strong>
+
+                        </label>
+
+                        <textarea
+                            id="message"
+                            name="message"
+                            rows="7"
+                            maxlength="2000"
+                            placeholder="Write your message here..."
+                            required
+                        ></textarea>
+
+                        <div class="public-contact-form-footer">
+
+                            <small>
+                                Maximum 2000 characters
+                            </small>
+
+                            <span
+                                id="publicContactCharacterCount"
+                            >
+                                0 / 2000
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- SUBMIT -->
+
+                    <button
+                        type="submit"
+                        class="public-contact-submit"
+                    >
+
+                        <span>
+                            Send Message
+                        </span>
+
+                        <span
+                            class="public-contact-submit-arrow"
+                        >
+                            →
+                        </span>
+
+                    </button>
+
+
+                </form>
+
+
+                <div class="public-contact-privacy">
+
+                    <span>
+                        ◇
+                    </span>
+
+                    <p>
+                        Messages submitted here are sent privately
+                        to the ORSC team and are not published
+                        on the public website.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+{% endblock %}

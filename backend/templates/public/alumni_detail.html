@@ -1,0 +1,774 @@
+{% extends "public/base_public.html" %}
+
+
+{% block title %}
+{{ profile["first_name"] }} {{ profile["last_name"] }} - ORSC Alumni
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+.public-alumni-detail {
+    max-width: 1200px;
+
+    margin: 0 auto;
+
+    padding:
+        55px 28px 90px;
+}
+
+.public-alumni-back {
+    display: inline-flex;
+
+    margin-bottom: 24px;
+
+    text-decoration: none;
+
+    color: inherit;
+
+    font-weight: 700;
+
+    opacity: .7;
+}
+
+.public-alumni-profile-hero {
+    position: relative;
+
+    overflow: hidden;
+
+    display: grid;
+
+    grid-template-columns:
+        330px 1fr;
+
+    gap: 38px;
+
+    padding: 30px;
+
+    border-radius: 32px;
+
+    border:
+        1px solid
+        rgba(120, 150, 155, .22);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(19, 139, 135, .11),
+            rgba(255, 255, 255, .025)
+        );
+}
+
+.public-alumni-profile-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 370px;
+    height: 370px;
+
+    border-radius: 50%;
+
+    right: -180px;
+    top: -170px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(19, 139, 135, .2),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+
+.public-alumni-profile-photo {
+    height: 390px;
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        rgba(19, 139, 135, .13);
+
+    font-size: 80px;
+
+    font-weight: 900;
+}
+
+.public-alumni-profile-photo img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.public-alumni-profile-info {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+.public-alumni-eyebrow {
+    font-size: 11px;
+
+    font-weight: 900;
+
+    letter-spacing: .15em;
+
+    color: #138b87;
+}
+
+.public-alumni-profile-info h1 {
+    margin: 10px 0;
+
+    font-size:
+        clamp(
+            38px,
+            5vw,
+            68px
+        );
+
+    line-height: 1;
+}
+
+.public-alumni-profile-headline {
+    font-size: 19px;
+
+    line-height: 1.55;
+
+    max-width: 650px;
+
+    opacity: .78;
+}
+
+.public-alumni-badges {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin: 18px 0;
+}
+
+.public-alumni-badge {
+    display: inline-flex;
+
+    padding: 7px 10px;
+
+    border-radius: 999px;
+
+    background:
+        rgba(19, 139, 135, .1);
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: .06em;
+}
+
+.public-alumni-current {
+    margin-top: 5px;
+
+    font-size: 15px;
+
+    font-weight: 700;
+}
+
+.public-alumni-links {
+    display: flex;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    margin-top: 22px;
+}
+
+.public-alumni-link {
+    display: inline-flex;
+
+    padding: 10px 14px;
+
+    border-radius: 11px;
+
+    text-decoration: none;
+
+    color: inherit;
+
+    border:
+        1px solid
+        rgba(120, 150, 155, .28);
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    transition:
+        transform .2s ease;
+}
+
+.public-alumni-link:hover {
+    transform:
+        translateY(-2px);
+}
+
+
+/* ========================================
+   CONTENT
+========================================= */
+
+.public-alumni-content {
+    display: grid;
+
+    grid-template-columns:
+        1.15fr .85fr;
+
+    gap: 20px;
+
+    margin-top: 22px;
+}
+
+.public-alumni-section {
+    border:
+        1px solid
+        rgba(120, 150, 155, .2);
+
+    border-radius: 22px;
+
+    padding: 24px;
+
+    background:
+        rgba(255, 255, 255, .025);
+}
+
+.public-alumni-section h2 {
+    margin:
+        0 0 18px;
+
+    font-size: 23px;
+}
+
+.public-alumni-story {
+    white-space: pre-line;
+
+    line-height: 1.8;
+
+    opacity: .8;
+}
+
+.public-alumni-short-bio {
+    line-height: 1.75;
+
+    opacity: .8;
+}
+
+
+/* ========================================
+   HISTORY
+========================================= */
+
+.public-alumni-timeline {
+    display: grid;
+
+    gap: 13px;
+}
+
+.public-alumni-history-item {
+    position: relative;
+
+    padding:
+        14px 14px 14px 19px;
+
+    border-radius:
+        0 13px 13px 0;
+
+    border-left:
+        3px solid #138b87;
+
+    background:
+        rgba(19, 139, 135, .06);
+}
+
+.public-alumni-history-item strong {
+    display: block;
+
+    margin-bottom: 5px;
+}
+
+.public-alumni-history-role {
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+.public-alumni-history-department {
+    font-size: 12px;
+
+    opacity: .7;
+
+    margin-top: 3px;
+}
+
+.public-alumni-no-history {
+    line-height: 1.6;
+
+    opacity: .7;
+}
+
+
+/* ========================================
+   PATH
+========================================= */
+
+.public-alumni-path-grid {
+    display: grid;
+
+    gap: 12px;
+}
+
+.public-alumni-path-item {
+    display: grid;
+
+    gap: 3px;
+
+    padding-bottom: 11px;
+
+    border-bottom:
+        1px solid
+        rgba(120, 150, 155, .13);
+}
+
+.public-alumni-path-item:last-child {
+    border-bottom: 0;
+}
+
+.public-alumni-path-item strong {
+    font-size: 11px;
+
+    opacity: .6;
+
+    text-transform: uppercase;
+
+    letter-spacing: .07em;
+}
+
+
+/* ========================================
+   MOBILE
+========================================= */
+
+@media (
+    max-width: 900px
+) {
+
+    .public-alumni-profile-hero {
+        grid-template-columns:
+            1fr;
+    }
+
+    .public-alumni-profile-photo {
+        height: 380px;
+    }
+
+    .public-alumni-content {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+@media (
+    max-width: 600px
+) {
+
+    .public-alumni-detail {
+        padding:
+            35px 18px 70px;
+    }
+
+    .public-alumni-profile-hero {
+        padding: 18px;
+
+        border-radius: 24px;
+    }
+
+    .public-alumni-profile-photo {
+        height: 310px;
+
+        border-radius: 19px;
+    }
+
+}
+
+</style>
+
+
+<div class="public-alumni-detail">
+
+    <a
+        href="{{ url_for(
+            'public_alumni.alumni'
+        ) }}"
+        class="public-alumni-back"
+    >
+        ← Back to Alumni
+    </a>
+
+
+    <!-- ========================================
+         HERO
+    ========================================= -->
+
+    <section class="public-alumni-profile-hero">
+
+        <div class="public-alumni-profile-photo">
+
+            {% if profile["photo_path"] %}
+
+                <img
+                    src="{{ url_for(
+                        'public_alumni.alumni_photo',
+                        slug=profile['slug']
+                    ) }}"
+                    alt="{{ profile['first_name'] }} {{ profile['last_name'] }}"
+                >
+
+            {% else %}
+
+                {{ profile["first_name"][0] }}
+                {{ profile["last_name"][0] }}
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="public-alumni-profile-info">
+
+            <span class="public-alumni-eyebrow">
+                ORSC ALUMNI
+            </span>
+
+
+            <h1>
+                {{ profile["first_name"] }}
+                {{ profile["last_name"] }}
+            </h1>
+
+
+            <div class="public-alumni-badges">
+
+                <span class="public-alumni-badge">
+                    {{ profile["category"] }}
+                </span>
+
+
+                {% if profile["is_featured"] %}
+
+                    <span class="public-alumni-badge">
+                        FEATURED
+                    </span>
+
+                {% endif %}
+
+
+                {% if profile["is_spotlight"] %}
+
+                    <span class="public-alumni-badge">
+                        ALUMNI SPOTLIGHT
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            {% if profile["headline"] %}
+
+                <div class="public-alumni-profile-headline">
+                    {{ profile["headline"] }}
+                </div>
+
+            {% endif %}
+
+
+            {% if
+                profile["current_title"]
+                or profile["current_organization"]
+            %}
+
+                <div class="public-alumni-current">
+
+                    {{ profile["current_title"] or "" }}
+
+                    {% if
+                        profile["current_title"]
+                        and profile["current_organization"]
+                    %}
+                        ·
+                    {% endif %}
+
+                    {{ profile["current_organization"] or "" }}
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="public-alumni-links">
+
+                {% if linkedin_url %}
+
+                    <a
+                        href="{{ linkedin_url }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="public-alumni-link"
+                    >
+                        LinkedIn ↗
+                    </a>
+
+                {% endif %}
+
+
+                {% if website_url %}
+
+                    <a
+                        href="{{ website_url }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="public-alumni-link"
+                    >
+                        Website ↗
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================================
+         CONTENT
+    ========================================= -->
+
+    <div class="public-alumni-content">
+
+        <div>
+
+            {% if profile["short_bio"] %}
+
+                <section class="public-alumni-section">
+
+                    <h2>
+                        About
+                    </h2>
+
+                    <div class="public-alumni-short-bio">
+                        {{ profile["short_bio"] }}
+                    </div>
+
+                </section>
+
+            {% endif %}
+
+
+            {% if profile["story"] %}
+
+                <section
+                    class="public-alumni-section"
+                    style="margin-top:20px;"
+                >
+
+                    <h2>
+                        Their Journey
+                    </h2>
+
+                    <div class="public-alumni-story">
+                        {{ profile["story"] }}
+                    </div>
+
+                </section>
+
+            {% endif %}
+
+        </div>
+
+
+        <div>
+
+            <section class="public-alumni-section">
+
+                <h2>
+                    ORSC Journey
+                </h2>
+
+
+                {% if history %}
+
+                    <div class="public-alumni-timeline">
+
+                        {% for membership in history %}
+
+                            <div class="public-alumni-history-item">
+
+                                <strong>
+                                    {{ membership["term_name"] }}
+                                </strong>
+
+                                <div class="public-alumni-history-role">
+                                    {{ membership["role_name"] }}
+                                </div>
+
+
+                                {% if membership["department_name"] %}
+
+                                    <div class="public-alumni-history-department">
+                                        {{ membership["department_name"] }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                {% else %}
+
+                    <div class="public-alumni-no-history">
+
+                        This alumnus belongs to an older
+                        ORSC generation whose historical
+                        mandate has not yet been fully
+                        reconstructed in the digital archive.
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <section
+                class="public-alumni-section"
+                style="margin-top:20px;"
+            >
+
+                <h2>
+                    Current Path
+                </h2>
+
+                <div class="public-alumni-path-grid">
+
+                    <div class="public-alumni-path-item">
+
+                        <strong>
+                            Field
+                        </strong>
+
+                        <span>
+                            {{ profile["category"] }}
+                        </span>
+
+                    </div>
+
+
+                    {% if profile["current_title"] %}
+
+                        <div class="public-alumni-path-item">
+
+                            <strong>
+                                Current Role
+                            </strong>
+
+                            <span>
+                                {{ profile["current_title"] }}
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if profile["current_organization"] %}
+
+                        <div class="public-alumni-path-item">
+
+                            <strong>
+                                Organization
+                            </strong>
+
+                            <span>
+                                {{ profile["current_organization"] }}
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if profile["graduation_year"] %}
+
+                        <div class="public-alumni-path-item">
+
+                            <strong>
+                                Graduation Year
+                            </strong>
+
+                            <span>
+                                {{ profile["graduation_year"] }}
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if profile["university"] %}
+
+                        <div class="public-alumni-path-item">
+
+                            <strong>
+                                University
+                            </strong>
+
+                            <span>
+                                {{ profile["university"] }}
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

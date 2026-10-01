@@ -1,0 +1,842 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+.alumni-detail {
+    padding: 8px 0 40px;
+}
+
+.alumni-detail-top {
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    gap: 18px;
+
+    align-items:
+        flex-start;
+
+    margin-bottom: 18px;
+}
+
+.alumni-back {
+    text-decoration: none;
+
+    color: inherit;
+
+    opacity: .72;
+
+    font-weight: 700;
+}
+
+.alumni-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 10px 14px;
+
+    border-radius: 11px;
+
+    text-decoration: none;
+
+    border:
+        1px solid
+        rgba(120, 140, 150, .25);
+
+    color: inherit;
+
+    background: transparent;
+
+    font-weight: 800;
+}
+
+.alumni-button.primary {
+    background: #0d7774;
+
+    color: white;
+
+    border-color: #0d7774;
+}
+
+.alumni-hero {
+    display: grid;
+
+    grid-template-columns:
+        160px 1fr;
+
+    gap: 24px;
+
+    padding: 22px;
+
+    border:
+        1px solid
+        rgba(120, 140, 150, .22);
+
+    border-radius: 20px;
+
+    background:
+        rgba(255, 255, 255, .035);
+}
+
+.alumni-photo {
+    width: 160px;
+    height: 160px;
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        rgba(13, 119, 116, .14);
+
+    font-size: 42px;
+
+    font-weight: 900;
+}
+
+.alumni-photo img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.alumni-hero h1 {
+    margin: 3px 0 8px;
+}
+
+.alumni-eyebrow {
+    font-size: 11px;
+
+    letter-spacing: .12em;
+
+    font-weight: 900;
+
+    opacity: .65;
+}
+
+.alumni-badges {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin: 12px 0;
+}
+
+.alumni-badge {
+    display: inline-flex;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    background:
+        rgba(13, 119, 116, .12);
+}
+
+.alumni-badge.hidden {
+    background:
+        rgba(170, 100, 30, .12);
+}
+
+.alumni-badge.spotlight {
+    background:
+        rgba(130, 90, 190, .14);
+}
+
+.alumni-sections {
+    display: grid;
+
+    grid-template-columns:
+        1.2fr .8fr;
+
+    gap: 16px;
+
+    margin-top: 16px;
+}
+
+.alumni-card {
+    border:
+        1px solid
+        rgba(120, 140, 150, .22);
+
+    border-radius: 16px;
+
+    padding: 18px;
+
+    background:
+        rgba(255, 255, 255, .03);
+}
+
+.alumni-card h2 {
+    margin-top: 0;
+}
+
+.alumni-meta {
+    display: grid;
+
+    gap: 9px;
+}
+
+.alumni-meta div {
+    display: grid;
+
+    grid-template-columns:
+        160px 1fr;
+
+    gap: 10px;
+}
+
+.alumni-meta strong {
+    font-size: 12px;
+
+    opacity: .7;
+}
+
+.alumni-history {
+    display: grid;
+
+    gap: 10px;
+}
+
+.alumni-history-item {
+    border-left:
+        3px solid
+        rgba(13, 119, 116, .55);
+
+    padding: 10px 12px;
+
+    background:
+        rgba(13, 119, 116, .05);
+
+    border-radius:
+        0 10px 10px 0;
+}
+
+.alumni-history-item strong {
+    display: block;
+}
+
+.alumni-story {
+    white-space: pre-line;
+
+    line-height: 1.65;
+}
+
+.alumni-danger {
+    margin-top: 16px;
+
+    border:
+        1px solid
+        rgba(190, 60, 60, .35);
+
+    border-radius: 16px;
+
+    padding: 18px;
+
+    background:
+        rgba(190, 60, 60, .05);
+}
+
+.alumni-danger input {
+    width: 100%;
+
+    max-width: 420px;
+
+    padding: 10px 12px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid
+        rgba(190, 60, 60, .3);
+
+    background: transparent;
+
+    color: inherit;
+}
+
+.alumni-danger button {
+    margin-top: 10px;
+
+    padding: 10px 14px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background: #b93c3c;
+
+    color: white;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+@media (
+    max-width: 850px
+) {
+
+    .alumni-hero {
+        grid-template-columns:
+            1fr;
+    }
+
+    .alumni-photo {
+        width: 120px;
+        height: 120px;
+    }
+
+    .alumni-sections {
+        grid-template-columns:
+            1fr;
+    }
+
+    .alumni-detail-top {
+        display: grid;
+    }
+
+    .alumni-meta div {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+</style>
+
+
+<div class="alumni-detail">
+
+    <div class="alumni-detail-top">
+
+        <a
+            href="{{ url_for(
+                'alumni.alumni_list'
+            ) }}"
+            class="alumni-back"
+        >
+            ← Back to Alumni
+        </a>
+
+
+        {% if can_manage %}
+
+            <a
+                href="{{ url_for(
+                    'alumni.edit_alumni',
+                    alumni_id=profile['alumni_id']
+                ) }}"
+                class="alumni-button primary"
+            >
+                Edit Alumni
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <section class="alumni-hero">
+
+        <div class="alumni-photo">
+
+            {% if profile["photo_path"] %}
+
+                <img
+                    src="{{ url_for(
+                        'alumni.alumni_photo',
+                        filename=profile['photo_path']
+                    ) }}"
+                    alt="{{ profile['first_name'] }} {{ profile['last_name'] }}"
+                >
+
+            {% elif profile["profile_photo"] %}
+
+                <img
+                    src="{{ url_for(
+                        'profile.profile_photo',
+                        filename=profile['profile_photo']
+                    ) }}"
+                    alt="{{ profile['first_name'] }} {{ profile['last_name'] }}"
+                >
+
+            {% else %}
+
+                {{ profile["first_name"][0] }}
+                {{ profile["last_name"][0] }}
+
+            {% endif %}
+
+        </div>
+
+
+        <div>
+
+            <span class="alumni-eyebrow">
+                ORSC ALUMNI PROFILE
+            </span>
+
+
+            <h1>
+                {{ profile["first_name"] }}
+                {{ profile["last_name"] }}
+            </h1>
+
+
+            <p>
+
+                {{
+                    profile["headline"]
+                    or profile["current_title"]
+                    or "ORSC Alumni"
+                }}
+
+            </p>
+
+
+            {% if
+                profile["current_title"]
+                or profile["current_organization"]
+            %}
+
+                <p>
+
+                    {{ profile["current_title"] or "" }}
+
+                    {% if
+                        profile["current_title"]
+                        and profile["current_organization"]
+                    %}
+                        ·
+                    {% endif %}
+
+                    {{ profile["current_organization"] or "" }}
+
+                </p>
+
+            {% endif %}
+
+
+            <div class="alumni-badges">
+
+                <span class="alumni-badge">
+                    {{ profile["category"] }}
+                </span>
+
+
+                {% if profile["is_public"] %}
+
+                    <span class="alumni-badge">
+                        PUBLIC
+                    </span>
+
+                {% else %}
+
+                    <span class="alumni-badge hidden">
+                        HIDDEN
+                    </span>
+
+                {% endif %}
+
+
+                {% if profile["is_featured"] %}
+
+                    <span class="alumni-badge">
+                        FEATURED
+                    </span>
+
+                {% endif %}
+
+
+                {% if profile["is_spotlight"] %}
+
+                    <span class="alumni-badge spotlight">
+                        HOMEPAGE SPOTLIGHT
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            {% if profile["short_bio"] %}
+
+                <p>
+                    {{ profile["short_bio"] }}
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <div class="alumni-sections">
+
+        <div>
+
+            <section class="alumni-card">
+
+                <h2>
+                    ORSC History
+                </h2>
+
+
+                {% if history %}
+
+                    <div class="alumni-history">
+
+                        {% for membership in history %}
+
+                            <div class="alumni-history-item">
+
+                                <strong>
+                                    {{ membership["term_name"] }}
+                                </strong>
+
+                                <span>
+                                    {{ membership["role_name"] }}
+                                </span>
+
+
+                                {% if membership["department_name"] %}
+
+                                    <span>
+                                        ·
+                                        {{ membership["department_name"] }}
+                                    </span>
+
+                                {% endif %}
+
+
+                                <div>
+                                    {{ membership["term_status"] }}
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                {% else %}
+
+                    <p>
+                        No historical membership is
+                        recorded yet.
+
+                        This profile may represent an
+                        older Alumni whose historical
+                        ORSC mandate has not yet been
+                        reconstructed.
+                    </p>
+
+                {% endif %}
+
+            </section>
+
+
+            {% if profile["story"] %}
+
+                <section
+                    class="alumni-card"
+                    style="margin-top:16px;"
+                >
+
+                    <h2>
+                        Story
+                    </h2>
+
+                    <div class="alumni-story">
+                        {{ profile["story"] }}
+                    </div>
+
+                </section>
+
+            {% endif %}
+
+        </div>
+
+
+        <div>
+
+            <section class="alumni-card">
+
+                <h2>
+                    Current Path
+                </h2>
+
+
+                <div class="alumni-meta">
+
+                    <div>
+                        <strong>
+                            Category
+                        </strong>
+
+                        <span>
+                            {{ profile["category"] }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>
+                            Current title
+                        </strong>
+
+                        <span>
+                            {{ profile["current_title"] or "—" }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>
+                            Organization
+                        </strong>
+
+                        <span>
+                            {{ profile["current_organization"] or "—" }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>
+                            Graduation year
+                        </strong>
+
+                        <span>
+                            {{ profile["graduation_year"] or "—" }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>
+                            University
+                        </strong>
+
+                        <span>
+                            {{ profile["university"] or "—" }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>
+                            Email
+                        </strong>
+
+                        <span>
+                            {{ profile["email"] or "—" }}
+                        </span>
+                    </div>
+
+                </div>
+
+
+                {% if profile["linkedin_url"] %}
+
+                    <p>
+
+                        <a
+                            href="{{ profile['linkedin_url'] }}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            LinkedIn
+                        </a>
+
+                    </p>
+
+                {% endif %}
+
+
+                {% if profile["website_url"] %}
+
+                    <p>
+
+                        <a
+                            href="{{ profile['website_url'] }}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            Website
+                        </a>
+
+                    </p>
+
+                {% endif %}
+
+            </section>
+
+
+            <section
+                class="alumni-card"
+                style="margin-top:16px;"
+            >
+
+                <h2>
+                    CMS Information
+                </h2>
+
+
+                <div class="alumni-meta">
+
+                    <div>
+                        <strong>
+                            Slug
+                        </strong>
+
+                        <span>
+                            {{ profile["slug"] }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>
+                            Display order
+                        </strong>
+
+                        <span>
+                            {{ profile["display_order"] }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>
+                            Created by
+                        </strong>
+
+                        <span>
+                            {{ profile["created_by_username"] or "—" }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>
+                            Created at
+                        </strong>
+
+                        <span>
+                            {{ profile["created_at"] }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>
+                            Updated by
+                        </strong>
+
+                        <span>
+                            {{ profile["updated_by_username"] or "—" }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>
+                            Updated at
+                        </strong>
+
+                        <span>
+                            {{ profile["updated_at"] or "—" }}
+                        </span>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+
+    {% if can_manage %}
+
+        <section class="alumni-danger">
+
+            <h2>
+                Delete Alumni Profile
+            </h2>
+
+
+            <p>
+                This deletes only the Alumni
+                profile.
+
+                The person and all historical
+                ORSC memberships are preserved.
+
+                Type
+
+                <strong>
+                    {{ profile["first_name"] }}
+                    {{ profile["last_name"] }}
+                </strong>
+
+                exactly to confirm.
+            </p>
+
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'alumni.delete_alumni',
+                    alumni_id=profile['alumni_id']
+                ) }}"
+                onsubmit="return confirm('Delete this Alumni profile? Historical ORSC membership data will be preserved.');"
+            >
+
+                <input
+                    type="text"
+                    name="confirmation"
+                    required
+                    autocomplete="off"
+                    placeholder="{{ profile['first_name'] }} {{ profile['last_name'] }}"
+                >
+
+
+                <button type="submit">
+                    Delete Alumni Profile
+                </button>
+
+            </form>
+
+        </section>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

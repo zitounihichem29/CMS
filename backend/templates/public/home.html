@@ -1,0 +1,1243 @@
+{% extends "public/base_public.html" %}
+
+
+{% block title %}
+ORSC - Operations Research Society Club
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="final-home">
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="final-home-hero">
+
+
+        <div class="final-home-copy">
+
+            <span class="final-home-badge">
+                Official Scientific Club · USTHB
+            </span>
+
+
+            <h1 class="final-home-title">
+
+                THIS IS NOT MATH IN THEORY
+
+                <span>
+                    THIS IS MATH IN REAL LIFE
+                </span>
+
+            </h1>
+
+
+            <p class="final-home-description">
+
+                ORSC is USTHB's Operations Research club,
+                bringing together students interested in
+                mathematics, optimization, artificial intelligence,
+                data and decision science.
+
+                We transform theoretical knowledge into projects,
+                training, research, challenges and real-world
+                problem solving.
+
+            </p>
+
+
+            <div class="final-home-actions">
+
+                <a
+                    href="{{ url_for(
+                        'public.about'
+                    ) }}"
+                    class="final-primary-action"
+                >
+                    Discover ORSC
+                    <span>
+                        →
+                    </span>
+                </a>
+
+
+                <a
+                    href="{{ url_for(
+                        'public.events'
+                    ) }}"
+                    class="final-secondary-action"
+                >
+                    Explore Activities
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="final-home-visual">
+
+            <div class="final-orbit">
+
+                <span
+                    class="
+                        final-orbit-dot
+                        one
+                    "
+                >
+                </span>
+
+                <span
+                    class="
+                        final-orbit-dot
+                        two
+                    "
+                >
+                </span>
+
+                <span
+                    class="
+                        final-orbit-dot
+                        three
+                    "
+                >
+                </span>
+
+
+                <div class="final-logo-core">
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='images/orsc-logo.png'
+                        ) }}"
+                        alt="ORSC Logo"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <section class="final-home-stats">
+
+
+        <div class="final-home-stat">
+
+            <div class="final-stat-icon">
+                ♙
+            </div>
+
+            <div class="final-stat-copy">
+
+                <strong>
+                    {{
+                        members_count
+                        | default(0)
+                    }}
+                </strong>
+
+                <span>
+                    Active Members
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="final-home-stat">
+
+            <div class="final-stat-icon">
+                ◫
+            </div>
+
+            <div class="final-stat-copy">
+
+                <strong>
+                    {{
+                        departments_count
+                        | default(0)
+                    }}
+                </strong>
+
+                <span>
+                    Departments
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="final-home-stat">
+
+            <div class="final-stat-icon">
+                ✧
+            </div>
+
+            <div class="final-stat-copy">
+
+                <strong>
+                    OR
+                </strong>
+
+                <span>
+                    Operations Research
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="final-home-stat">
+
+            <div class="final-stat-icon">
+                ◎
+            </div>
+
+            <div class="final-stat-copy">
+
+                <strong>
+                    1
+                </strong>
+
+                <span>
+                    Shared Vision
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MISSION
+    ====================================================== -->
+
+    <section class="final-section">
+
+        <div class="final-section-heading">
+
+            <span class="final-section-label">
+                WHAT WE DO
+            </span>
+
+            <h2>
+                Learn. Model. Optimize. Build.
+            </h2>
+
+            <p>
+
+                ORSC connects academic Operations Research with
+                practical experience. Members discover algorithms,
+                optimization tools, research methods and project
+                development through collaborative activities.
+
+            </p>
+
+        </div>
+
+
+        <div class="final-mission-grid">
+
+
+            <a
+                href="{{ url_for(
+                    'public.trainings'
+                ) }}"
+                class="final-mission-card"
+            >
+
+                <span class="final-mission-number">
+                    01
+                </span>
+
+                <h3>
+                    Learn
+                </h3>
+
+                <p>
+
+                    Training sessions in optimization,
+                    programming, data, design and technical tools
+                    help members build useful skills.
+
+                </p>
+
+            </a>
+
+
+            <a
+                href="{{ url_for(
+                    'public.research_innovation'
+                ) }}"
+                class="final-mission-card"
+            >
+
+                <span class="final-mission-number">
+                    02
+                </span>
+
+                <h3>
+                    Research
+                </h3>
+
+                <p>
+
+                    Explore mathematical models, scientific
+                    articles, optimization problems and
+                    research-oriented projects.
+
+                </p>
+
+            </a>
+
+
+            <a
+                href="{{ url_for(
+                    'public.events'
+                ) }}"
+                class="final-mission-card"
+            >
+
+                <span class="final-mission-number">
+                    03
+                </span>
+
+                <h3>
+                    Apply
+                </h3>
+
+                <p>
+
+                    Events, challenges and projects turn ideas
+                    into practical solutions and collaborative
+                    experiences.
+
+                </p>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         UPCOMING ACTIVITY
+    ====================================================== -->
+
+    <section class="final-section">
+
+        <div class="final-section-heading">
+
+            <span class="final-section-label">
+                WHAT'S NEXT
+            </span>
+
+            <h2>
+                Upcoming at ORSC
+            </h2>
+
+            <p>
+
+                Discover the next public activities currently
+                scheduled by the club.
+
+            </p>
+
+        </div>
+
+
+        {% if
+            next_home_event
+            or next_home_training
+        %}
+
+            <div class="final-upcoming">
+
+
+                {% if next_home_event %}
+
+                    <a
+                        href="{{ url_for(
+                            'public.events'
+                        ) }}"
+                        class="final-activity"
+                    >
+
+                        <div class="final-activity-date">
+
+                            <strong>
+                                {{ next_home_event["day"] }}
+                            </strong>
+
+                            <span>
+                                {{ next_home_event["month"] }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="final-activity-content">
+
+                            <strong>
+                                {{ next_home_event["title"] }}
+                            </strong>
+
+                            <span>
+                                Event
+                            </span>
+
+
+                            {% if next_home_event["leader_name"] %}
+
+                                <span>
+                                    Led by
+                                    {{
+                                        next_home_event[
+                                            "leader_name"
+                                        ]
+                                    }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <span class="final-activity-arrow">
+                            →
+                        </span>
+
+                    </a>
+
+                {% endif %}
+
+
+
+                {% if next_home_training %}
+
+                    <a
+                        href="{{ url_for(
+                            'public.trainings'
+                        ) }}"
+                        class="final-activity"
+                    >
+
+                        <div class="final-activity-date">
+
+                            <strong>
+                                {{ next_home_training["day"] }}
+                            </strong>
+
+                            <span>
+                                {{ next_home_training["month"] }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="final-activity-content">
+
+                            <strong>
+                                {{ next_home_training["title"] }}
+                            </strong>
+
+                            <span>
+                                Training
+                            </span>
+
+
+                            {% if next_home_training["coach_name"] %}
+
+                                <span>
+                                    Coached by
+                                    {{
+                                        next_home_training[
+                                            "coach_name"
+                                        ]
+                                    }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <span class="final-activity-arrow">
+                            →
+                        </span>
+
+                    </a>
+
+                {% endif %}
+
+
+            </div>
+
+
+        {% else %}
+
+            <div class="home-empty-state">
+
+                No upcoming activities at the moment.
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+
+    <!-- =====================================================
+         DISCOVER ORSC
+    ====================================================== -->
+
+    <section class="final-section">
+
+        <div class="final-section-heading">
+
+            <span class="final-section-label">
+                EXPLORE
+            </span>
+
+            <h2>
+                Inside the ORSC ecosystem
+            </h2>
+
+            <p>
+
+                Every part of the club contributes to one goal:
+                helping students understand complex problems and
+                build better solutions.
+
+            </p>
+
+        </div>
+
+
+        <div class="final-pathways">
+
+
+            <a
+                href="{{ url_for(
+                    'public.departments'
+                ) }}"
+                class="final-pathway"
+            >
+
+                <div class="final-pathway-icon">
+                    ◫
+                </div>
+
+                <h3>
+                    Departments
+                </h3>
+
+                <p>
+
+                    Meet the teams that manage projects,
+                    people, communication, partnerships and
+                    scientific work.
+
+                </p>
+
+            </a>
+
+
+            <a
+                href="{{ url_for(
+                    'public.research_innovation'
+                ) }}"
+                class="final-pathway"
+            >
+
+                <div class="final-pathway-icon">
+                    ◇
+                </div>
+
+                <h3>
+                    Research & Innovation
+                </h3>
+
+                <p>
+
+                    Explore projects, mathematical models,
+                    scientific work and technical innovation.
+
+                </p>
+
+            </a>
+
+
+            <a
+                href="{{ url_for(
+                    'public.gallery'
+                ) }}"
+                class="final-pathway"
+            >
+
+                <div class="final-pathway-icon">
+                    ▣
+                </div>
+
+                <h3>
+                    Gallery
+                </h3>
+
+                <p>
+
+                    Discover moments from events,
+                    trainings and club activities.
+
+                </p>
+
+            </a>
+
+
+            <a
+                href="{{ url_for(
+                    'public_alumni.alumni'
+                ) }}"
+                class="final-pathway"
+            >
+
+                <div class="final-pathway-icon">
+                    ◎
+                </div>
+
+                <h3>
+                    Alumni
+                </h3>
+
+                <p>
+
+                    Follow the paths of former ORSC members
+                    from university to academia,
+                    entrepreneurship and industry.
+
+                </p>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ALUMNI SPOTLIGHT
+    ====================================================== -->
+
+    {% if alumni_spotlight %}
+
+        <style>
+
+            .final-alumni-spotlight {
+
+                width:
+                    min(
+                        1180px,
+                        90%
+                    );
+
+                margin:
+                    40px
+                    auto
+                    80px;
+
+                display:
+                    grid;
+
+                grid-template-columns:
+                    310px
+                    minmax(
+                        0,
+                        1fr
+                    );
+
+                gap:
+                    42px;
+
+                padding:
+                    32px;
+
+                position:
+                    relative;
+
+                overflow:
+                    hidden;
+
+                border:
+                    1px solid
+                    var(
+                        --or-public-border
+                    );
+
+                border-radius:
+                    28px;
+
+                background:
+                    var(
+                        --or-public-surface
+                    );
+
+                box-shadow:
+                    var(
+                        --or-public-shadow
+                    );
+            }
+
+
+            .final-alumni-spotlight::after {
+
+                content:
+                    "";
+
+                position:
+                    absolute;
+
+                width:
+                    390px;
+
+                height:
+                    390px;
+
+                right:
+                    -170px;
+
+                top:
+                    -190px;
+
+                border-radius:
+                    50%;
+
+                background:
+                    radial-gradient(
+                        circle,
+                        rgba(
+                            32,
+                            174,
+                            182,
+                            .17
+                        ),
+                        transparent
+                        68%
+                    );
+
+                pointer-events:
+                    none;
+            }
+
+
+            .final-alumni-photo {
+
+                height:
+                    350px;
+
+                border-radius:
+                    22px;
+
+                overflow:
+                    hidden;
+
+                display:
+                    flex;
+
+                align-items:
+                    center;
+
+                justify-content:
+                    center;
+
+                background:
+                    var(
+                        --or-public-gradient-soft
+                    );
+
+                color:
+                    var(
+                        --or-public-primary
+                    );
+
+                font-size:
+                    70px;
+
+                font-weight:
+                    900;
+            }
+
+
+            .final-alumni-photo img {
+
+                width:
+                    100%;
+
+                height:
+                    100%;
+
+                object-fit:
+                    cover;
+            }
+
+
+            .final-alumni-content {
+
+                position:
+                    relative;
+
+                z-index:
+                    2;
+
+                display:
+                    flex;
+
+                flex-direction:
+                    column;
+
+                justify-content:
+                    center;
+            }
+
+
+            .final-alumni-label {
+
+                color:
+                    var(
+                        --or-public-primary
+                    );
+
+                font-size:
+                    10px;
+
+                font-weight:
+                    900;
+
+                letter-spacing:
+                    .13em;
+
+                text-transform:
+                    uppercase;
+            }
+
+
+            .final-alumni-content h2 {
+
+                margin:
+                    12px
+                    0
+                    8px;
+
+                font-size:
+                    clamp(
+                        31px,
+                        4vw,
+                        52px
+                    );
+
+                line-height:
+                    1.05;
+            }
+
+
+            .final-alumni-headline {
+
+                max-width:
+                    640px;
+
+                color:
+                    var(
+                        --or-public-text-soft
+                    );
+
+                font-size:
+                    16px;
+
+                line-height:
+                    1.65;
+            }
+
+
+            .final-alumni-meta {
+
+                display:
+                    flex;
+
+                flex-wrap:
+                    wrap;
+
+                gap:
+                    7px;
+
+                margin-top:
+                    17px;
+            }
+
+
+            .final-alumni-meta span {
+
+                padding:
+                    6px
+                    9px;
+
+                border-radius:
+                    999px;
+
+                background:
+                    var(
+                        --or-public-soft
+                    );
+
+                color:
+                    var(
+                        --or-public-text-soft
+                    );
+
+                font-size:
+                    10px;
+
+                font-weight:
+                    700;
+            }
+
+
+            .final-alumni-bio {
+
+                max-width:
+                    670px;
+
+                margin-top:
+                    17px;
+
+                color:
+                    var(
+                        --or-public-text-soft
+                    );
+
+                font-size:
+                    13px;
+
+                line-height:
+                    1.7;
+            }
+
+
+            .final-alumni-actions {
+
+                display:
+                    flex;
+
+                flex-wrap:
+                    wrap;
+
+                gap:
+                    10px;
+
+                margin-top:
+                    23px;
+            }
+
+
+            @media (
+                max-width:
+                    800px
+            ) {
+
+                .final-alumni-spotlight {
+
+                    grid-template-columns:
+                        1fr;
+
+                    width:
+                        calc(
+                            100% - 36px
+                        );
+
+                    padding:
+                        20px;
+                }
+
+
+                .final-alumni-photo {
+
+                    height:
+                        380px;
+                }
+
+            }
+
+
+            @media (
+                max-width:
+                    520px
+            ) {
+
+                .final-alumni-photo {
+
+                    height:
+                        310px;
+                }
+
+            }
+
+        </style>
+
+
+        <section class="final-alumni-spotlight">
+
+
+            <div class="final-alumni-photo">
+
+                {% if alumni_spotlight["photo_path"] %}
+
+                    <img
+                        src="{{ url_for(
+                            'public_alumni.alumni_photo',
+                            slug=alumni_spotlight['slug']
+                        ) }}"
+                        alt="{{ alumni_spotlight['first_name'] }} {{ alumni_spotlight['last_name'] }}"
+                    >
+
+                {% else %}
+
+                    {{
+                        alumni_spotlight[
+                            "first_name"
+                        ][0]
+                    }}
+
+                    {{
+                        alumni_spotlight[
+                            "last_name"
+                        ][0]
+                    }}
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="final-alumni-content">
+
+                <span class="final-alumni-label">
+                    Alumni Spotlight
+                </span>
+
+
+                <h2>
+
+                    {{ alumni_spotlight["first_name"] }}
+                    {{ alumni_spotlight["last_name"] }}
+
+                </h2>
+
+
+                <div class="final-alumni-headline">
+
+                    {{
+                        alumni_spotlight[
+                            "headline"
+                        ]
+                        or
+                        alumni_spotlight[
+                            "current_title"
+                        ]
+                        or
+                        "From ORSC to real-world impact"
+                    }}
+
+                </div>
+
+
+                <div class="final-alumni-meta">
+
+
+                    {% if alumni_spotlight["current_title"] %}
+
+                        <span>
+                            {{
+                                alumni_spotlight[
+                                    "current_title"
+                                ]
+                            }}
+                        </span>
+
+                    {% endif %}
+
+
+                    {% if alumni_spotlight["current_organization"] %}
+
+                        <span>
+                            {{
+                                alumni_spotlight[
+                                    "current_organization"
+                                ]
+                            }}
+                        </span>
+
+                    {% endif %}
+
+
+                    {% if alumni_spotlight["latest_role_name"] %}
+
+                        <span>
+                            {{
+                                alumni_spotlight[
+                                    "latest_role_name"
+                                ]
+                            }}
+                        </span>
+
+                    {% endif %}
+
+
+                    {% if alumni_spotlight["latest_term_name"] %}
+
+                        <span>
+                            {{
+                                alumni_spotlight[
+                                    "latest_term_name"
+                                ]
+                            }}
+                        </span>
+
+                    {% endif %}
+
+
+                </div>
+
+
+                {% if alumni_spotlight["short_bio"] %}
+
+                    <p class="final-alumni-bio">
+
+                        {{
+                            alumni_spotlight[
+                                "short_bio"
+                            ]
+                        }}
+
+                    </p>
+
+                {% endif %}
+
+
+                <div class="final-alumni-actions">
+
+                    <a
+                        href="{{ url_for(
+                            'public_alumni.alumni_detail',
+                            slug=alumni_spotlight['slug']
+                        ) }}"
+                        class="final-primary-action"
+                    >
+                        Discover Their Journey
+                    </a>
+
+
+                    <a
+                        href="{{ url_for(
+                            'public_alumni.alumni'
+                        ) }}"
+                        class="final-secondary-action"
+                    >
+                        Meet Our Alumni
+                    </a>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         FINAL CTA
+    ====================================================== -->
+
+    <section class="final-cta">
+
+
+        <div class="final-cta-copy">
+
+            <span class="final-cta-label">
+                BE PART OF THE COMMUNITY
+            </span>
+
+            <h2>
+                Ready to explore Operations Research differently?
+            </h2>
+
+            <p>
+
+                Follow ORSC's activities, discover our work
+                and apply during an open recruitment period
+                to become part of the club.
+
+            </p>
+
+        </div>
+
+
+        <div class="final-cta-actions">
+
+            <a
+                href="{{ url_for(
+                    'applications.apply'
+                ) }}"
+                class="final-cta-primary"
+            >
+                Join ORSC
+            </a>
+
+
+            <a
+                href="{{ url_for(
+                    'public.contact'
+                ) }}"
+                class="final-cta-secondary"
+            >
+                Contact Us
+            </a>
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,498 @@
+{% extends "public/base_public.html" %}
+
+
+{% block title %}
+Research & Innovation | ORSC
+{% endblock %}
+
+
+{% block content %}
+
+<div class="public-research-page">
+
+
+    <!-- ========================================
+         HERO
+         ======================================== -->
+
+    <section class="public-research-hero">
+
+        <span class="public-section-label">
+            RESEARCH & INNOVATION
+        </span>
+
+        <h1>
+            Ideas into Impact
+        </h1>
+
+        <p>
+            Explore ORSC’s IT projects and scientific articles,
+            where ideas, research and collaboration come together.
+        </p>
+
+    </section>
+
+
+
+    <!-- ========================================
+         CATEGORY SWITCH
+         ======================================== -->
+
+    <section class="public-research-switch">
+
+        <button
+            type="button"
+            class="public-research-tab active"
+            data-target="it-projects"
+        >
+            IT Projects
+        </button>
+
+        <button
+            type="button"
+            class="public-research-tab"
+            data-target="scientific-articles"
+        >
+            Scientific Articles
+        </button>
+
+    </section>
+
+
+
+    <!-- ========================================
+         IT PROJECTS
+         ======================================== -->
+
+    <section
+        class="public-research-content active"
+        id="it-projects"
+    >
+
+        <div class="public-research-heading">
+
+            <span class="public-section-label">
+                BUILD & CREATE
+            </span>
+
+            <h2>
+                IT Projects
+            </h2>
+
+            <p>
+                Discover practical projects developed by ORSC members.
+            </p>
+
+        </div>
+
+
+        <div class="public-research-grid">
+
+             {% if projects %}
+                {% for project in projects %}
+
+                    <button type="button" class="public-research-card public-project-card">
+
+                        <span class="public-research-card-type">
+                            IT Project
+                        </span>
+
+                        <h3>
+                            {{ project["name"] }}
+                        </h3>
+
+                        <div class="public-research-owner">
+
+                            <span>
+                                Idea Owner
+                            </span>
+
+                            <strong>
+                                {{ project["owner_first_name"] }}
+                                {{ project["owner_last_name"] }}
+                            </strong>
+
+                        </div>
+
+                        <span class="public-research-card-arrow">
+                            →
+                        </span>
+
+                        <!-- ========================================
+                     HIDDEN PROJECT INFORMATION
+                     Used later by the modal
+                     ======================================== -->
+                        
+                        <div class="public-project-hidden-data" hidden>
+
+                            <span class="public-project-title">
+                                {{ project["name"] }}
+                            </span>
+
+                            <span class="public-project-description">
+                                {{ project["description"] or "" }}
+                            </span>
+
+                            <span class="public-project-owner">
+                                {{ project["owner_first_name"] }}
+                                {{ project["owner_last_name"] }}
+                            </span>
+
+                            <span class="public-project-team">
+                                {{ project["team_names"] or "" }}
+                            </span>
+
+                            <span class="public-project-link">
+                                {{ project["project_link"] or "" }}
+                            </span>
+
+                        </div> 
+
+                    </button> 
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="public-research-empty">
+
+                    <strong>
+                        No public projects yet
+                    </strong>
+
+                    <p>
+                        Published IT projects will appear here.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================
+         SCIENTIFIC ARTICLES
+         ======================================== -->
+
+    <section
+        class="public-research-content"
+        id="scientific-articles"
+    >
+
+        <div class="public-research-heading">
+
+            <span class="public-section-label">
+                RESEARCH & KNOWLEDGE
+            </span>
+
+            <h2>
+                Scientific Articles
+            </h2>
+
+            <p>
+                Explore scientific work and research produced
+                by ORSC members.
+            </p>
+
+        </div>
+
+
+        <div class="public-research-grid">
+
+            {% if articles %}
+
+                {% for article in articles %}
+
+                    <button  type="button" class="public-research-card public-article-card">
+
+                        <span class="public-research-card-type">
+                            Scientific Article
+                        </span>
+
+                        <h3>
+                            {{ article["title"] }}
+                        </h3>
+
+                        <div class="public-research-owner">
+
+                            <span>
+                                Idea Owner
+                            </span>
+
+                            <strong>
+                                {{ article["owner_first_name"] }}
+                                {{ article["owner_last_name"] }}
+                            </strong>
+
+                        </div>
+
+                        <span class="public-research-card-arrow">
+                            →
+                        </span>
+
+
+                        <!-- ========================================
+                         HIDDEN ARTICLE INFORMATION
+                         Used later by the modal
+                         ======================================== -->
+
+                         <div class="public-article-hidden-data" hidden>
+
+                            <span class="public-article-title">
+                                {{ article["title"] }}
+                            </span>
+
+                            <span class="public-article-description">
+                                {{ article["abstract"] or "" }}
+                            </span>
+
+                            <span class="public-article-owner">
+                                {{ article["owner_first_name"] }}
+                                {{ article["owner_last_name"] }}
+                            </span>
+
+                            <span class="public-article-authors">
+                                {{ article["author_names"] or "" }}
+                            </span>
+
+                            <span class="public-article-id">
+                                {{ article["scientific_article_id"] }}
+                            </span>
+
+                         </div>
+
+                    </button>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="public-research-empty">
+
+                    <strong>
+                        No public scientific articles yet
+                    </strong>
+
+                    <p>
+                        Published scientific articles will appear here.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+
+<!-- ========================================
+     PROJECT DETAIL MODAL
+     ======================================== -->
+
+<div
+    class="public-research-modal"
+    id="publicProjectModal"
+    aria-hidden="true"
+>
+
+    <div class="public-research-modal-overlay"></div>
+
+
+    <div class="public-research-modal-card">
+
+        <button
+            type="button"
+            class="public-research-modal-close"
+            id="publicProjectModalClose"
+            aria-label="Close"
+        >
+            ×
+        </button>
+
+
+        <span class="public-research-card-type">
+            IT Project
+        </span>
+
+
+        <h2 id="publicProjectModalTitle">
+            Project Title
+        </h2>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="public-research-modal-section">
+
+            <span class="public-research-modal-label">
+                Description
+            </span>
+
+            <p id="publicProjectModalDescription">
+            </p>
+
+        </div>
+
+
+
+        <!-- IDEA OWNER -->
+
+        <div class="public-research-modal-section">
+
+            <span class="public-research-modal-label">
+                Idea Owner
+            </span>
+
+            <strong id="publicProjectModalOwner">
+            </strong>
+
+        </div>
+
+
+
+        <!-- TEAM -->
+
+        <div class="public-research-modal-section">
+
+            <span class="public-research-modal-label">
+                Project Team
+            </span>
+
+            <p id="publicProjectModalTeam">
+            </p>
+
+        </div>
+
+
+
+        <!-- LINK -->
+
+        <div
+            class="public-research-modal-actions"
+            id="publicProjectModalActions"
+        >
+
+            <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                id="publicProjectModalLink"
+                class="public-research-modal-link"
+            >
+                View Project
+                <span>↗</span>
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<!-- ========================================
+     SCIENTIFIC ARTICLE MODAL
+     ======================================== -->
+
+<div
+    class="public-research-modal"
+    id="publicArticleModal"
+    aria-hidden="true"
+>
+
+    <div class="public-research-modal-overlay"></div>
+
+
+    <div class="public-research-modal-card">
+
+
+        <button
+            type="button"
+            class="public-research-modal-close"
+            id="publicArticleModalClose"
+            aria-label="Close"
+        >
+            ×
+        </button>
+
+
+        <span class="public-research-card-type">
+            Scientific Article
+        </span>
+
+
+        <h2 id="publicArticleModalTitle">
+            Article Title
+        </h2>
+
+
+
+        <div class="public-research-modal-section">
+
+            <span class="public-research-modal-label">
+                Description
+            </span>
+
+            <p id="publicArticleModalDescription"></p>
+
+        </div>
+
+
+
+        <div class="public-research-modal-section">
+
+            <span class="public-research-modal-label">
+                Idea Owner
+            </span>
+
+            <strong id="publicArticleModalOwner"></strong>
+
+        </div>
+
+
+
+        <div class="public-research-modal-section">
+
+            <span class="public-research-modal-label">
+                Authors
+            </span>
+
+            <p id="publicArticleModalAuthors"></p>
+
+        </div>
+
+
+
+        <div class="public-research-modal-actions">
+
+            <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                id="publicArticleModalLink"
+                class="public-research-modal-link"
+            >
+                Read Article
+                <span>↗</span>
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+{% endblock %}

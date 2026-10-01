@@ -1,0 +1,1197 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+
+    <!-- =====================================================
+         DASHBOARD HEADER
+    ====================================================== -->
+
+    <section class="dashboard-header">
+
+        <div class="dashboard-header-content">
+
+            <span class="dashboard-label">
+                ORSC ANALYTICS
+            </span>
+
+            <h1>
+                Dashboard
+            </h1>
+
+            <p>
+                {% if scope == "club" %}
+
+                    Global overview of ORSC members,
+                    tasks and participation.
+
+                {% else %}
+
+                    Performance overview for the
+                    {{ scope_title }} department.
+
+                {% endif %}
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-header-right">
+
+
+            <!-- CURRENT SCOPE -->
+
+            <div class="dashboard-scope-info">
+
+                <span>
+                    Current view
+                </span>
+
+                <strong>
+                    {{ scope_title }}
+                </strong>
+
+            </div>
+
+
+            <!-- HEAD RH ONLY -->
+
+            {% if can_switch_scope %}
+
+                <div class="dashboard-scope-switch">
+
+                    <a
+                        href="{{ url_for(
+                            'dashboard.dashboard',
+                            scope='department'
+                        ) }}"
+                        class="
+                            dashboard-scope-button
+                            {% if scope == 'department' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        RH Department
+                    </a>
+
+
+                    <a
+                        href="{{ url_for(
+                            'dashboard.dashboard',
+                            scope='club'
+                        ) }}"
+                        class="
+                            dashboard-scope-button
+                            {% if scope == 'club' %}
+                                active
+                            {% endif %}
+                        "
+                    >
+                        Whole Club
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         SUMMARY CARDS
+    ====================================================== -->
+
+    <section class="dashboard-summary">
+
+
+        <!-- MEMBERS -->
+
+        <div class="dashboard-stat-card">
+
+            <div class="dashboard-stat-icon">
+                ♙
+            </div>
+
+
+            <div class="dashboard-stat-content">
+
+                <span>
+                    Members
+                </span>
+
+                <strong>
+                    {{ member_stats["total_members"] }}
+                </strong>
+
+                <p>
+                    Active members in this view
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TASK COMPLETION -->
+
+        <div class="dashboard-stat-card">
+
+            <div class="dashboard-stat-icon">
+                ✓
+            </div>
+
+
+            <div class="dashboard-stat-content">
+
+                <span>
+                    Task completion
+                </span>
+
+                <strong>
+                    {{ task_stats["task_completion_rate"] }}%
+                </strong>
+
+                <p>
+                    {{ task_stats["completed_tasks"] }}
+                    of
+                    {{ task_stats["total_tasks"] }}
+                    tasks completed
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- OVERDUE -->
+
+        <div class="dashboard-stat-card">
+
+            <div class="dashboard-stat-icon">
+                !
+            </div>
+
+
+            <div class="dashboard-stat-content">
+
+                <span>
+                    Overdue tasks
+                </span>
+
+                <strong>
+                    {{ task_stats["overdue_tasks"] }}
+                </strong>
+
+                <p>
+                    Tasks past their deadline
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ATTENDANCE -->
+
+        <div class="dashboard-stat-card">
+
+            <div class="dashboard-stat-icon">
+                ◎
+            </div>
+
+
+            <div class="dashboard-stat-content">
+
+                <span>
+                    Attendance
+                </span>
+
+                <strong>
+                    {{ attendance_stats["overall_rate"] }}%
+                </strong>
+
+                <p>
+                    Overall participation rate
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MAIN ANALYTICS GRID
+    ====================================================== -->
+
+    <section class="dashboard-analytics-grid">
+
+
+        <!-- =================================================
+             TASK PROGRESS
+        ================================================== -->
+
+        <div class="dashboard-panel dashboard-task-panel">
+
+
+            <div class="dashboard-panel-header">
+
+                <div>
+
+                    <span class="dashboard-panel-label">
+                        TASKS
+                    </span>
+
+                    <h2>
+                        Task progress
+                    </h2>
+
+                    <p>
+                        Current task distribution for
+                        {{ scope_title }}.
+                    </p>
+
+                </div>
+
+
+                <div class="dashboard-panel-percentage">
+
+                    <strong>
+                        {{ task_stats["task_completion_rate"] }}%
+                    </strong>
+
+                    <span>
+                        completed
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            {% if task_stats["total_tasks"] > 0 %}
+
+
+                <div class="dashboard-progress-list">
+
+
+                    <!-- COMPLETED -->
+
+                    <div class="dashboard-progress-row">
+
+                        <div class="dashboard-progress-row-header">
+
+                            <div>
+
+                                <span class="dashboard-progress-dot completed">
+                                </span>
+
+                                <strong>
+                                    Completed
+                                </strong>
+
+                            </div>
+
+                            <span>
+                                {{ task_stats["completed_tasks"] }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="dashboard-progress-track">
+
+                            <div
+                                class="
+                                    dashboard-progress-fill
+                                    completed
+                                "
+                                style="
+                                    width:
+                                    {{
+                                        (
+                                            task_stats["completed_tasks"]
+                                            /
+                                            task_stats["total_tasks"]
+                                            *
+                                            100
+                                        )
+                                        | round
+                                    }}%;
+                                "
+                            >
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- IN PROGRESS -->
+
+                    <div class="dashboard-progress-row">
+
+                        <div class="dashboard-progress-row-header">
+
+                            <div>
+
+                                <span class="dashboard-progress-dot in-progress">
+                                </span>
+
+                                <strong>
+                                    In progress
+                                </strong>
+
+                            </div>
+
+                            <span>
+                                {{ task_stats["in_progress_tasks"] }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="dashboard-progress-track">
+
+                            <div
+                                class="
+                                    dashboard-progress-fill
+                                    in-progress
+                                "
+                                style="
+                                    width:
+                                    {{
+                                        (
+                                            task_stats["in_progress_tasks"]
+                                            /
+                                            task_stats["total_tasks"]
+                                            *
+                                            100
+                                        )
+                                        | round
+                                    }}%;
+                                "
+                            >
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- PENDING -->
+
+                    <div class="dashboard-progress-row">
+
+                        <div class="dashboard-progress-row-header">
+
+                            <div>
+
+                                <span class="dashboard-progress-dot pending">
+                                </span>
+
+                                <strong>
+                                    Pending
+                                </strong>
+
+                            </div>
+
+                            <span>
+                                {{ task_stats["pending_tasks"] }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="dashboard-progress-track">
+
+                            <div
+                                class="
+                                    dashboard-progress-fill
+                                    pending
+                                "
+                                style="
+                                    width:
+                                    {{
+                                        (
+                                            task_stats["pending_tasks"]
+                                            /
+                                            task_stats["total_tasks"]
+                                            *
+                                            100
+                                        )
+                                        | round
+                                    }}%;
+                                "
+                            >
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- OVERDUE -->
+
+                    <div class="dashboard-progress-row">
+
+                        <div class="dashboard-progress-row-header">
+
+                            <div>
+
+                                <span class="dashboard-progress-dot overdue">
+                                </span>
+
+                                <strong>
+                                    Overdue
+                                </strong>
+
+                            </div>
+
+                            <span>
+                                {{ task_stats["overdue_tasks"] }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="dashboard-progress-track">
+
+                            <div
+                                class="
+                                    dashboard-progress-fill
+                                    overdue
+                                "
+                                style="
+                                    width:
+                                    {{
+                                        (
+                                            task_stats["overdue_tasks"]
+                                            /
+                                            task_stats["total_tasks"]
+                                            *
+                                            100
+                                        )
+                                        | round
+                                    }}%;
+                                "
+                            >
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="dashboard-empty-state">
+
+                    <div class="dashboard-empty-icon">
+                        ✓
+                    </div>
+
+                    <h3>
+                        No tasks yet
+                    </h3>
+
+                    <p>
+                        Task statistics will appear here
+                        once tasks are assigned.
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- =================================================
+             MEMBER PROGRESS
+        ================================================== -->
+
+        <div class="dashboard-panel dashboard-members-panel">
+
+
+            <div class="dashboard-panel-header">
+
+                <div>
+
+                    <span class="dashboard-panel-label">
+                        MEMBERS
+                    </span>
+
+                    <h2>
+                        Member progress
+                    </h2>
+
+                    <p>
+                        How members are progressing with
+                        their assigned work.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="dashboard-member-progress-main">
+
+                <div
+                    class="dashboard-member-progress-circle"
+                    style="
+                        --progress:
+                        {{ member_stats['member_completion_rate'] }};
+                    "
+                >
+
+                    <div class="dashboard-member-progress-inner">
+
+                        <strong>
+                            {{ member_stats["member_completion_rate"] }}%
+                        </strong>
+
+                        <span>
+                            up to date
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-member-progress-summary">
+
+                    <strong>
+                        {{ member_stats["members_all_completed"] }}
+                        members
+                    </strong>
+
+                    <p>
+                        have completed all tasks currently
+                        assigned to them.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="dashboard-member-status-list">
+
+
+                <!-- ALL COMPLETED -->
+
+                <div class="dashboard-member-status">
+
+                    <div class="dashboard-member-status-left">
+
+                        <span class="dashboard-status-icon completed">
+                            ✓
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Fully up to date
+                            </strong>
+
+                            <p>
+                                All assigned tasks completed
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <strong class="dashboard-status-number">
+                        {{ member_stats["members_all_completed"] }}
+                    </strong>
+
+                </div>
+
+
+
+                <!-- WORK REMAINING -->
+
+                <div class="dashboard-member-status">
+
+                    <div class="dashboard-member-status-left">
+
+                        <span class="dashboard-status-icon progress">
+                            ◷
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Work remaining
+                            </strong>
+
+                            <p>
+                                Members with unfinished tasks
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <strong class="dashboard-status-number">
+                        {{ member_stats["members_with_open_tasks"] }}
+                    </strong>
+
+                </div>
+
+
+
+                <!-- OVERDUE -->
+
+                <div class="dashboard-member-status">
+
+                    <div class="dashboard-member-status-left">
+
+                        <span class="dashboard-status-icon overdue">
+                            !
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Overdue work
+                            </strong>
+
+                            <p>
+                                Members affected by overdue tasks
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <strong class="dashboard-status-number">
+                        {{ member_stats["members_with_overdue_tasks"] }}
+                    </strong>
+
+                </div>
+
+
+
+                <!-- NO TASKS -->
+
+                <div class="dashboard-member-status">
+
+                    <div class="dashboard-member-status-left">
+
+                        <span class="dashboard-status-icon neutral">
+                            –
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                No assigned tasks
+                            </strong>
+
+                            <p>
+                                Members without current tasks
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <strong class="dashboard-status-number">
+                        {{ member_stats["members_without_tasks"] }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             ATTENDANCE
+        ================================================== -->
+
+        <div class="dashboard-panel dashboard-attendance-panel">
+
+
+            <div class="dashboard-panel-header">
+
+                <div>
+
+                    <span class="dashboard-panel-label">
+                        PARTICIPATION
+                    </span>
+
+                    <h2>
+                        Attendance overview
+                    </h2>
+
+                    <p>
+                        Participation across club activities.
+                    </p>
+
+                </div>
+
+
+                <div class="dashboard-panel-percentage">
+
+                    <strong>
+                        {{ attendance_stats["overall_rate"] }}%
+                    </strong>
+
+                    <span>
+                        overall
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="dashboard-attendance-grid">
+
+
+                <!-- EVENTS -->
+
+                <div class="dashboard-attendance-item">
+
+                    <div class="dashboard-attendance-icon">
+                        ◫
+                    </div>
+
+                    <span>
+                        Events
+                    </span>
+
+                    <strong>
+                        {{ attendance_stats["events"]["rate"] }}%
+                    </strong>
+
+                    <p>
+                        {{ attendance_stats["events"]["present"] }}
+                        /
+                        {{ attendance_stats["events"]["total"] }}
+                        present
+                    </p>
+
+                </div>
+
+
+
+                <!-- TRAININGS -->
+
+                <div class="dashboard-attendance-item">
+
+                    <div class="dashboard-attendance-icon">
+                        ☆
+                    </div>
+
+                    <span>
+                        Trainings
+                    </span>
+
+                    <strong>
+                        {{ attendance_stats["trainings"]["rate"] }}%
+                    </strong>
+
+                    <p>
+                        {{ attendance_stats["trainings"]["present"] }}
+                        /
+                        {{ attendance_stats["trainings"]["total"] }}
+                        present
+                    </p>
+
+                </div>
+
+
+
+                <!-- MEETINGS -->
+
+                <div class="dashboard-attendance-item">
+
+                    <div class="dashboard-attendance-icon">
+                        ◇
+                    </div>
+
+                    <span>
+                        Meetings
+                    </span>
+
+                    <strong>
+                        {{ attendance_stats["meetings"]["rate"] }}%
+                    </strong>
+
+                    <p>
+                        {{ attendance_stats["meetings"]["present"] }}
+                        /
+                        {{ attendance_stats["meetings"]["total"] }}
+                        present
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             QUICK HEALTH
+        ================================================== -->
+
+        <div class="dashboard-panel dashboard-health-panel">
+
+
+            <div class="dashboard-panel-header">
+
+                <div>
+
+                    <span class="dashboard-panel-label">
+                        OVERVIEW
+                    </span>
+
+                    <h2>
+                        Current status
+                    </h2>
+
+                    <p>
+                        A quick operational snapshot.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="dashboard-health-list">
+
+
+                <div class="dashboard-health-item">
+
+                    <span>
+                        Total tasks
+                    </span>
+
+                    <strong>
+                        {{ task_stats["total_tasks"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="dashboard-health-item">
+
+                    <span>
+                        Completed tasks
+                    </span>
+
+                    <strong>
+                        {{ task_stats["completed_tasks"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="dashboard-health-item">
+
+                    <span>
+                        Active work
+                    </span>
+
+                    <strong>
+                        {{
+                            task_stats["pending_tasks"]
+                            +
+                            task_stats["in_progress_tasks"]
+                        }}
+                    </strong>
+
+                </div>
+
+
+                <div class="dashboard-health-item">
+
+                    <span>
+                        Members with tasks
+                    </span>
+
+                    <strong>
+                        {{ member_stats["members_with_tasks"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="dashboard-health-item important">
+
+                    <span>
+                        Members with overdue work
+                    </span>
+
+                    <strong>
+                        {{ member_stats["members_with_overdue_tasks"] }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         DEPARTMENT OVERVIEW
+         GLOBAL CLUB VIEW ONLY
+    ====================================================== -->
+
+    {% if scope == "club" %}
+
+        <section class="dashboard-departments-section">
+
+
+            <div class="dashboard-section-header">
+
+                <div>
+
+                    <span class="dashboard-panel-label">
+                        CLUB STRUCTURE
+                    </span>
+
+                    <h2>
+                        Departments overview
+                    </h2>
+
+                    <p>
+                        Compare activity indicators across
+                        ORSC departments.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            {% if departments_overview %}
+
+                <div class="dashboard-departments-table-wrapper">
+
+                    <table class="dashboard-departments-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Department
+                                </th>
+
+                                <th>
+                                    Members
+                                </th>
+
+                                <th>
+                                    Task completion
+                                </th>
+
+                                <th>
+                                    Attendance
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for department in departments_overview %}
+
+                                <tr>
+
+                                    <td>
+
+                                        <div class="dashboard-department-name">
+
+                                            <span class="dashboard-department-dot">
+                                            </span>
+
+                                            <strong>
+                                                {{ department["department_name"] }}
+                                            </strong>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong>
+                                            {{ department["members"] }}
+                                        </strong>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="dashboard-table-progress">
+
+                                            <div class="dashboard-table-progress-info">
+
+                                                <strong>
+                                                    {{
+                                                        department[
+                                                            "task_completion_rate"
+                                                        ]
+                                                    }}%
+                                                </strong>
+
+                                            </div>
+
+
+                                            <div class="dashboard-table-progress-track">
+
+                                                <div
+                                                    class="dashboard-table-progress-fill"
+                                                    style="
+                                                        width:
+                                                        {{
+                                                            department[
+                                                                'task_completion_rate'
+                                                            ]
+                                                        }}%;
+                                                    "
+                                                >
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="dashboard-table-progress">
+
+                                            <div class="dashboard-table-progress-info">
+
+                                                <strong>
+                                                    {{
+                                                        department[
+                                                            "attendance_rate"
+                                                        ]
+                                                    }}%
+                                                </strong>
+
+                                            </div>
+
+
+                                            <div class="dashboard-table-progress-track">
+
+                                                <div
+                                                    class="dashboard-table-progress-fill attendance"
+                                                    style="
+                                                        width:
+                                                        {{
+                                                            department[
+                                                                'attendance_rate'
+                                                            ]
+                                                        }}%;"
+                                                >
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            {% else %}
+
+                <div class="dashboard-empty-state">
+
+                    <div class="dashboard-empty-icon">
+                        ▤
+                    </div>
+
+                    <h3>
+                        No department statistics yet
+                    </h3>
+
+                    <p>
+                        Department analytics will appear here
+                        when data becomes available.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+        </section>
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}

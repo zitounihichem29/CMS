@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "records/_styles.html" %}
+
+<div class="records-page">
+
+    <div class="records-head">
+
+        <div>
+
+            <a
+                class="records-muted"
+                href="{{ url_for(
+                    'records.records_home'
+                ) }}"
+            >
+                ← Club Records
+            </a>
+
+            <h1>
+                General Meetings
+            </h1>
+
+            <p class="records-muted">
+                Internal meetings by mandate.
+            </p>
+
+        </div>
+
+        <span class="records-badge">
+            {{ term["name"] }}
+        </span>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="records-error">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <form
+        method="GET"
+        class="records-filter"
+    >
+
+        <div class="records-field">
+
+            <label>
+                Mandate
+            </label>
+
+            <select name="term_id">
+
+                {% for item in terms %}
+
+                    <option
+                        value="{{ item['term_id'] }}"
+                        {% if item["term_id"] == term["term_id"] %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ item["name"] }}
+                        ·
+                        {{ item["status"] }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <button
+            class="records-btn"
+            type="submit"
+        >
+            Open
+        </button>
+
+    </form>
+
+
+    {% if
+        can_manage
+        and term["status"] == "ACTIVE"
+    %}
+
+        <section class="records-section">
+
+            <h2>
+                Create Meeting
+            </h2>
+
+            <form
+                method="POST"
+                class="records-form-grid"
+            >
+
+                <div class="records-field full">
+
+                    <label>
+                        Title
+                    </label>
+
+                    <input
+                        name="title"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="records-field full">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <textarea
+                        name="description"
+                        rows="3"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="records-field">
+
+                    <label>
+                        Date
+                    </label>
+
+                    <input
+                        type="date"
+                        name="meeting_date"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="records-field">
+
+                    <label>
+                        Location
+                    </label>
+
+                    <input
+                        name="location"
+                    >
+
+                </div>
+
+
+                <div class="records-field">
+
+                    <label>
+                        Start time
+                    </label>
+
+                    <input
+                        type="time"
+                        name="start_time"
+                    >
+
+                </div>
+
+
+                <div class="records-field">
+
+                    <label>
+                        End time
+                    </label>
+
+                    <input
+                        type="time"
+                        name="end_time"
+                    >
+
+                </div>
+
+
+                <div class="records-actions full">
+
+                    <button
+                        class="records-btn primary"
+                        type="submit"
+                    >
+                        Create Meeting
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    {% endif %}
+
+
+    <section class="records-section">
+
+        <h2>
+            {{ term["name"] }} Meetings
+        </h2>
+
+
+        {% if meetings %}
+
+            <div class="records-table-wrap">
+
+                <table class="records-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Meeting
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Organizer
+                            </th>
+
+                            <th>
+                                Attendance
+                            </th>
+
+                            <th></th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for meeting in meetings %}
+
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+                                        {{ meeting["title"] }}
+                                    </strong>
+
+                                    <br>
+
+                                    <span class="records-muted">
+                                        {{
+                                            meeting["location"]
+                                            or "Location not set"
+                                        }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ meeting["meeting_date"] }}
+
+                                    {% if meeting["start_time"] %}
+
+                                        <br>
+
+                                        {{ meeting["start_time"] }}
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+                                    {{ meeting["organizer_first_name"] }}
+                                    {{ meeting["organizer_last_name"] }}
+                                </td>
+
+
+                                <td>
+                                    {{ meeting["attendance_count"] }}
+                                </td>
+
+
+                                <td>
+
+                                    <a
+                                        class="records-btn"
+                                        href="{{ url_for(
+                                            'records.meeting_detail',
+                                            meeting_id=meeting['meeting_id']
+                                        ) }}"
+                                    >
+                                        Open
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        {% else %}
+
+            <div class="records-empty">
+                No meetings recorded for this mandate.
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

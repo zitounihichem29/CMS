@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}
+Announcement
+{% endblock %}
+
+{% block content %}
+
+<div class="announcement-detail-page">
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="announcement-detail-header">
+
+        <div>
+
+            <span>
+                ANNOUNCEMENT
+            </span>
+
+            <h1>
+                {{ announcement["title"] }}
+            </h1>
+
+        </div>
+
+        <a href="{{ url_for('announcements.announcements') }}">
+            Back to Announcements
+        </a>
+
+    </div>
+
+
+    <!-- ========================================
+         ANNOUNCEMENT
+         ======================================== -->
+
+    <div class="announcement-detail-card">
+
+
+        <!-- META -->
+
+        <div class="announcement-detail-meta">
+
+            <span>
+                {{ announcement["visibility"]|capitalize }}
+            </span>
+
+            <span>
+                {{ announcement["status"]|capitalize }}
+            </span>
+
+            <span>
+                {{ announcement["created_at"] }}
+            </span>
+
+        </div>
+
+
+        <!-- MESSAGE -->
+
+        <div class="announcement-detail-message">
+
+            <p>
+                {{ announcement["message"] }}
+            </p>
+
+        </div>
+
+
+        <!-- AUTHOR -->
+
+        <div class="announcement-detail-author">
+
+            <p>
+                Posted by
+                <strong>
+                    {{ announcement["creator_first_name"] }}
+                    {{ announcement["creator_last_name"] }}
+                </strong>
+            </p>
+
+        </div>
+
+
+        <!-- ========================================
+             CREATOR ACTIONS
+             ======================================== -->
+
+        {% if announcement["created_by_membership_id"] == current_membership_id %}
+
+            <!-- EDIT -->
+
+            <div class="announcement-edit-action">
+
+                <a
+                    href="{{ url_for(
+                        'announcements.edit_announcement',
+                        announcement_id=announcement['announcement_id']
+                    ) }}"
+                >
+                    Edit Announcement
+                </a>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="announcement-status-actions">
+
+                {% if announcement["status"] == "active" %}
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'announcements.update_announcement_status',
+                            announcement_id=announcement['announcement_id']
+                        ) }}"
+                    >
+
+                        <input
+                            type="hidden"
+                            name="status"
+                            value="resolved"
+                        >
+
+                        <button type="submit">
+                            Mark as Resolved
+                        </button>
+
+                    </form>
+
+                {% else %}
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'announcements.update_announcement_status',
+                            announcement_id=announcement['announcement_id']
+                        ) }}"
+                    >
+
+                        <input
+                            type="hidden"
+                            name="status"
+                            value="active"
+                        >
+
+                        <button type="submit">
+                            Reopen Announcement
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- DELETE -->
+             
+            <div class="announcement-delete-action">
+                
+                <form method="POST" action="{{ url_for( 'announcements.delete_announcement', announcement_id=announcement['announcement_id'] ) }}" onsubmit="return confirm('Are you sure you want to delete this announcement?');">
+
+                    <button type="submit">
+                        Delete Announcement
+                    </button>
+                
+                </form>
+            
+            </div>
+
+        {% endif %}
+
+
+        <!-- ========================================
+             PERSONALIZED ANNOUNCEMENT
+             ======================================== -->
+
+        {% if announcement["visibility"] == "personalized" %}
+
+            <div class="announcement-detail-recipient">
+
+                <p>
+                    Recipient:
+                    <strong>
+                        {{ announcement["recipient_first_name"] }}
+                        {{ announcement["recipient_last_name"] }}
+                    </strong>
+                </p>
+
+
+                {% if announcement["is_read"] == 1 %}
+
+                    <p>
+                        Status: Read
+                    </p>
+
+                    {% if announcement["read_at"] %}
+
+                        <p>
+                            Read at:
+                            {{ announcement["read_at"] }}
+                        </p>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <p>
+                        Status: Unread
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

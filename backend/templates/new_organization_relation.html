@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Relationship
+{% endblock %}
+
+
+{% block content %}
+
+<div class="new-organization-page">
+
+
+    <!-- ========================================
+         HEADER
+         ======================================== -->
+
+    <div class="organization-form-header">
+
+        <div>
+
+            <span class="organizations-label">
+                EXTERNAL RELATIONS
+            </span>
+
+            <h1>
+                Add Relationship
+            </h1>
+
+            <p>
+                Add a new ORSC relationship for
+                <strong>{{ organization["name"] }}</strong>.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for(
+                'organizations.organization_detail',
+                organization_id=organization['organization_id']
+            ) }}"
+            class="btn-secondary"
+        >
+            Back
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================================
+         FORM
+         ======================================== -->
+
+    <form
+        method="POST"
+        class="organization-form"
+    >
+
+        <div class="organization-form-section">
+
+
+            <div class="organization-form-section-header">
+
+                <span class="organization-form-number">
+                    01
+                </span>
+
+                <div>
+
+                    <h2>
+                        Relationship Information
+                    </h2>
+
+                    <p>
+                        Define the relationship between ORSC and
+                        {{ organization["name"] }}.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ACADEMIC YEAR -->
+
+            <div class="organization-form-group">
+
+                <label for="term_id">
+                    Academic Year *
+                </label>
+
+                <select
+                    id="term_id"
+                    name="term_id"
+                    required
+                >
+
+                    <option value="">
+                        Select academic year
+                    </option>
+
+                    {% for term in terms %}
+
+                        <option value="{{ term['term_id'] }}">
+                            {{ term["name"] }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+
+            <!-- RELATION TYPE -->
+
+            <div class="organization-form-group">
+
+                <label for="relation_type">
+                    Relation Type *
+                </label>
+
+                <select
+                    id="relation_type"
+                    name="relation_type"
+                    required
+                >
+
+                    <option value="">
+                        Select relation type
+                    </option>
+
+                    <option value="sponsor">
+                        Sponsor
+                    </option>
+
+                    <option value="partner">
+                        Partner
+                    </option>
+
+                    <option value="collaboration">
+                        Collaboration
+                    </option>
+
+                    <option value="other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- START DATE -->
+
+            <div class="organization-form-group">
+
+                <label for="start_date">
+                    Start Date
+                </label>
+
+                <input
+                    type="date"
+                    id="start_date"
+                    name="start_date"
+                >
+
+            </div>
+
+
+
+            <!-- END DATE -->
+
+            <div class="organization-form-group">
+
+                <label for="end_date">
+                    End Date
+                </label>
+
+                <input
+                    type="date"
+                    id="end_date"
+                    name="end_date"
+                >
+
+            </div>
+
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="organization-form-group organization-form-full">
+
+                <label for="description">
+                    Relation Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="4"
+                    placeholder="Example: Sponsor of ORigin 2.0..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             ACTIONS
+             ======================================== -->
+
+        <div class="organization-form-actions">
+
+            <a
+                href="{{ url_for(
+                    'organizations.organization_detail',
+                    organization_id=organization['organization_id']
+                ) }}"
+                class="btn-secondary"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Add Relationship
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

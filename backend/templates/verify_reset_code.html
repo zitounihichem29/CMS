@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Verify Code - ORSC CMS
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body class="login-page-body">
+
+
+    <main class="login-page">
+
+
+        <section class="login-brand-panel">
+
+            <div class="login-brand-content">
+
+                <div class="login-logos">
+
+                    <div class="login-logo-box">
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/orsc-logo.png'
+                            ) }}"
+                            alt="ORSC Logo"
+                            class="login-logo login-logo-orsc"
+                        >
+
+                    </div>
+
+
+                    <div class="login-logo-separator">
+                    </div>
+
+
+                    <div class="login-logo-box">
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/usthb-logo.png'
+                            ) }}"
+                            alt="USTHB Logo"
+                            class="login-logo login-logo-usthb"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <span class="login-brand-label">
+                    OPERATIONS RESEARCH SOCIETY CLUB
+                </span>
+
+
+                <h1>
+                    ORSC
+                    <span>CMS</span>
+                </h1>
+
+
+                <p class="login-brand-description">
+                    Verify your identity to securely
+                    recover access to your account.
+                </p>
+
+            </div>
+
+
+            <p class="login-brand-footer">
+                Université des Sciences et de la Technologie
+                Houari Boumediene
+            </p>
+
+        </section>
+
+
+
+        <section class="login-form-panel">
+
+
+            <div class="login-form-container">
+
+
+                <div class="login-form-header">
+
+                    <span class="login-form-label">
+                        ACCOUNT RECOVERY
+                    </span>
+
+
+                    <h2>
+                        Verify your code
+                    </h2>
+
+
+                    <p>
+                        Enter the 6-digit verification code
+                        sent to your email address.
+                    </p>
+
+                </div>
+
+
+
+                {% if error %}
+
+                    <div class="login-error">
+                        {{ error }}
+                    </div>
+
+                {% endif %}
+
+
+
+                {% if success %}
+
+                    <div class="login-security-note">
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            {{ success }}
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+
+
+                {% if not success %}
+
+                    <form
+                        method="POST"
+                        class="login-form"
+                    >
+
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+
+                        <div class="login-form-group">
+
+                            <label for="code">
+                                Verification Code
+                            </label>
+
+
+                            <div class="login-input-wrapper">
+
+                                <span class="login-input-icon">
+                                    ◇
+                                </span>
+
+
+                                <input
+                                    type="text"
+                                    id="code"
+                                    name="code"
+                                    placeholder="Enter 6-digit code"
+                                    inputmode="numeric"
+                                    autocomplete="one-time-code"
+                                    maxlength="6"
+                                    pattern="[0-9]{6}"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="login-submit-button"
+                        >
+
+                            <span>
+                                Verify code
+                            </span>
+
+                            <span class="login-submit-arrow">
+                                →
+                            </span>
+
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+
+
+                <div class="login-security-note">
+
+                    <span>
+                        ◈
+                    </span>
+
+                    <p>
+                        The verification code expires
+                        after 10 minutes.
+                    </p>
+
+                </div>
+
+
+                <div class="login-forgot-password">
+
+                    <a href="{{ url_for('auth.forgot_password') }}">
+                        ← Request a new code
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>
