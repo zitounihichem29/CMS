@@ -3261,3 +3261,302 @@ textarea:focus {
     }
 
 }
+
+
+.alumni-file-input {
+    width: 100%;
+    padding: 7px;
+
+    border: 1px solid var(--line);
+    border-radius: 12px;
+
+    background: var(--surface-2);
+    color: var(--text);
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+
+.alumni-file-input::file-selector-button {
+    margin-right: 12px;
+
+    padding: 9px 14px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: rgba(13, 159, 168, 0.10);
+
+    color: var(--teal);
+
+    font-size: 11px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.alumni-file-input::file-selector-button:hover {
+    background: var(--teal);
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+
+body.dark .alumni-file-input {
+    background: var(--surface-2);
+}
+
+
+body.dark
+.alumni-file-input::file-selector-button {
+    background: rgba(13, 159, 168, 0.16);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   ALUMNI CUSTOM DROPDOWNS
+========================================================= */
+
+.alumni-custom-select {
+    position: relative;
+    width: 100%;
+}
+
+
+.alumni-custom-select-button {
+    width: 100%;
+    min-height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding: 0 14px;
+
+    border: 1px solid var(--line);
+    border-radius: 12px;
+
+    background: var(--surface-2);
+    color: var(--text);
+
+    font: inherit;
+    font-size: 12px;
+    font-weight: 650;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.alumni-custom-select-button:hover {
+    border-color:
+        rgba(13, 159, 168, 0.45);
+}
+
+
+.alumni-custom-select.open
+.alumni-custom-select-button {
+    border-color: var(--teal);
+
+    background: var(--surface);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(13, 159, 168, 0.10);
+}
+
+
+.alumni-custom-select-arrow {
+    color: var(--teal);
+
+    font-size: 14px;
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+.alumni-custom-select.open
+.alumni-custom-select-arrow {
+    transform: rotate(180deg);
+}
+
+
+/* THE OPEN LIST */
+
+.alumni-custom-select-menu {
+    position: absolute;
+
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+
+    z-index: 100;
+
+    max-height: 260px;
+
+    padding: 7px;
+
+    overflow-y: auto;
+
+    border: 1px solid var(--line);
+    border-radius: 14px;
+
+    background: var(--surface);
+
+    box-shadow:
+        0 18px 45px
+        rgba(24, 56, 62, 0.16);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(-6px);
+
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        visibility 0.18s ease;
+}
+
+
+.alumni-custom-select.open
+.alumni-custom-select-menu {
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(0);
+}
+
+
+/* OPTIONS */
+
+.alumni-custom-select-option {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 3px;
+
+    padding: 10px 12px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: transparent;
+    color: var(--text);
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.16s ease,
+        color 0.16s ease,
+        transform 0.16s ease;
+}
+
+
+.alumni-custom-select-option:hover {
+    background:
+        rgba(13, 159, 168, 0.09);
+
+    color: var(--teal);
+
+    transform: translateX(2px);
+}
+
+
+.alumni-custom-select-option.active {
+    background:
+        rgba(13, 159, 168, 0.12);
+
+    color: var(--teal);
+}
+
+
+.alumni-option-main {
+    font-size: 11px;
+    font-weight: 750;
+}
+
+
+.alumni-option-small {
+    color: var(--muted);
+
+    font-size: 9px;
+    font-weight: 500;
+}
+
+
+/* SCROLLBAR */
+
+.alumni-custom-select-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+
+.alumni-custom-select-menu::-webkit-scrollbar-thumb {
+    background:
+        rgba(13, 159, 168, 0.30);
+
+    border-radius: 20px;
+}
+
+
+.alumni-custom-select-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+/* DARK MODE */
+
+body.dark
+.alumni-custom-select-menu {
+    box-shadow:
+        0 20px 45px
+        rgba(0, 0, 0, 0.35);
+}
