@@ -1,0 +1,827 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if mode == "edit" %}
+Edit Alumni
+{% else %}
+Add Alumni
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+.alumni-form-page {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 8px 0 40px;
+}
+
+.alumni-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.alumni-form-header h1 {
+    margin: 6px 0 8px;
+}
+
+.alumni-form-header p {
+    margin: 0;
+    opacity: .72;
+}
+
+.alumni-eyebrow {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .12em;
+    opacity: .65;
+}
+
+.alumni-back {
+    text-decoration: none;
+    color: inherit;
+    font-weight: 700;
+    opacity: .72;
+}
+
+.alumni-form-card {
+    border: 1px solid rgba(120, 140, 150, .22);
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 16px;
+}
+
+.alumni-form-card h2 {
+    margin: 0 0 18px;
+    font-size: 17px;
+}
+
+.alumni-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.alumni-form-field {
+    display: grid;
+    gap: 7px;
+}
+
+.alumni-form-field.full {
+    grid-column: 1 / -1;
+}
+
+.alumni-form-field label {
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.alumni-form-field input,
+.alumni-form-field select,
+.alumni-form-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.alumni-form-field textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.alumni-form-help {
+    font-size: 10px;
+    opacity: .62;
+}
+
+.alumni-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.alumni-check {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.alumni-error {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(190, 60, 60, .10);
+    color: #b93c3c;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.alumni-current-photo {
+    width: 110px;
+    height: 110px;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.alumni-current-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.alumni-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.alumni-button {
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.alumni-button.secondary {
+    border: 1px solid rgba(120, 140, 150, .28);
+    background: transparent;
+    color: inherit;
+}
+
+.alumni-button.primary {
+    border: 0;
+    background: #0d7774;
+    color: white;
+}
+
+@media (max-width: 700px) {
+
+    .alumni-form-header {
+        display: grid;
+    }
+
+    .alumni-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .alumni-form-field.full {
+        grid-column: auto;
+    }
+
+    .alumni-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .alumni-button {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+</style>
+
+
+<div class="alumni-form-page">
+
+    <div class="alumni-form-header">
+
+        <div>
+
+            <span class="alumni-eyebrow">
+                ORSC ALUMNI
+            </span>
+
+            <h1>
+                {% if mode == "edit" %}
+                    Edit Alumni
+                {% else %}
+                    Add Alumni
+                {% endif %}
+            </h1>
+
+            <p>
+                {% if mode == "edit" %}
+                    Update the alumni profile and public information.
+                {% else %}
+                    Create a new alumni profile for the ORSC network.
+                {% endif %}
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('alumni.alumni_list') }}"
+            class="alumni-back"
+        >
+            ← Back to Alumni
+        </a>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="alumni-error">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token() }}"
+        >
+
+
+        {% if mode == "create" %}
+
+            <div class="alumni-form-card">
+
+                <h2>
+                    Person
+                </h2>
+
+                <div class="alumni-form-field full">
+
+                    <label for="existing_person_id">
+                        Existing person
+                    </label>
+
+                    <select
+                        id="existing_person_id"
+                        name="existing_person_id"
+                    >
+
+                        <option value="">
+                            Create a new person
+                        </option>
+
+                        {% for person in available_people %}
+
+                            <option
+                                value="{{ person['person_id'] }}"
+                            >
+                                {{ person["first_name"] }}
+                                {{ person["last_name"] }}
+
+                                {% if person["email"] %}
+                                    — {{ person["email"] }}
+                                {% endif %}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                    <span class="alumni-form-help">
+                        Select an existing person or leave this empty to create a new one.
+                    </span>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+        <div
+            class="alumni-form-card"
+            id="newPersonFields"
+        >
+
+            <h2>
+                Personal Information
+            </h2>
+
+            <div class="alumni-form-grid">
+
+                <div class="alumni-form-field">
+
+                    <label for="first_name">
+                        First name *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="first_name"
+                        name="first_name"
+                        value="{% if profile %}{{ profile['first_name'] or '' }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <div class="alumni-form-field">
+
+                    <label for="last_name">
+                        Last name *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="last_name"
+                        name="last_name"
+                        value="{% if profile %}{{ profile['last_name'] or '' }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <div class="alumni-form-field">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value="{% if profile %}{{ profile['email'] or '' }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <div class="alumni-form-field">
+
+                    <label for="university">
+                        University
+                    </label>
+
+                    <input
+                        type="text"
+                        id="university"
+                        name="university"
+                        value="{% if profile %}{{ profile['university'] or '' }}{% else %}USTHB{% endif %}"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="alumni-form-card">
+
+            <h2>
+                Alumni Profile
+            </h2>
+
+            <div class="alumni-form-grid">
+
+                <div class="alumni-form-field">
+
+                    <label for="category">
+                        Category *
+                    </label>
+
+                    <select
+                        id="category"
+                        name="category"
+                        required
+                    >
+
+                        {% for category in categories %}
+
+                            <option
+                                value="{{ category }}"
+                                {% if profile and profile["category"] == category %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ category }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="alumni-form-field">
+
+                    <label for="graduation_year">
+                        Graduation year
+                    </label>
+
+                    <input
+                        type="number"
+                        id="graduation_year"
+                        name="graduation_year"
+                        min="1900"
+                        max="2200"
+                        value="{% if profile and profile['graduation_year'] %}{{ profile['graduation_year'] }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <div class="alumni-form-field">
+
+                    <label for="current_title">
+                        Current position
+                    </label>
+
+                    <input
+                        type="text"
+                        id="current_title"
+                        name="current_title"
+                        value="{% if profile %}{{ profile['current_title'] or '' }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <div class="alumni-form-field">
+
+                    <label for="current_organization">
+                        Current organization
+                    </label>
+
+                    <input
+                        type="text"
+                        id="current_organization"
+                        name="current_organization"
+                        value="{% if profile %}{{ profile['current_organization'] or '' }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <div class="alumni-form-field full">
+
+                    <label for="headline">
+                        Headline
+                    </label>
+
+                    <input
+                        type="text"
+                        id="headline"
+                        name="headline"
+                        value="{% if profile %}{{ profile['headline'] or '' }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <div class="alumni-form-field full">
+
+                    <label for="short_bio">
+                        Short bio
+                    </label>
+
+                    <textarea
+                        id="short_bio"
+                        name="short_bio"
+                    >{% if profile %}{{ profile["short_bio"] or "" }}{% endif %}</textarea>
+
+                </div>
+
+
+                <div class="alumni-form-field full">
+
+                    <label for="story">
+                        Alumni story
+                    </label>
+
+                    <textarea
+                        id="story"
+                        name="story"
+                    >{% if profile %}{{ profile["story"] or "" }}{% endif %}</textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="alumni-form-card">
+
+            <h2>
+                Photo & Links
+            </h2>
+
+            <div class="alumni-form-grid">
+
+                <div class="alumni-form-field">
+
+                    <label for="photo_file">
+                        Profile photo
+                    </label>
+
+                    {% if profile and profile["photo_path"] %}
+
+                        <div class="alumni-current-photo">
+
+                            <img
+                                src="{{ url_for(
+                                    'alumni.alumni_photo',
+                                    filename=profile['photo_path']
+                                ) }}"
+                                alt="Alumni photo"
+                            >
+
+                        </div>
+
+                    {% endif %}
+
+                    <input
+                        type="file"
+                        id="photo_file"
+                        name="photo_file"
+                        class="alumni-file-input"
+                        accept=".jpg,.jpeg,.png,.webp"
+                    >
+
+                    {% if mode == "edit" and profile and profile["photo_path"] %}
+
+                        <label class="alumni-check">
+
+                            <input
+                                type="checkbox"
+                                name="remove_photo"
+                                value="1"
+                            >
+
+                            Remove current photo
+
+                        </label>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="alumni-form-field">
+
+                    <label for="slug">
+                        Public profile slug
+                    </label>
+
+                    <input
+                        type="text"
+                        id="slug"
+                        name="slug"
+                        value="{% if profile %}{{ profile['slug'] or '' }}{% endif %}"
+                    >
+
+                    <span class="alumni-form-help">
+                        Leave empty to generate automatically.
+                    </span>
+
+                </div>
+
+
+                <div class="alumni-form-field">
+
+                    <label for="linkedin_url">
+                        LinkedIn
+                    </label>
+
+                    <input
+                        type="url"
+                        id="linkedin_url"
+                        name="linkedin_url"
+                        value="{% if profile %}{{ profile['linkedin_url'] or '' }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <div class="alumni-form-field">
+
+                    <label for="website_url">
+                        Website
+                    </label>
+
+                    <input
+                        type="url"
+                        id="website_url"
+                        name="website_url"
+                        value="{% if profile %}{{ profile['website_url'] or '' }}{% endif %}"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="alumni-form-card">
+
+            <h2>
+                Visibility
+            </h2>
+
+            <div class="alumni-checks">
+
+                <label class="alumni-check">
+
+                    <input
+                        type="checkbox"
+                        name="is_public"
+                        value="1"
+                        {% if profile and profile["is_public"] %}
+                            checked
+                        {% endif %}
+                    >
+
+                    Public profile
+
+                </label>
+
+
+                <label class="alumni-check">
+
+                    <input
+                        type="checkbox"
+                        name="is_featured"
+                        value="1"
+                        {% if profile and profile["is_featured"] %}
+                            checked
+                        {% endif %}
+                    >
+
+                    Featured alumni
+
+                </label>
+
+
+                <label class="alumni-check">
+
+                    <input
+                        type="checkbox"
+                        name="is_spotlight"
+                        value="1"
+                        {% if profile and profile["is_spotlight"] %}
+                            checked
+                        {% endif %}
+                    >
+
+                    Spotlight
+
+                </label>
+
+            </div>
+
+
+            <div
+                class="alumni-form-field"
+                style="margin-top: 16px; max-width: 220px;"
+            >
+
+                <label for="display_order">
+                    Display order
+                </label>
+
+                <input
+                    type="number"
+                    id="display_order"
+                    name="display_order"
+                    min="0"
+                    value="{% if profile %}{{ profile['display_order'] or 0 }}{% else %}0{% endif %}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="alumni-form-actions">
+
+            <a
+                href="{{ url_for('alumni.alumni_list') }}"
+                class="alumni-button secondary"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="alumni-button primary"
+            >
+                {% if mode == "edit" %}
+                    Save Changes
+                {% else %}
+                    Add Alumni
+                {% endif %}
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+{% if mode == "create" %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const existingPerson =
+            document.getElementById(
+                "existing_person_id"
+            );
+
+        const newPersonFields =
+            document.getElementById(
+                "newPersonFields"
+            );
+
+        const firstName =
+            document.getElementById(
+                "first_name"
+            );
+
+        const lastName =
+            document.getElementById(
+                "last_name"
+            );
+
+
+        function updatePersonMode() {
+
+            const useExisting =
+                existingPerson.value !== "";
+
+            newPersonFields.style.display =
+                useExisting
+                    ? "none"
+                    : "block";
+
+            firstName.required =
+                !useExisting;
+
+            lastName.required =
+                !useExisting;
+        }
+
+
+        existingPerson.addEventListener(
+            "change",
+            updatePersonMode
+        );
+
+        updatePersonMode();
+
+    }
+);
+
+</script>
+
+{% else %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        document.getElementById(
+            "first_name"
+        ).required = true;
+
+        document.getElementById(
+            "last_name"
+        ).required = true;
+
+    }
+);
+
+</script>
+
+{% endif %}
+
+{% endblock %}
