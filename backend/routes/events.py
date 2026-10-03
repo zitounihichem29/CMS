@@ -168,6 +168,8 @@ def events():
     # RH MEMBERS ONLY
     # ========================================================
 
+    active_term_id = get_active_term_id()
+    
     can_create_event = (
         is_department_head(
             current_user
