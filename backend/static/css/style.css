@@ -25532,6 +25532,51 @@ body.dark .change-password-actions a {
 
 
 /* =========================================================
+   FORGOT PASSWORD
+========================================================= */
+
+.login-forgot-password {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    margin-top: -7px;
+    margin-bottom: -2px;
+}
+
+
+.login-forgot-password a {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 6px 10px;
+
+    border-radius: 8px;
+
+    color: #0c929b;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.login-forgot-password a:hover {
+    background: #edf8f8;
+
+    color: #076f76;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
    SUBMIT
 ========================================================= */
 
