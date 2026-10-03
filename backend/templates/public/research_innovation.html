@@ -138,9 +138,22 @@ Research & Innovation | ORSC
                                 {{ project["owner_last_name"] }}
                             </span>
 
-                            <span class="public-project-team">
-                                {{ project["team_names"] or "" }}
-                            </span>
+                            <div class="public-project-team" hidden>
+                                {% for member in project_team_members.get(
+                                    project["project_id"],
+                                    []
+                                ) %}
+
+                                    <div
+                                        class="public-project-team-member"
+                                        data-name="{{ member['first_name'] }} {{ member['last_name'] }}"
+                                        data-linkedin="{{ member['linkedin'] or '' }}"
+                                    >
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
 
                             <span class="public-project-link">
                                 {{ project["project_link"] or "" }}
@@ -255,9 +268,21 @@ Research & Innovation | ORSC
                                 {{ article["owner_last_name"] }}
                             </span>
 
-                            <span class="public-article-authors">
-                                {{ article["author_names"] or "" }}
-                            </span>
+                            <div class="public-article-authors" hidden>
+                                {% for author in article_author_members.get(
+                                    article["scientific_article_id"],
+                                    []
+                                ) %}
+
+                                    <div
+                                        class="public-article-author"
+                                        data-name="{{ author['first_name'] }} {{ author['last_name'] }}"
+                                        data-linkedin="{{ author['linkedin'] or '' }}"
+                                    >
+                                    </div>
+
+                                {% endfor %}
+                            </div>
 
                             <span class="public-article-id">
                                 {{ article["scientific_article_id"] }}
@@ -367,8 +392,11 @@ Research & Innovation | ORSC
                 Project Team
             </span>
 
-            <p id="publicProjectModalTeam">
-            </p>
+            <div
+                id="publicProjectModalTeam"
+                class="public-research-people-list"
+            >
+            </div>
 
         </div>
 
@@ -468,7 +496,11 @@ Research & Innovation | ORSC
                 Authors
             </span>
 
-            <p id="publicArticleModalAuthors"></p>
+            <div
+                id="publicArticleModalAuthors"
+                class="public-research-people-list"
+            >
+            </div>
 
         </div>
 
