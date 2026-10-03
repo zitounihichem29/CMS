@@ -745,6 +745,12 @@ def event_detail(event_id):
         )
 
 
+    active_term_id = (
+        get_active_term_id()
+    )
+
+
+
     # ========================================================
     # ALUMNI
     #
